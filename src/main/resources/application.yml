@@ -1,0 +1,33 @@
+debug: true
+
+server:
+  port: 8088
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    session:
+      timeout: 180
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://106.14.120.166:3400/bookstore?useUnicode=true&characterEncoding=utf8
+    username: fan
+    password: Fmy1054.
+
+  redis:
+    host: 106.14.120.166
+    port: 6400
+    password: myredis
+
+  http:
+    encoding: #配置htttp字符编码
+      charset: utf-8
+      enabled: true
+      force: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB #设置单个上传文件的大小
+      max-request-size: -1  #设置单次请求的文件的总大小  -1为不限制
+      enabled: false #是否支持批量上传
