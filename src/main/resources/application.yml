@@ -28,6 +28,6 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 10MB #设置单个上传文件的大小
-      max-request-size: -1  #设置单次请求的文件的总大小  -1为不限制
-      enabled: false #是否支持批量上传
+      max-file-size: 5MB #设置单个上传文件的大小
+      max-request-size: 40MB  #设置单次请求的文件的总大小  -1为不限制
+      enabled: true #是否支持批量上传
