@@ -17,7 +17,7 @@ import java.util.Map;
 public class QuestionUpload {
 
 
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload", method = RequestMethod.PUT)
     public String upload(@RequestParam MultipartFile file) {
 
         return "上传成功";
