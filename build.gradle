@@ -7,7 +7,7 @@ subprojects {
 
     sourceCompatibility = 1.8
 
-    def rxJava = "2.2.10"
+    def rxJava = "2.2.15"
 
     repositories {
         maven { url 'https://plugins.gradle.org/m2/' }
@@ -17,23 +17,29 @@ subprojects {
     }
 
     dependencies {
-        implementation 'com.google.guava:guava:21.0'
+        implementation 'com.google.guava:guava:28.1'
 
         implementation 'org.glassfish.jersey.containers:jersey-container-servlet:2.28'
         implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.28'
         implementation 'org.glassfish.jersey.inject:jersey-hk2:2.28'
         implementation 'net.sourceforge.javacsv:javacsv:2.0'
 
-        implementation 'org.apache.tomcat.embed:tomcat-embed-core:8.5.41'
-        implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.41'
-        implementation 'com.google.code.gson:gson:2.8.4'
-        compile 'org.jsoup:jsoup:1.12.1'
+        implementation 'org.apache.tomcat.embed:tomcat-embed-core:8.5.49'
+        implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.49'
+        implementation 'com.google.code.gson:gson:2.8.6'
 
-        compile "io.reactivex.rxjava2:rxjava:$rxJava"
-        compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+        implementation "io.reactivex.rxjava2:rxjava:$rxJava"
+        implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
         implementation fileTree(dir: 'libctp', include: ['*.jar'])
 
         testCompile group: 'junit', name: 'junit', version: '4.12'
+
+        implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
+        implementation group: 'com.alibaba', name: 'druid', version: '1.1.21'
+        implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.62'
+        implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+
     }
 
 }

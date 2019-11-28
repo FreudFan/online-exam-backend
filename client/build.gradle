@@ -1,5 +1,5 @@
 dependencies {
-    compile project(':test')
+    implementation project(':test')
 
     implementation 'javax.ws.rs:javax.ws.rs-api:2.0.1'
     implementation 'io.github.openfeign:feign-jaxrs2:9.7.0'
