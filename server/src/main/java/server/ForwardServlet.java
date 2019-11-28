@@ -3,7 +3,6 @@ package server;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +23,7 @@ public class ForwardServlet extends HttpServlet {
     	
     	
     	String ctpath=this.getServletContext().getContextPath();
-    	path="/rest"+path.substring(ctpath.length(),path.length());
+    	path= "/rest" +path.substring(ctpath.length(),path.length());
     	
     	System.out.println("path="+path);
     	

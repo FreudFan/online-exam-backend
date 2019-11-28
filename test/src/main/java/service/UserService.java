@@ -15,6 +15,7 @@ import entity.UserInfo;
 @Path("users")
 
 public interface UserService {
+
 	@GET
     @Path("all")  //访问http://localhost:8888/demo/rest/users/all
     @Produces(MediaType.APPLICATION_JSON)

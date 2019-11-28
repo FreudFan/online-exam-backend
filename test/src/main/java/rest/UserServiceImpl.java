@@ -65,6 +65,4 @@ public class UserServiceImpl implements service.UserService {
 		return null;
 	}
 
-	
-
 }
