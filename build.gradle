@@ -1,0 +1,39 @@
+subprojects {
+
+    apply plugin: 'java'
+
+    group 'edu.sandau'
+    version '1.0-SNAPSHOT'
+
+    sourceCompatibility = 1.8
+
+    def rxJava = "2.2.10"
+
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+    }
+
+    dependencies {
+        implementation 'com.google.guava:guava:21.0'
+
+        implementation 'org.glassfish.jersey.containers:jersey-container-servlet:2.28'
+        implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.28'
+        implementation 'org.glassfish.jersey.inject:jersey-hk2:2.28'
+        implementation 'net.sourceforge.javacsv:javacsv:2.0'
+
+        implementation 'org.apache.tomcat.embed:tomcat-embed-core:8.5.41'
+        implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.41'
+        implementation 'com.google.code.gson:gson:2.8.4'
+        compile 'org.jsoup:jsoup:1.12.1'
+
+        compile "io.reactivex.rxjava2:rxjava:$rxJava"
+        compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+        implementation fileTree(dir: 'libctp', include: ['*.jar'])
+
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+
+}

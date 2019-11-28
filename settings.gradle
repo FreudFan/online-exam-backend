@@ -1,0 +1,5 @@
+rootProject.name = 'online-exam-backend'
+include 'server'
+include 'login'
+include 'client'
+
