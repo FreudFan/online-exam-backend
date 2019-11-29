@@ -15,12 +15,7 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
-    <!--<servlet>-->
-        <!--<servlet-name>datasource.Druid</servlet-name>-->
-        <!--<servlet-class>datasource.Druid</servlet-class>-->
-        <!--<load-on-startup>2</load-on-startup>-->
-    <!--</servlet>-->
-
+    <!--配置durid监控-->
     <servlet>
         <servlet-name>StatViewServlet</servlet-name>
         <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
@@ -41,6 +36,9 @@
         </init-param>
     </servlet>
 
+    <!--durid监控url
+    http://localhost:8888/demo/druid
+    -->
     <servlet-mapping>
         <servlet-name>StatViewServlet</servlet-name>
         <url-pattern>/druid/*</url-pattern>
