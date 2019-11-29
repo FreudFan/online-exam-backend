@@ -14,16 +14,12 @@
         <servlet-name>server.RestConfig</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>server.startup.ForwardServlet</servlet-name>
-        <servlet-class>server.startup.ForwardServlet</servlet-class>
-    </servlet>
- 
-    <servlet-mapping>
-        <servlet-name>server.startup.ForwardServlet</servlet-name>
-        <url-pattern>*.json</url-pattern>
-    </servlet-mapping>
+
+    <!--<servlet>-->
+        <!--<servlet-name>datasource.Druid</servlet-name>-->
+        <!--<servlet-class>datasource.Druid</servlet-class>-->
+        <!--<load-on-startup>2</load-on-startup>-->
+    <!--</servlet>-->
 
     <servlet>
         <servlet-name>StatViewServlet</servlet-name>

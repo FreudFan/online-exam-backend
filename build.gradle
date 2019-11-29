@@ -17,7 +17,7 @@ subprojects {
     }
 
     dependencies {
-        implementation 'com.google.guava:guava:28.1'
+//        implementation 'com.google.guava:guava:28.1'
 
         implementation 'org.glassfish.jersey.containers:jersey-container-servlet:2.28'
         implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.28'

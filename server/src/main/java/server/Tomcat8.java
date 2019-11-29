@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
+import java.sql.Connection;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import datasource.Druid;
 import org.apache.catalina.Context;
 import org.apache.catalina.Server;
 import org.apache.catalina.Service;
@@ -43,10 +45,10 @@ public class Tomcat8 {
 	        connector.setEnableLookups(false);
 	        connector.setAllowTrace(false);
 	        
-	        
-	        
+
+
 	        //connector.setAttribute(name, value);
-	       
+
 	        File appdir=new File("webapp");//一定要绝对路径，不然无法启动
 	        String context_path="/demo";
 	        Context context =tomcat.addWebapp(context_path, appdir.getAbsolutePath());
@@ -66,8 +68,9 @@ public class Tomcat8 {
 	        
 	        	        
 	        Valve log=loadAccessLog();
-	        service.getContainer().getPipeline().addValve(log);	        
+	        service.getContainer().getPipeline().addValve(log);
 
+			initDatabaseConnectionPool();	//初始化连接池
 
 //	        Valve[] vs=service.getContainer().getPipeline().getValves();
 //	        System.out.println(vs);
@@ -76,7 +79,7 @@ public class Tomcat8 {
 	        System.out.println("started tomcat at port="+connector.getPort()+" , for webapp ["+context.getName()+"]");
 	        
 	        System.out.println("tomcat workdir="+tmpdir.toString());
-	        
+
 	        server.await();
 	    }
 	    
@@ -104,12 +107,12 @@ public class Tomcat8 {
 	    	return log;
 	    }
 	    
-	    public static boolean setFieldValue(String fieldName, Object obj,Object v) {  
+	    private static boolean setFieldValue(String fieldName, Object obj, Object v) {
 	        try {    
 	            String firstLetter = fieldName.substring(0, 1).toUpperCase();    
 	            String getter = "set" + firstLetter + fieldName.substring(1);    
-	            Method method = obj.getClass().getMethod(getter, new Class[] {getFieldType(fieldName,obj.getClass())});    
-	            method.invoke(obj, new Object[] {v});    
+	            Method method = obj.getClass().getMethod(getter, new Class[] {getFieldType(fieldName,obj.getClass())});
+	            method.invoke(obj, new Object[] {v});
 	            return true;    
 	        } catch (Throwable e) {    
 	            //log.error(e.getMessage(),e);    
@@ -134,7 +137,7 @@ public class Tomcat8 {
 	    }
 	 	
 	    
-	    public static Class getFieldType(String fieldName, Class objc) {  
+	    private static Class getFieldType(String fieldName, Class objc) {
 	        try {    
 	            String firstLetter = fieldName.substring(0, 1).toUpperCase();    
 	            String getter = "get" + firstLetter + fieldName.substring(1);    
@@ -155,5 +158,9 @@ public class Tomcat8 {
 	 		
 	 		return null; 
 	    } 
+
+	    private static void initDatabaseConnectionPool() {
+			Druid.getConnection();
+		}
 
 }

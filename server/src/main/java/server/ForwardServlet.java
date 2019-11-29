@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(
-        name = "MyServlet", 
-        urlPatterns = {"*.json"}
-    )
+		name = "MyServlet",
+		urlPatterns = {"*.json"}
+		)
 public class ForwardServlet extends HttpServlet {
 
     @Override
