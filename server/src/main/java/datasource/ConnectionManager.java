@@ -35,7 +35,7 @@ public class ConnectionManager extends GenericServlet {
     }
 
     //2.获取连接
-    public static Connection getConnection() {
+    public synchronized static Connection getConnection() {
         try {
             return dataSource.getConnection();
         } catch (SQLException e) {
@@ -45,7 +45,7 @@ public class ConnectionManager extends GenericServlet {
     }
 
     //3.关闭连接
-    public static void closeAll(Connection connection, Statement statement, ResultSet resultSet) {
+    public synchronized static void closeAll(Connection connection, Statement statement, ResultSet resultSet) {
         try {
             if (resultSet != null) {
                 resultSet.close();
@@ -59,24 +59,6 @@ public class ConnectionManager extends GenericServlet {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * 获取数据库连接
-     * @return 数据库连接对象Connection
-     */
-    public synchronized final Connection getDruidConnection(){
-        try
-        {
-            // 查看活动链接数
-            // System.out.println("------->busy connections: " + ds.getNumBusyConnections());
-            return dataSource.getConnection();
-        }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override
