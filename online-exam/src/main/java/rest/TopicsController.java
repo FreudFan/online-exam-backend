@@ -34,7 +34,7 @@ public class TopicsController {
         TopticsService topticsService = new TopticsService();
         request.setCharacterEncoding("UTF-8");
         String contentType = request.getContentType();
-        if ((contentType.indexOf("multipart/form-data") >= 0)) {
+        if ((contentType.contains("multipart/form-data"))) {
             DiskFileItemFactory factory = new DiskFileItemFactory();
             File f = new File("topics"); //新建保存目录
             if ( !f.exists() ) {
