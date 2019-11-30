@@ -43,6 +43,7 @@ public class Tomcat8 {
 	        connector.setMaxPostSize(1024*5);
 	        connector.setEnableLookups(false);
 	        connector.setAllowTrace(false);
+	        connector.setURIEncoding("UTF-8");
 	        
 
 
