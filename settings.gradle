@@ -1,6 +1,5 @@
 rootProject.name = 'online-exam-backend'
 include 'server'
+include 'online-exam'
 include 'test'
 include 'client'
-include 'online-exam'
-

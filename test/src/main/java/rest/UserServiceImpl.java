@@ -16,10 +16,10 @@ import javax.ws.rs.core.MediaType;
 import entity.UserInfo;
 import util.FileDB;
 
-@Path("users")
+@Path("demo/users")
 
 public class UserServiceImpl implements service.UserService {
-	
+
 	public static Map<String, UserInfo> uMap = FileDB.loadUsers();
 	static {
 		

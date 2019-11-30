@@ -7,7 +7,7 @@ import service.UserService;
 public class MyClientFact {
 	static MyClientFact inst=new MyClientFact();
 //	static String base_url="http://139.9.179.236:8888/demo/rest";
-	static String base_url="http://localhost:8888/demo/rest";
+	static String base_url="http://localhost:8888/demo/rest/demo/";
 	
 	public void setUrl(String u){
 		base_url = u;
