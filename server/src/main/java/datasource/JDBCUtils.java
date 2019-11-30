@@ -18,9 +18,15 @@ public class JDBCUtils {
      */
     public static ResultSet queryForResultSet( String sql ) throws SQLException {
         if ( !StringUtils.isEmpty(sql) ) {
-            Connection connection = ConnectionManager.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);
-            return statement.executeQuery();
+            try(
+                    Connection connection = ConnectionManager.getConnection();
+                    PreparedStatement statement = connection.prepareStatement(sql);
+            ) {
+                return statement.executeQuery();
+            } catch ( Exception e ) {
+                e.printStackTrace();
+                return null;
+            }
         }
         return null;
     }
@@ -42,21 +48,18 @@ public class JDBCUtils {
                 ResultSetMetaData metaData = resultSet.getMetaData();   // 取得数据库的列名
                 int numberOfColumns = metaData.getColumnCount();
 
-
-                Map<String, Object> resultMap;
                 while ( resultSet.next() ) {
-                    resultMap = new HashMap<>(numberOfColumns);
+                    Map<String, Object> resultMap = new HashMap<>(numberOfColumns);
                     for ( int i = 1; i < numberOfColumns; i++ ) {
                         resultMap.put(metaData.getColumnName(i), resultSet.getObject(i));
                     }
                     resultList.add(resultMap);
                 }
-
+                return resultList;
             } catch ( Exception e ) {
                 e.printStackTrace();
                 return null;
             }
-            return resultList;
         }
         return null;
     }

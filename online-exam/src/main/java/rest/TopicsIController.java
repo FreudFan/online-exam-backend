@@ -16,7 +16,7 @@ import java.util.Map;
  * 文件上传
  */
 @Path("topic")
-public class TopicsImportController {
+public class TopicsIController {
 
     @POST
     @Path("import")
