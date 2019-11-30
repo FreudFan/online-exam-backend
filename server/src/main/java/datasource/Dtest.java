@@ -12,7 +12,8 @@ import java.util.Map;
 
 public class Dtest {
     public static void main ( String[] args ) throws SQLException {
-        testSQLExcute();
+//        testSQLExcute();
+        testSQLUtil();
     }
 
     private static void testSQLExcute() throws SQLException {
@@ -20,6 +21,17 @@ public class Dtest {
         List<Map<String,Object>> list = JDBCUtils.queryForList(sql);
         for ( Map<String,Object> map: list ) {
             System.out.println(new JSONObject(map).toJSONString());
+        }
+    }
+
+    private static void testSQLUtil() throws SQLException {
+        ConnectionManager.getConnection();
+        for (int i = 0; i < 100000; i++) {
+            String sql = "SELECT * FROM MENU";
+            List<Map<String,Object>> list = JDBCUtils.queryForList(sql);
+            System.out.println(list.toString());
+//            ResultSet resultSet = JDBCUtils.queryForResultSet(sql);
+//            System.out.println(resultSet.toString());
         }
     }
 
