@@ -15,8 +15,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-public class Druid extends GenericServlet {
-    private Druid(){}
+public class ConnectionManager extends GenericServlet {
+    private ConnectionManager(){}
 
     private static DruidDataSource dataSource;
 
@@ -26,7 +26,7 @@ public class Druid extends GenericServlet {
         try {
             Properties properties = new Properties();
             //通过类加载器加载配置文件
-            InputStream inputStream = Druid.class.getClassLoader().getResourceAsStream("druid.properties");
+            InputStream inputStream = ConnectionManager.class.getClassLoader().getResourceAsStream("druid.properties");
             properties.load(inputStream);
             dataSource = (DruidDataSource) DruidDataSourceFactory.createDataSource(properties);
         } catch (Exception e) {
@@ -61,8 +61,26 @@ public class Druid extends GenericServlet {
         }
     }
 
+    /**
+     * 获取数据库连接
+     * @return 数据库连接对象Connection
+     */
+    public synchronized final Connection getDruidConnection(){
+        try
+        {
+            // 查看活动链接数
+            // System.out.println("------->busy connections: " + ds.getNumBusyConnections());
+            return dataSource.getConnection();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        new Druid();
+        new ConnectionManager();
     }
 }

@@ -5,12 +5,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
-import java.sql.Connection;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import datasource.Druid;
+import datasource.ConnectionManager;
 import org.apache.catalina.Context;
 import org.apache.catalina.Server;
 import org.apache.catalina.Service;
@@ -160,7 +159,7 @@ public class Tomcat8 {
 	    } 
 
 	    private static void initDatabaseConnectionPool() {
-			Druid.getConnection();
+			ConnectionManager.getConnection();
 		}
 
 }
