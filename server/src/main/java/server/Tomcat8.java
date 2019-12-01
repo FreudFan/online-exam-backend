@@ -167,7 +167,8 @@ public class Tomcat8 {
 	    } 
 
 	    private static void initDatabaseConnectionPool() {
-			ConnectionManager.getConnection();
+			java.sql.Connection connection = ConnectionManager.getConnection();
+			ConnectionManager.closeAll(connection,null,null);
 		}
 
 }
