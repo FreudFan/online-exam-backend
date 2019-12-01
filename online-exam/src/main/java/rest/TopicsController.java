@@ -1,6 +1,8 @@
 package rest;
 
+import dao.TopticsDao;
 import model.TopicFile;
+import model.Topics;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -98,4 +100,15 @@ public class TopicsController {
         return response;
     }
 
+
+
+
+    @GET
+    @Path("show")
+    @Consumes({ MediaType.MULTIPART_FORM_DATA })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public List topicShow(@Context HttpServletRequest request) throws Exception {
+
+        return new TopticsDao().selectTopicAll();
+    }
 }
