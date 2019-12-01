@@ -3,11 +3,7 @@ package datasource;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 
-import javax.servlet.GenericServlet;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import java.io.IOException;
+import javax.inject.Singleton;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,7 +11,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-public class ConnectionManager extends GenericServlet {
+@Singleton
+public class ConnectionManager {
     private ConnectionManager(){}
 
     private static DruidDataSource dataSource;
@@ -61,8 +58,4 @@ public class ConnectionManager extends GenericServlet {
         }
     }
 
-    @Override
-    public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        new ConnectionManager();
-    }
 }

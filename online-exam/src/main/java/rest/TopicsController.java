@@ -12,6 +12,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.glassfish.jersey.servlet.WebConfig;
 import service.TopticsService;
+import utils.RequestUtils;
 import utils.TimeUtils;
 
 import javax.servlet.ServletContext;
@@ -34,73 +35,33 @@ public class TopicsController {
     @Produces({ MediaType.APPLICATION_JSON })
     public Map topicImport(@Context HttpServletRequest request) throws Exception {
         Map<String,Object> response = new HashMap<>();
-        TopticsService topticsService = new TopticsService();
-        request.setCharacterEncoding("UTF-8");
-        String contentType = request.getContentType();
-        if ((contentType.contains("multipart/form-data"))) {
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-            File f = new File("topics"); //新建保存目录
-            if ( !f.exists() ) {
-                f.mkdir();
-            }
-
-            // 创建一个新的文件上传处理程序
-            ServletFileUpload fileUpload = new ServletFileUpload(factory);
-            fileUpload.setHeaderEncoding("utf-8");
-            List<FileItem> fileItemList = fileUpload.parseRequest(request);
-
-            if ( fileItemList.size() == 0 ) {
-                response.put("status", null);
-                return response;
-            }
-
-            List<TopicFile> fileList = new ArrayList<>(fileItemList.size());
-            for (FileItem fileItem : fileItemList) {
-                //判断是否是普通字段
-                if ( !fileItem.isFormField() )  {
-                    String fileName = fileItem.getName();
-                    if ( fileName != null && !fileName.equals("") ) {
-                        //截取文件名
-                        String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
-                        if ( !fileType.equals("xlsx") ) {
-                            response.put("status", "请上传xlsx格式文件");
-                            return response;
-                        }
-                        //文件名要唯一
-                        fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtils.fileNow();
-//                        fileName = fileName.replace(" ", "_");
-                        //保存在服务器端
-                        String filePath = "topics/" + fileName + "." + fileType;
-
-                        File file = new File(filePath);
-                        try(
-                                InputStream inputStream = fileItem.getInputStream();
-                                FileOutputStream outputStream = new FileOutputStream(file);
-                                ) {
-                            // 流的对拷
-                            byte[] buffer = new byte[1024]; //每次读取1个字节
-                            int len;
-                            // 开始读取上传文件的字节，并将其输出到服务端的撒花姑娘穿文件的输出流中
-                            while ( ( len = inputStream.read(buffer) ) > 0 ) {
-                                outputStream.write(buffer, 0, len);
-                            }
-
-                            TopicFile topicFile = new TopicFile();
-                            topicFile.setFilePath(filePath);
-                            topicFile.setFile(file);
-                            fileList.add(topicFile);
-                        } catch ( Exception e ) {
-                            e.printStackTrace();
-                        } finally {
-                            fileItem.delete();
-                        }
-                    }
-                }
-            }
-            topticsService.readTopicExcel(fileList);
+        List<FileItem> fileItemList = RequestUtils.getFileItemList(request,"xlsx");
+        if ( fileItemList == null || fileItemList.size() == 0 ) {
+            response.put("status", "请上传文件");
+            return response;
         }
 
-        response.put("status", "好的");
+        List<TopicFile> fileList = new ArrayList<>(fileItemList.size());
+        for (FileItem fileItem : fileItemList) {
+            //判断是否是普通字段
+            if ( !fileItem.isFormField() )  {
+                String fileName = fileItem.getName();
+                if ( fileName != null && !fileName.equals("") ) {
+                    //截取文件名
+                    String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+                    if ( !fileType.equals("xlsx") ) {
+                        response.put("status", "请上传xlsx格式文件");
+                        return response;
+                    }
+                    TopicFile topicFile = RequestUtils.saveFile(fileItem,"topics/");//将文件保存至本地
+                    fileList.add(topicFile);
+                }
+            }
+        }
+        TopticsService topticsService = new TopticsService();
+        topticsService.readTopicExcel(fileList);
+
+        response.put("status", "ok");
         return response;
     }
 
