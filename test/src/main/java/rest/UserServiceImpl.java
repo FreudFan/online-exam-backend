@@ -27,7 +27,7 @@ public class UserServiceImpl implements service.UserService {
 	
 	
 	@GET
-    @Path("all")  //访问http://localhost:8888/demo/departs
+    @Path("all")
     @Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Map<String, UserInfo> queryAll() {

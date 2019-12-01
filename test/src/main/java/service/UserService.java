@@ -17,7 +17,7 @@ import entity.UserInfo;
 public interface UserService {
 
 	@GET
-    @Path("all")  //访问http://localhost:8888/demo/rest/demo/users/all
+    @Path("all")  //访问http://localhost:8888/rest/demo/users/all
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, UserInfo> queryAll();
 

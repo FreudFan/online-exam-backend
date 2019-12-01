@@ -27,6 +27,9 @@ public class Tomcat8 {
 	static public ExecutorService fixedThreadPool = Executors.newFixedThreadPool(1);
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	private static Integer PORT = 8888;	//服务端口号
+	private static String CONTEXT_PATH = "";	//服务url根路径 /demo
+
 	    public static void main(String[] args) throws Exception {
 	        File tmpdir=Files.createTempDirectory("tomcat-temp").toFile();	        
 	        //tmpdir=new File("./tmp");
@@ -42,7 +45,7 @@ public class Tomcat8 {
 
 	        
 	        Connector connector = tomcat.getConnector();
-	        connector.setPort(8888);
+	        connector.setPort(PORT);
 	        connector.setMaxPostSize(1024*5);
 	        connector.setEnableLookups(false);
 	        connector.setAllowTrace(false);
@@ -53,8 +56,8 @@ public class Tomcat8 {
 	        //connector.setAttribute(name, value);
 
 	        File appdir=new File("webapp");//一定要绝对路径，不然无法启动
-	        String context_path="/demo";
-	        Context context =tomcat.addWebapp(context_path, appdir.getAbsolutePath());
+//	        String context_path="/";
+	        Context context =tomcat.addWebapp(CONTEXT_PATH, appdir.getAbsolutePath());
 
 	        StandardContext ctx=(StandardContext )context;
 	        WebResourceRoot resources = new StandardRoot(ctx);
@@ -82,6 +85,7 @@ public class Tomcat8 {
 	        System.out.println("started tomcat at port="+connector.getPort()+" , for webapp ["+context.getName()+"]");
 
 	        System.out.println("tomcat workdir="+tmpdir.toString());
+	        System.out.println("tomcat workurl= " + "http://localhost:" + PORT + CONTEXT_PATH);
 
 	        server.await();
 	    }
