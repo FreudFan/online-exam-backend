@@ -6,7 +6,8 @@ subprojects {
     group 'edu.sandau'
     version '1.0-SNAPSHOT'
 
-    sourceCompatibility = 1.8
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 
     def rxJava = "2.2.15"
 
@@ -54,7 +55,6 @@ subprojects {
         compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.29'
 //        log4j2 异步依赖
         compile group: 'com.lmax', name: 'disruptor', version: '3.4.2'
-
 
     }
 
