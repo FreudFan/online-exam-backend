@@ -45,6 +45,17 @@ subprojects {
         compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.1'
         compile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
 
+//        log4j2
+        compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
+        compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.12.1'
+        compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.12.1'
+//        slf4j
+        compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.29'
+        compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.29'
+//        log4j2 异步依赖
+        compile group: 'com.lmax', name: 'disruptor', version: '3.4.2'
+
+
     }
 
 }

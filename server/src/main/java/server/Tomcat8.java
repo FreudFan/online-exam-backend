@@ -20,9 +20,12 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.valves.AccessLogValve;
 import org.apache.catalina.webresources.StandardRoot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Tomcat8 {
 	static public ExecutorService fixedThreadPool = Executors.newFixedThreadPool(1);
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	    public static void main(String[] args) throws Exception {
 	        File tmpdir=Files.createTempDirectory("tomcat-temp").toFile();	        
@@ -30,7 +33,7 @@ public class Tomcat8 {
 	        Tomcat tomcat = new Tomcat();        
 	        //tomcat.setBaseDir(new File("./tmp").getAbsolutePath());
 	        tomcat.setBaseDir(tmpdir.getAbsolutePath());
-	        
+
 	        Server server = tomcat.getServer();
 	        
 			// server.setPort(8080);
@@ -44,7 +47,7 @@ public class Tomcat8 {
 	        connector.setEnableLookups(false);
 	        connector.setAllowTrace(false);
 	        connector.setURIEncoding("UTF-8");
-	        
+
 
 
 	        //connector.setAttribute(name, value);
@@ -75,9 +78,9 @@ public class Tomcat8 {
 //	        Valve[] vs=service.getContainer().getPipeline().getValves();
 //	        System.out.println(vs);
 	        server.start();
-	        
+
 	        System.out.println("started tomcat at port="+connector.getPort()+" , for webapp ["+context.getName()+"]");
-	        
+
 	        System.out.println("tomcat workdir="+tmpdir.toString());
 
 	        server.await();
@@ -144,8 +147,8 @@ public class Tomcat8 {
 	            Method method = objc.getMethod(getter, new Class[] {});    
 	            return method.getReturnType();
 	        } catch (Throwable e) {    
-	            //log.error(e.getMessage(),e);  
-	               
+	            //log.error(e.getMessage(),e);
+
 	        }    
 	        
 	 		try{
