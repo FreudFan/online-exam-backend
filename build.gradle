@@ -41,9 +41,9 @@ subprojects {
         implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.62'
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
         implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
-        compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
-        compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.1'
-        compile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+        implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+        implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.1'
+        implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
 
 //        log4j2
         compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'

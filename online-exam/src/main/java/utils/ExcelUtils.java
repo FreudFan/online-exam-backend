@@ -71,7 +71,7 @@ public class ExcelUtils {
                 continue;
             }
             List<Object> valueLinked = new LinkedList<>();
-            for (int j = row.getFirstCellNum(); j <= titleLinked.size(); j++) {
+            for (int j = row.getFirstCellNum(); j < titleLinked.size(); j++) {
                 Object value = getValue(row, j);
                 if ( value == null ) {
                     value = "";
