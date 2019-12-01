@@ -49,6 +49,11 @@ public class TopicsController {
             fileUpload.setHeaderEncoding("utf-8");
             List<FileItem> fileItemList = fileUpload.parseRequest(request);
 
+            if ( fileItemList.size() == 0 ) {
+                response.put("status", null);
+                return response;
+            }
+
             List<TopicFile> fileList = new ArrayList<>(fileItemList.size());
             for (FileItem fileItem : fileItemList) {
                 //判断是否是普通字段
@@ -94,7 +99,6 @@ public class TopicsController {
             }
             topticsService.readTopicExcel(fileList);
         }
-
 
         response.put("status", "好的");
         return response;
