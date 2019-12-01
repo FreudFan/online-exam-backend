@@ -31,6 +31,7 @@ public class TopicsController {
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
     @Produces({ MediaType.APPLICATION_JSON })
     public Map topicImport(@Context HttpServletRequest request) throws Exception {
+        Map<String,Object> response = new HashMap<>();
         TopticsService topticsService = new TopticsService();
         request.setCharacterEncoding("UTF-8");
         String contentType = request.getContentType();
@@ -54,6 +55,10 @@ public class TopicsController {
                     if ( fileName != null && !fileName.equals("") ) {
                         //截取文件名
                         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+                        if ( !fileType.equals("xlsx") ) {
+                            response.put("status", "请上传xlsx格式文件");
+                            return response;
+                        }
                         //文件名要唯一
                         fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtils.fileNow();
 //                        fileName = fileName.replace(" ", "_");
@@ -88,9 +93,9 @@ public class TopicsController {
             topticsService.readTopicExcel(fileList);
         }
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("status", "测试中文123abc");
-        return map;
+
+        response.put("status", "好的");
+        return response;
     }
 
 }
