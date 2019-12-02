@@ -1,5 +1,6 @@
 package service;
 
+import dao.TopticsDao;
 import model.TopicFile;
 import utils.ExcelUtils;
 
@@ -17,6 +18,8 @@ public class TopticsService {
         for ( TopicFile topicFile: topicFiles ) {
             File file = topicFile.getFile();
             List<List<Object>> listList = ExcelUtils.readExcel(file);
+            new TopticsDao().insetForExcel(listList);
+
         }
 
     }
