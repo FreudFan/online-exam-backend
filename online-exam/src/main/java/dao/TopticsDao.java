@@ -36,41 +36,32 @@ public class TopticsDao {
             PreparedStatement stmt = connection.prepareStatement(sbForOptions.toString());
             ResultSet rs ;
             PreparedStatement ps = connection.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
+            int chooseCount = getChooseCount(excelList.get(0));
             for (int i = 1; i < excelList.size(); i++) {
                 String description = String.valueOf(excelList.get(i).get(0));
-                String correctKey = String.valueOf(excelList.get(i).get(6));
-                Double topicMark = (Double) excelList.get(i).get(7);
-                String analysis = String.valueOf(excelList.get(i).get(8));
+                String correctKey = String.valueOf(excelList.get(i).get(chooseCount + 1));
+                String mark = excelList.get(i).get(chooseCount + 2).toString();
+                Double topicMark = null;
+                if(!StringUtils.isEmpty(mark)){
+                    topicMark = Double.valueOf(excelList.get(i).get(chooseCount + 2).toString());
+                }
+                String analysis = String.valueOf(excelList.get(i).get(chooseCount + 3));
                 ps.setString(1, description);
                 ps.setString(2, correctKey);
-                ps.setDouble(3, topicMark);
+                if(topicMark == null) {
+                    ps.setString(3,null);
+                }else{
+                    ps.setDouble(3, topicMark);
+                }
                 ps.setString(4, analysis);
                 ps.executeUpdate();
                 rs =  ps.getGeneratedKeys();
                 rs.next();
                 int id = rs.getInt(1);
-                for (int j = 1; j < 6; j++) {
-                    String option = "";
-                    switch (j) {
-                        case 1:
-                            option = "A";
-                            break;
-                        case 2:
-                            option = "B";
-                            break;
-                        case 3:
-                            option = "C";
-                            break;
-                        case 4:
-                            option = "D";
-                            break;
-                        case 5:
-                            option = "E";
-                            break;
-                    }
+                for (int j = 1; j <= chooseCount ; j++) {
                     if (excelList.get(i).get(j) != "") {
                         stmt.setInt(1, id);
-                        stmt.setString(2, option);
+                        stmt.setString(2,  String.valueOf((char)('A' + j - 1)));
                         stmt.setString(3, String.valueOf(excelList.get(i).get(j)));
                         stmt.addBatch();
                     }
@@ -83,5 +74,16 @@ public class TopticsDao {
         }
 
        return flag;
+    }
+
+    public static int getChooseCount( List<Object> titleList)  {
+        int title = 0;
+        for (int i = 1; i < titleList.size(); i++) {
+            if(!titleList.get(i).toString().contains("选项")){
+                title = i-1;
+                break;
+            }
+        }
+        return title;
     }
 }

@@ -64,17 +64,4 @@ public class JDBCUtils {
         return null;
     }
 
-    public static int getId (String sql,String description,String correctKey,double topicMark,String analysis)throws SQLException {
-        Connection conn = ConnectionManager.getConnection();
-        PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        ps.setString(1, description);
-        ps.setString(2, correctKey);
-        ps.setDouble(3, topicMark);
-        ps.setString(4, analysis);
-        ps.executeUpdate();
-        ResultSet rs = ps.getGeneratedKeys();
-        rs.next();
-        int id = rs.getInt(1);
-        return id;
-    }
 }
