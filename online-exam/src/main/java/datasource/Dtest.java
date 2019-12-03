@@ -4,23 +4,26 @@ import com.alibaba.fastjson.JSONObject;
 import model.Topics;
 import org.apache.commons.collections4.MapUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.List;
 import java.util.Map;
 
 public class Dtest {
-    public static void main ( String[] args ) throws SQLException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+    public static void main ( String[] args ) throws SQLException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException, InvocationTargetException, InstantiationException {
 //        testSQLExcute();
 //        testSQLUtil();
 //        compareSpeed();
         insertOrUpdate();
     }
 
-    private static void insertOrUpdate() throws NoSuchFieldException, IllegalAccessException {
+    private static void insertOrUpdate() throws NoSuchFieldException, IllegalAccessException, SQLException, InvocationTargetException, InstantiationException {
         Topics topics = new Topics();
         topics.setSubject_id(11165186);
         topics.setTopics_id(12);
-        JDBCUtils.insertOrUpdate(topics);
+//        JDBCUtils.insertOrUpdate(topics);
+        List<Topics> topicsList = JDBCUtils.get(Topics.class, 0 ,5);
+        topicsList.size();
     }
 
     private static void testSQLExcute() throws SQLException {

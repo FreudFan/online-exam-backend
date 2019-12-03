@@ -3,6 +3,7 @@ package datasource;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,18 +66,65 @@ public class JDBCUtils {
         return null;
     }
 
-    public static int getId (String sql,String description,String correctKey,double topicMark,String analysis)throws SQLException {
-        Connection conn = ConnectionManager.getConnection();
-        PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        ps.setString(1, description);
-        ps.setString(2, correctKey);
-        ps.setDouble(3, topicMark);
-        ps.setString(4, analysis);
-        ps.executeUpdate();
-        ResultSet rs = ps.getGeneratedKeys();
-        rs.next();
-        int id = rs.getInt(1);
-        return id;
+    /***
+     * 分页查询实体集合
+     * 当 start 和 end 为 null 或不合规时会查询全部内容
+     * @param clazz 实体类.class
+     * @param start 分页 开始序号
+     * @param end   分页 结束序号
+     * @return
+     */
+    public static List get( Class clazz, Integer start, Integer end ) {
+        String clazzName = clazz.getSimpleName().toLowerCase();
+        String SQL = " SELECT * FROM " + clazzName + " ORDER BY ? ASC " ;
+        boolean flag = false;
+        if ( start != null && end != null && start >= 0 && end >= start ) {
+            SQL = SQL + " LIMIT ?, ? ";
+            flag = true;
+        }
+        List<Object> objects = new ArrayList<Object>();
+        try(
+                Connection connection = ConnectionManager.getConnection();
+                PreparedStatement statement = connection.prepareStatement(SQL);
+        ) {
+            statement.setString(1, clazzName+"_id");    //order by key
+            if ( flag ) {
+                statement.setInt(2, start);
+                statement.setInt(3, end);
+            }
+            ResultSet resultSet = statement.executeQuery();
+            String[] colNames = getColNames(resultSet);
+            Method[] methods = clazz.getMethods();
+
+            while ( resultSet.next() ) {
+                Object object = clazz.newInstance();
+                for (String colName : colNames) {
+                    //获取set方法的方法名
+                    String methodName = colName.substring(0,1).toUpperCase() + colName.substring(1);
+                    methodName = "set" + methodName;
+                    for (Method method : methods) {
+                        if (methodName.endsWith(method.getName())) {
+                            method.invoke(object, resultSet.getObject(colName));
+                            break;
+                        }
+                    }
+                }
+                objects.add(object);
+            }
+        } catch ( Exception e ) {
+            e.printStackTrace();
+            return null;
+        }
+        return objects;
+    }
+
+    /***
+     * 通过实体类查询，返回List<Object>
+     * @param clazz 类名.class
+     * @return
+     */
+    public static List get( Class clazz ) {
+        return get(clazz, null, null);
     }
 
     /***
@@ -107,6 +155,24 @@ public class JDBCUtils {
         }
 
         return null;
+    }
+
+    /***
+     * 获取ResultSet查询结果的列名
+     * @param rs
+     * @return
+     * @throws SQLException
+     */
+    private static String[] getColNames(ResultSet rs) throws SQLException {
+        ResultSetMetaData metaData = rs.getMetaData();
+        //获取查询的列数
+        int count = metaData.getColumnCount();
+        String[] colNames = new String[count];
+        for(int i = 1; i <= count; i ++) {
+            //获取查询类的别名
+            colNames[i - 1] = metaData.getColumnLabel(i);
+        }
+        return colNames;
     }
 
 }
