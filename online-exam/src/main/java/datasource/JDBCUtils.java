@@ -50,7 +50,7 @@ public class JDBCUtils {
 
                 while ( resultSet.next() ) {
                     Map<String, Object> resultMap = new HashMap<>(numberOfColumns);
-                    for ( int i = 1; i < numberOfColumns; i++ ) {
+                    for ( int i = 1; i <= numberOfColumns; i++ ) {
                         resultMap.put(metaData.getColumnName(i), resultSet.getObject(i));
                     }
                     resultList.add(resultMap);

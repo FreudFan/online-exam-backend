@@ -73,7 +73,37 @@ public class TopicsController {
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
     @Produces({ MediaType.APPLICATION_JSON })
     public List topicShow(@Context HttpServletRequest request) throws Exception {
+        List<Map<String, Object>> topicsList = new TopticsDao().selectTopicAll();
+        List<Map<String, Object>> showList = new ArrayList<>();
+        Map<String, Object> showMap = null;
+        int count ;
+        if(!topicsList.isEmpty()){
+            for (int i = 0; i < topicsList.size(); i+=count) {
+                count = 1;
+                Map<String, Object> tempMap = new HashMap<>();
+                tempMap = topicsList.get(i);
+                String option = tempMap.get("option").toString();
+                String value = tempMap.get("value").toString();
+                showMap = new LinkedHashMap<>();
+                showMap.put("topics_id", tempMap.get("topics_id"));
+                showMap.put("description", tempMap.get("description"));
+                showMap.put("correctkey", tempMap.get("correctkey"));
+                showMap.put("topicmark", tempMap.get("topicmark"));
+                showMap.put("analysis", tempMap.get("analysis"));
+                showMap.put(option,value);
+                for (int j = i + 1; j < topicsList.size(); j++) {
 
-        return new TopticsDao().selectTopicAll();
+                    if(!topicsList.get(j).get("topics_id").toString().equals(topicsList.get(i).get("topics_id").toString()))
+                    {
+                       break;
+                    }
+                    showMap.put(topicsList.get(j).get("option").toString(),topicsList.get(j).get("value").toString());
+                    count ++ ;
+                }
+                showList.add(showMap);
+
+            }
+        }
+        return showList;
     }
 }

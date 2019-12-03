@@ -7,7 +7,6 @@ import java.io.Serializable;
 @Data
 public class Topics implements Serializable {
     private Integer topics_id;
-    private Integer options_id;
     private Integer type;
     private Integer difficult;
     private String description;
