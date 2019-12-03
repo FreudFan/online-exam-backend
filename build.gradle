@@ -2,12 +2,42 @@ subprojects {
 
     apply plugin: 'java'
     apply plugin: 'idea'
+    apply plugin: 'application'
 
     group 'edu.sandau'
     version '1.0-SNAPSHOT'
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
+
+    jar {
+        from {
+            //添加依懒到打包文件
+            //configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+            configurations.runtime.collect{zipTree(it)}
+        }
+        manifest {
+            attributes 'Main-Class': 'server.Tomcat8'
+        }
+    }
+
+
+    /*
+    jar {
+        //指定生成的jar名
+        baseName 'online-exam'
+        version = '0.0.1'
+        manifest {
+            attributes 'Main-Class': 'server.Tomcat8'
+        }
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+        into('assets') {
+            from 'assets'
+        }
+    }
+    */
 
     def rxJava = "2.2.15"
 
@@ -33,7 +63,9 @@ subprojects {
 
         implementation "io.reactivex.rxjava2:rxjava:$rxJava"
         implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
-        implementation fileTree(dir: 'libctp', include: ['*.jar'])
+        implementation 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+        implementation 'io.github.openfeign:feign-jaxrs2:9.7.0'
+        implementation 'io.github.openfeign:feign-gson:9.7.0'
 
         testCompile group: 'junit', name: 'junit', version: '4.12'
 
@@ -44,7 +76,9 @@ subprojects {
         implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
         implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.1'
+
         implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+        annotationProcessor "org.projectlombok:lombok:1.18.10"
 
 //        log4j2
         compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
