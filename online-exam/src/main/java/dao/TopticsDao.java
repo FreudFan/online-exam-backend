@@ -71,7 +71,6 @@ public class TopticsDao {
             flag = false;
             e.printStackTrace();
         }
-
        return flag;
     }
 
