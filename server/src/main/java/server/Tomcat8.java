@@ -29,6 +29,9 @@ public class Tomcat8 {
 
 	private static Integer PORT = 8888;	//服务端口号
 	private static String CONTEXT_PATH = "";	//服务url根路径 /demo
+	private static String PROJECT_PATH = System.getProperty("user.dir");// 工程物理的绝对路径
+	private static String WEB_APP_PATH = PROJECT_PATH + File.separatorChar
+			+ "server/src/main/resources/webapp";
 
 	    public static void main(String[] args) throws Exception {
 	        File tmpdir=Files.createTempDirectory("tomcat-temp").toFile();	        
@@ -55,9 +58,9 @@ public class Tomcat8 {
 
 	        //connector.setAttribute(name, value);
 
-	        File appdir=new File("webapp");//一定要绝对路径，不然无法启动
+//	        File appdir=new File("webapp");//一定要绝对路径，不然无法启动
 //	        String context_path="/";
-	        Context context =tomcat.addWebapp(CONTEXT_PATH, appdir.getAbsolutePath());
+	        Context context =tomcat.addWebapp(CONTEXT_PATH, WEB_APP_PATH);
 
 	        StandardContext ctx=(StandardContext )context;
 	        WebResourceRoot resources = new StandardRoot(ctx);
