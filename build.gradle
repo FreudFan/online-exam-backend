@@ -61,14 +61,14 @@ subprojects {
     }
 
     dependencies {
-        implementation 'org.glassfish.jersey.containers:jersey-container-servlet:2.28'
-        implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.28'
-        compile group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.28'
-        implementation 'org.glassfish.jersey.inject:jersey-hk2:2.28'
+        implementation group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.29.1'
+        implementation 'org.glassfish.jersey.containers:jersey-container-servlet:2.29.1'
+        implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.29.1'
+        implementation 'org.glassfish.jersey.inject:jersey-hk2:2.29.1'
         implementation 'net.sourceforge.javacsv:javacsv:2.0'
 
-        implementation 'org.apache.tomcat.embed:tomcat-embed-core:8.5.49'
-        implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.49'
+        implementation 'org.apache.tomcat.embed:tomcat-embed-core:9.0.29'
+        implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.29'
         implementation 'com.google.code.gson:gson:2.8.6'
 
         implementation "io.reactivex.rxjava2:rxjava:$rxJava"

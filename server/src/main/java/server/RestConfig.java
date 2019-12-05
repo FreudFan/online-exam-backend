@@ -14,7 +14,6 @@ import javax.ws.rs.ext.ReaderInterceptorContext;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 
@@ -33,9 +32,6 @@ public class RestConfig extends ResourceConfig {
     	System.out.println("in packages="+packages);
     	this.packages(packages);
     	// can add thread following
-
-		//注册MultiPartFeature.class
-		register(MultiPartFeature.class);
     	
     	//if(use_gzip){
       	    //this.register(GzipInterceptor.class); //支持压缩
