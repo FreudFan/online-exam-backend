@@ -1,15 +1,13 @@
 package datasource;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.ContextLoaderListener;
 
-import javax.annotation.sql.DataSourceDefinition;
 import javax.servlet.ServletContextEvent;
+import javax.sql.DataSource;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -19,12 +17,12 @@ import java.util.Properties;
 
 @Scope("singleton")
 public class ConnectionManager extends ContextLoaderListener {
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final static Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
 
-    private static DruidDataSource dataSource;
+    private static DataSource dataSource;
 
     //1.初始化Druid连接池
-    private void init() {
+    private static void init() {
         //第二种方式:使用软编码通过配置文件初始化DBCP
         try {
             Properties properties = new Properties();
@@ -33,7 +31,7 @@ public class ConnectionManager extends ContextLoaderListener {
             properties.load(inputStream);
             System.out.println("配置文件：：" + properties.toString());
             if ( dataSource == null ) {
-                dataSource = (DruidDataSource) DruidDataSourceFactory.createDataSource(properties);
+                dataSource = DruidDataSourceFactory.createDataSource(properties);
                 LOGGER.info("配置连接池成功...");
             }
         } catch (Exception e) {
@@ -44,11 +42,17 @@ public class ConnectionManager extends ContextLoaderListener {
     //2.获取连接
     public synchronized static Connection getConnection() {
         try {
+            if ( dataSource == null ) init();
             return dataSource.getConnection();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public synchronized static DataSource getDataSource() {
+        if ( dataSource == null ) init();
+        return dataSource;
     }
 
     //3.关闭连接
@@ -71,7 +75,7 @@ public class ConnectionManager extends ContextLoaderListener {
     @Override
     public void contextInitialized(ServletContextEvent event){
         LOGGER.info("启动连接池...");
-        this.init();
+        init();
         closeAll(getConnection(), null, null);
     }
 

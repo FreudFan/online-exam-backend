@@ -7,10 +7,10 @@
          
     <servlet>
         <servlet-name>server.RestConfig</servlet-name>
-        <!--<init-param>-->
-            <!--<param-name>com.sun.jersey.config.property.packages</param-name>-->
-            <!--<param-value>rest</param-value>-->
-        <!--</init-param>-->
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>rest</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
  
@@ -23,6 +23,9 @@
         <listener-class>
             org.springframework.web.context.ContextLoaderListener
         </listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
 
     <listener>

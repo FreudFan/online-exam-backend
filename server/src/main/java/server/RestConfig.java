@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.util.Properties;
 import java.util.zip.GZIPOutputStream;
 
-import javax.servlet.annotation.WebServlet;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.ReaderInterceptor;

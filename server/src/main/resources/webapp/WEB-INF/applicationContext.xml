@@ -4,7 +4,9 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!--<context:annotation-config/>-->
+    <!--<context:component-scan base-package="dao"/>-->
+    <!--<context:component-scan base-package="rest"/>-->
+    <!--<context:component-scan base-package="service"/>-->
 
     <context:property-placeholder location="classpath:druid.properties"/>
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
