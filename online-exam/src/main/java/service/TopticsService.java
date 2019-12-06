@@ -28,4 +28,16 @@ public class TopticsService {
         return topicList;
     }
 
+
+    public static int getChooseCount( List<Object> titleList)  {
+        int title = 0;
+        for (int i = 1; i < titleList.size(); i++) {
+            if(!titleList.get(i).toString().contains("选项")){
+                title = i-1;
+                break;
+            }
+        }
+        return title;
+    }
+
 }
