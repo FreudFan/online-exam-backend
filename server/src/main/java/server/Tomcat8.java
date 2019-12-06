@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 public class Tomcat8 {
 	static public ExecutorService fixedThreadPool = Executors.newFixedThreadPool(1);
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final static Logger LOGGER = LoggerFactory.getLogger(Tomcat8.class);
 
 	private static Integer PORT = 8888;	//服务端口号
 	private static String CONTEXT_PATH = "";	//服务url根路径 /demo
@@ -79,16 +79,16 @@ public class Tomcat8 {
 	        Valve log=loadAccessLog();
 	        service.getContainer().getPipeline().addValve(log);
 
-			initDatabaseConnectionPool();	//初始化连接池
+//			initDatabaseConnectionPool();	//初始化连接池
 
 //	        Valve[] vs=service.getContainer().getPipeline().getValves();
 //	        System.out.println(vs);
 	        server.start();
 
-	        System.out.println("started tomcat at port="+connector.getPort()+" , for webapp ["+context.getName()+"]");
+			LOGGER.info("started tomcat at port="+connector.getPort()+" , for webapp ["+context.getName()+"]");
 
-	        System.out.println("tomcat workdir="+tmpdir.toString());
-	        System.out.println("tomcat workurl= " + "http://localhost:" + PORT + CONTEXT_PATH);
+			LOGGER.info("tomcat workdir="+tmpdir.toString());
+			LOGGER.info("tomcat workurl= " + "http://localhost:" + PORT + CONTEXT_PATH);
 
 	        server.await();
 	    }
@@ -99,7 +99,7 @@ public class Tomcat8 {
 	    	String fileName=path+"/"+"accesslog.prop";
 	    	
 	    	AccessLogValve log= new org.apache.catalina.valves.AccessLogValve();
-	    	
+
 	    	Properties p=new Properties();
 	    	try {
 				p.load(log.getClass().getClassLoader().getResourceAsStream(fileName));
@@ -141,7 +141,7 @@ public class Tomcat8 {
 	 		     
 	 		}catch(Throwable t)
 	 		{
-	 			System.out.println(t.getMessage());
+				LOGGER.error(t.getMessage());
 	 			return false;
 	 		}
 	    }
@@ -163,7 +163,7 @@ public class Tomcat8 {
 	 		     return f.getType();
 	 		}catch(Throwable t)
 	 		{
-	 			//System.out.println(t.getMessage()+" not found type!");
+	 			//LOGGER.error(t.getMessage()+" not found type!");
 	 		}
 	 		
 	 		return null; 

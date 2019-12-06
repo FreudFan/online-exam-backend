@@ -5,6 +5,8 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +19,7 @@ import java.util.Map;
 import static org.apache.poi.ss.usermodel.CellType.STRING;
 
 public class ExcelUtils {
+    private final static Logger LOGGER = LoggerFactory.getLogger(ExcelUtils.class);
     /**
      * 要求excel版本在2007以上
      *
@@ -118,7 +121,7 @@ public class ExcelUtils {
                     value = javaDate.getTime() / 1000;
                 } else {
                     //数值类型返回double类型的数字
-                    //System.out.println(cell.getNumericCellValue()+":格式："+cell.getCellStyle().getDataFormatString());
+//                    LOGGER.info(cell.getNumericCellValue()+":格式："+cell.getCellStyle().getDataFormatString());
                     value = cell.getNumericCellValue();
                 }
                 break;

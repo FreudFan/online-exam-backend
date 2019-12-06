@@ -1,8 +1,11 @@
 package datasource;
 
 import com.alibaba.fastjson.JSONObject;
+import datasource.ConnectionManager;
+import datasource.JDBCUtils;
 import model.Topics;
 import org.apache.commons.collections4.MapUtils;
+import server.Tomcat8;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -10,11 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 public class Dtest {
-    public static void main ( String[] args ) throws SQLException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException, InvocationTargetException, InstantiationException {
-//        testSQLExcute();
+    public static void main ( String[] args ) throws Exception {
+        Tomcat8.main(null);
+        //        testSQLExcute();
 //        testSQLUtil();
 //        compareSpeed();
-        insertOrUpdate();
+//        insertOrUpdate();
     }
 
     private static void insertOrUpdate() throws NoSuchFieldException, IllegalAccessException, SQLException, InvocationTargetException, InstantiationException {

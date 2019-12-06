@@ -3,12 +3,14 @@ package dao;
 import datasource.ConnectionManager;
 import datasource.JDBCUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class TopticsDao {
 
     public List selectTopicAll() throws Exception {

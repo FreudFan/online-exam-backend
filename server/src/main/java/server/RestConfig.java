@@ -15,9 +15,13 @@ import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
 import org.glassfish.jersey.server.ResourceConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class RestConfig extends ResourceConfig {
+	private final static Logger LOGGER = LoggerFactory.getLogger(RestConfig.class);
+
     public RestConfig()
     {
     	super();
@@ -26,10 +30,10 @@ public class RestConfig extends ResourceConfig {
     
     public void init()
     {
-    	System.out.print("load restful services......");
+		LOGGER.info("load restful services......");
     	String packages="sd.order.rest";
     	packages=this.loadPackages();
-    	System.out.println("in packages="+packages);
+		LOGGER.info("in packages="+packages);
     	this.packages(packages);
     	// can add thread following
     	
@@ -37,8 +41,6 @@ public class RestConfig extends ResourceConfig {
       	    //this.register(GzipInterceptor.class); //支持压缩
       	    this.register(TestReaderIntercetor.class);
       	//}
-
-      	    
     	
     }
     
@@ -52,7 +54,7 @@ public class RestConfig extends ResourceConfig {
 				p.load(is);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				System.out.println("无法加载restconfig.properties文件。。。。。。");
+				LOGGER.error("无法加载restconfig.properties文件。。。。。。");
 				e.printStackTrace();
 			}
     		String ret=p.getProperty("service_packages","sd.order.rest");
@@ -81,7 +83,7 @@ public class RestConfig extends ResourceConfig {
             
             gzipStream.close();
             
-            //System.out.println("GZIP拦截器压缩");
+            //LOGGER.info("GZIP拦截器压缩");
         }
     }
     
@@ -93,14 +95,18 @@ public class RestConfig extends ResourceConfig {
 			MultivaluedMap<String, String> headers=context.getHeaders();
 			
 			java.util.Iterator<String>  keys=headers.keySet().iterator();
-			System.out.println("request filter:{");
+//			System.out.println("request filter:{");
+			String log = "request filter:{\n";
 			while(keys.hasNext())
 			{
 				String key =keys.next();
 				String v=headers.getFirst(key);
-				System.out.println("     "+key+"="+v);
+				log += "     " + key + "=" + v + "\n";
+//				System.out.println("     "+key+"="+v);
 			}
-			System.out.println("}");
+			log += "}";
+//			System.out.println("}");
+			LOGGER.info(log);
 			return context.proceed();
 		}
     	
