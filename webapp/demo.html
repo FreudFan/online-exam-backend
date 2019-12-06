@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>测试上传文件页面</title>
+</head>
+<body>
+    <form action="http://localhost:8888/rest/topic/import" method="POST" name="file" enctype="multipart/form-data">
+    <label for="">请选择要上传的文件:</label>
+    <input type="file" name="file"><br>
+    <button type="submit">提交</button>
+    </form>
+    <form action="http://localhost:8888/rest/topic/show" method="get" name="file" enctype="multipart/form-data">
+        <button type="submit">查看题目</button>
+    </form>
+</body>
+</html>

@@ -59,20 +59,18 @@ public class TopicsController {
             }
         }
         TopticsService topticsService = new TopticsService();
-        topticsService.readTopicExcel(fileList);
+        List topicList = topticsService.readTopicExcel(fileList);
 
-        response.put("status", "ok");
+        response.put("topics", topicList);
         return response;
     }
 
 
-
-
     @GET
     @Path("show")
-    @Consumes({ MediaType.MULTIPART_FORM_DATA })
+    @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public List topicShow(@Context HttpServletRequest request) throws Exception {
+    public List topicShow() throws Exception {
         List<Map<String, Object>> topicsList = new TopticsDao().selectTopicAll();
         List<Map<String, Object>> showList = new ArrayList<>();
         Map<String, Object> showMap = null;

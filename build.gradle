@@ -1,3 +1,33 @@
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
+    }
+}
+
+// Output to build/libs/shadow.jar
+shadowJar {
+    // 生成包的命名规则： baseName-version-classifier.jar
+    baseName = 'online-exam'
+    manifest {
+        attributes("Main-Class": "server.Tomcat8")
+    }
+    from("src/main/java") {
+        include 'META-INF/**'
+        include 'resources/**'
+        include 'build.gradle'
+    }
+    // 打包时排除指定的 jar 包
+    dependencies {
+    }
+}
+
+
 subprojects {
 
     apply plugin: 'java'
@@ -21,24 +51,6 @@ subprojects {
         }
     }
 
-
-    /*
-    jar {
-        //指定生成的jar名
-        baseName 'online-exam'
-        version = '0.0.1'
-        manifest {
-            attributes 'Main-Class': 'server.Tomcat8'
-        }
-        from {
-            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-        }
-        into('assets') {
-            from 'assets'
-        }
-    }
-    */
-
     def rxJava = "2.2.15"
 
     repositories {
@@ -49,8 +61,6 @@ subprojects {
     }
 
     dependencies {
-//        implementation 'com.google.guava:guava:28.1'
-
         implementation 'org.glassfish.jersey.containers:jersey-container-servlet:2.28'
         implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.28'
         compile group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.28'

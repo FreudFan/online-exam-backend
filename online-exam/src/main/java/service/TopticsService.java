@@ -5,6 +5,7 @@ import model.TopicFile;
 import utils.ExcelUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TopticsService {
@@ -14,14 +15,17 @@ public class TopticsService {
      * @param topicFiles
      * @throws Exception
      */
-    public void readTopicExcel( List<TopicFile> topicFiles ) throws Exception {
+    public List readTopicExcel( List<TopicFile> topicFiles ) throws Exception {
+        List<List<List<Object>>> topicList = new ArrayList<>();
         for ( TopicFile topicFile: topicFiles ) {
             File file = topicFile.getFile();
             List<List<Object>> listList = ExcelUtils.readExcel(file);
-            new TopticsDao().insetForExcel(listList);
-
+            TopticsDao topticsDao = new TopticsDao();
+            if ( topticsDao.insetForExcel(listList) ) {
+                topicList.add(listList);
+            }
         }
-
+        return topicList;
     }
 
 
