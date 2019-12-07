@@ -14,11 +14,10 @@ import java.util.Map;
 
 public class Dtest {
     public static void main ( String[] args ) throws Exception {
-        Tomcat8.main(null);
         //        testSQLExcute();
 //        testSQLUtil();
 //        compareSpeed();
-//        insertOrUpdate();
+        insertOrUpdate();
     }
 
     private static void insertOrUpdate() throws NoSuchFieldException, IllegalAccessException, SQLException, InvocationTargetException, InstantiationException {

@@ -1,6 +1,8 @@
 package datasource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -11,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 public class JDBCUtils {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /***
      * 查询返回 ResultSet
@@ -76,7 +81,8 @@ public class JDBCUtils {
      */
     public static List get( Class clazz, Integer start, Integer end ) {
         String clazzName = clazz.getSimpleName().toLowerCase();
-        String SQL = " SELECT * FROM " + clazzName + " ORDER BY ? ASC " ;
+        String tableName = getTableName(clazz);
+        String SQL = " SELECT * FROM " + tableName + " ORDER BY ? ASC " ;
         boolean flag = false;
         if ( start != null && end != null && start >= 0 && end >= start ) {
             SQL = SQL + " LIMIT ?, ? ";
@@ -135,6 +141,7 @@ public class JDBCUtils {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
+    @Deprecated
     public static Integer insertOrUpdate( Object object ) throws NoSuchFieldException, IllegalAccessException {
         Class clazz = object.getClass();
         String clazzName = clazz.getName(); //类名
@@ -153,7 +160,6 @@ public class JDBCUtils {
                 }
             }
         }
-
         return null;
     }
 
@@ -195,6 +201,26 @@ public class JDBCUtils {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    /***
+     * 通过变量 TABLE_NAME 获得数据库表名
+     * @param clazz
+     * @return
+     */
+    private static String getTableName(Class clazz) {
+        String clazzName = null;
+        try {
+            Object obj = clazz.newInstance();
+            Field field = clazz.getDeclaredField("TABLE_NAME");
+            field.setAccessible(true);
+            clazzName = field.get(obj).toString();
+        } catch (NoSuchFieldException e) {
+            return null;
+        } catch (IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+        }
+        return clazzName;
     }
 
 }
