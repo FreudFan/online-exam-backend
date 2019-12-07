@@ -1,7 +1,11 @@
 package rest;
 
+import com.alibaba.fastjson.JSONArray;
+import com.graphbuilder.struc.LinkedList;
 import dao.TopticsDao;
 import model.TopicFile;
+import model.Topics;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.fileupload.FileItem;
 import service.TopticsService;
 import utils.RequestUtils;
@@ -10,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import java.util.*;
 
 /***
@@ -92,5 +97,39 @@ public class TopicsController {
             }
         }
         return showList;
+    }
+
+
+    @POST
+    @Path("delete")
+    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public  String topicDelete(MultivaluedMap topicsMap) {
+//        String[] idArrays = topicsMap.get("topics_id").substring(1, topicsMap.get("topics_id").length() - 1).split(",");
+        List topicsList = (List)topicsMap.get("topics_id");
+        String id = (String)topicsList.get(0);
+        String[] idArrays = id.split(",");
+        int count = TopticsService.topicsDeleteService("topics_id",idArrays);
+        if(count > 0){
+            return "success";
+        }else{
+            return "fail";
+        }
+    }
+
+
+
+    @POST
+    @Path("deleteJSON")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public  String topicDelete_JSON( Map<String,String> topicsMap)  {
+        String[] idArrays = topicsMap.get("topics_id").substring(1,topicsMap.get("topics_id").length()-1).split(",");
+        int count = TopticsService.topicsDeleteService("topics_id",idArrays);
+        if(count > 0){
+            return "success";
+        }else{
+            return "fail";
+        }
     }
 }
