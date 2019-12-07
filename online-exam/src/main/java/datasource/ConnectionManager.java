@@ -29,7 +29,7 @@ public class ConnectionManager extends ContextLoaderListener {
             //通过类加载器加载配置文件
             InputStream inputStream = ConnectionManager.class.getClassLoader().getResourceAsStream("druid.properties");
             properties.load(inputStream);
-            System.out.println("配置文件：：" + properties.toString());
+            LOGGER.info("配置文件：" + properties.toString());
             if ( dataSource == null ) {
                 dataSource = DruidDataSourceFactory.createDataSource(properties);
                 LOGGER.info("配置连接池成功...");

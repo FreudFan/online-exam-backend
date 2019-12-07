@@ -4,29 +4,38 @@
  
     <!-- Servlet declaration can be omitted in which case
          it would be automatically added by Jersey  -->
-         
+
+    <!--<listener>-->
+        <!--<listener-class>-->
+            <!--org.springframework.web.context.ContextLoaderListener-->
+        <!--</listener-class>-->
+    <!--</listener>-->
+
+    <!--<servlet>-->
+        <!--<servlet-name>server.RestConfig</servlet-name>-->
+        <!--<load-on-startup>1</load-on-startup>-->
+    <!--</servlet>-->
+ <!---->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>server.RestConfig</servlet-name>-->
+        <!--<url-pattern>/rest/*</url-pattern>-->
+    <!--</servlet-mapping>-->
+
     <servlet>
-        <servlet-name>server.RestConfig</servlet-name>
+        <servlet-name>jerseySpring</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <!-- 配置自己的资源加载类去加载资源 -->
         <init-param>
-            <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>rest</param-value>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>server.RestConfig</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
- 
     <servlet-mapping>
-        <servlet-name>server.RestConfig</servlet-name>
+        <servlet-name>jerseySpring</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
-    <listener>
-        <listener-class>
-            org.springframework.web.context.ContextLoaderListener
-        </listener-class>
-    </listener>
-    <listener>
-        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-    </listener>
 
     <listener>
         <listener-class>datasource.ConnectionManager</listener-class>
@@ -54,7 +63,7 @@
     </servlet>
 
     <!--durid监控url
-    http://localhost:8888/demo/druid
+    http://localhost:8888/druid
     -->
     <servlet-mapping>
         <servlet-name>StatViewServlet</servlet-name>

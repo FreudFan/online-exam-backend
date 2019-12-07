@@ -3,6 +3,8 @@ package rest;
 import dao.TopticsDao;
 import model.TopicFile;
 import org.apache.commons.fileupload.FileItem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 import service.TopticsService;
 import utils.RequestUtils;
 
@@ -15,8 +17,14 @@ import java.util.*;
 /***
  * 题库
  */
+
 @Path("topic")
 public class TopicsController {
+
+    @Autowired
+    private TopticsDao topticsDao;
+    @Autowired
+    private TopticsService topticsService;
 
     @POST
     @Path("import")
@@ -47,7 +55,6 @@ public class TopicsController {
                 }
             }
         }
-        TopticsService topticsService = new TopticsService();
         List topicList = topticsService.readTopicExcel(fileList);
 
         response.put("topics", topicList);
@@ -60,7 +67,7 @@ public class TopicsController {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public List topicShow() throws Exception {
-        List<Map<String, Object>> topicsList = new TopticsDao().selectTopicAll();
+        List<Map<String, Object>> topicsList = topticsDao.selectTopicAll();
         List<Map<String, Object>> showList = new ArrayList<>();
         Map<String, Object> showMap = null;
         int count ;

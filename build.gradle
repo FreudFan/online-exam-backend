@@ -52,6 +52,8 @@ subprojects {
     }
 
     def rxJava = "2.2.15"
+    def jersey = "2.25.1"
+    def spring = "4.3.25.RELEASE"
 
     repositories {
         maven { url 'https://plugins.gradle.org/m2/' }
@@ -61,9 +63,9 @@ subprojects {
     }
 
     dependencies {
-        implementation group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.29.1'
-        implementation 'org.glassfish.jersey.containers:jersey-container-servlet:2.29.1'
-        implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.29.1'
+        implementation group: 'org.glassfish.jersey.core', name: 'jersey-server', version: jersey
+        implementation 'org.glassfish.jersey.containers:jersey-container-servlet:$jersey'
+        implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.28'
         implementation 'org.glassfish.jersey.inject:jersey-hk2:2.29.1'
         implementation 'net.sourceforge.javacsv:javacsv:2.0'
 
@@ -71,13 +73,14 @@ subprojects {
         implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.29'
         implementation 'com.google.code.gson:gson:2.8.6'
 
-        compile group: 'org.springframework', name: 'spring-context', version: '5.2.2.RELEASE'
-        compile group: 'org.springframework', name: 'spring-context-support', version: '5.2.2.RELEASE'
-        compile group: 'org.springframework', name: 'spring-core', version: '5.2.2.RELEASE'
-        compile group: 'org.springframework', name: 'spring-web', version: '5.2.2.RELEASE'
-        compile group: 'org.springframework', name: 'spring-jdbc', version: '5.2.2.RELEASE'
-        compile group: 'com.sun.jersey.contribs', name: 'jersey-spring', version: '1.19.4'
-//        compile group: 'org.glassfish.jersey.ext', name: 'jersey-spring5', version: '2.29.1'
+        compile group: 'org.springframework', name: 'spring-context', version: spring
+        compile group: 'org.springframework', name: 'spring-context-support', version: spring
+        compile group: 'org.springframework', name: 'spring-core', version: spring
+        compile group: 'org.springframework', name: 'spring-web', version: spring
+        compile group: 'org.springframework', name: 'spring-jdbc', version: spring
+        compile group: 'org.springframework', name: 'spring-aop', version: spring
+//        必须配置jersey-spring3，否则会报错
+        compile group: 'org.glassfish.jersey.ext', name: 'jersey-spring3', version: jersey
 
         implementation "io.reactivex.rxjava2:rxjava:$rxJava"
         implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
