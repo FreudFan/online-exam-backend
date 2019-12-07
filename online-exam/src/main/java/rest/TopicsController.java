@@ -1,14 +1,9 @@
 package rest;
 
-import com.alibaba.fastjson.JSONArray;
-import com.graphbuilder.struc.LinkedList;
 import dao.TopticsDao;
 import model.TopicFile;
-import model.Topics;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.fileupload.FileItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
 import service.TopticsService;
 import utils.RequestUtils;
 
@@ -22,7 +17,6 @@ import java.util.*;
 /***
  * 题库
  */
-
 @Path("topic")
 public class TopicsController {
 
@@ -111,7 +105,7 @@ public class TopicsController {
     @Path("delete")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
     @Produces({ MediaType.APPLICATION_JSON })
-    public  String topicDelete(MultivaluedMap topicsMap) {
+    public String topicDelete(MultivaluedMap topicsMap) {
 //        String[] idArrays = topicsMap.get("topics_id").substring(1, topicsMap.get("topics_id").length() - 1).split(",");
         List topicsList = (List)topicsMap.get("topics_id");
         String id = (String)topicsList.get(0);
@@ -130,7 +124,7 @@ public class TopicsController {
     @Path("deleteJSON")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public  String topicDelete_JSON( Map<String,String> topicsMap)  {
+    public String topicDelete_JSON( Map<String,String> topicsMap)  {
         String[] idArrays = topicsMap.get("topics_id").substring(1,topicsMap.get("topics_id").length()-1).split(",");
         int count = topticsService.topicsDeleteService("topics_id",idArrays);
         if(count > 0){

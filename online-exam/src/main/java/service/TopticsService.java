@@ -2,17 +2,19 @@ package service;
 
 import dao.TopticsDao;
 import model.TopicFile;
-import model.Topics;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import utils.ExcelUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class TopticsService {
+
+    @Autowired
+    private TopticsDao topticsDao;
 
     /***
      * 解析excel文件内容
@@ -24,7 +26,6 @@ public class TopticsService {
         for ( TopicFile topicFile: topicFiles ) {
             File file = topicFile.getFile();
             List<List<Object>> listList = ExcelUtils.readExcel(file);
-            TopticsDao topticsDao = new TopticsDao();
             if ( topticsDao.insetForExcel(listList) ) {
                 topicList.add(listList);
             }
@@ -45,6 +46,6 @@ public class TopticsService {
     }
 
     public int topicsDeleteService(String idName,String[] idArrays){
-        return TopticsDao.deleteTopics(idName,idArrays);
+        return topticsDao.deleteTopics(idName,idArrays);
     }
 }

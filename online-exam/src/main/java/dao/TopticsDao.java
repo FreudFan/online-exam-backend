@@ -2,19 +2,21 @@ package dao;
 
 import datasource.ConnectionManager;
 import datasource.JDBCUtils;
-import model.Topics;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import service.TopticsService;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static service.TopticsService.getChooseCount;
-
 @Repository
 public class TopticsDao {
+
+    @Autowired
+    private TopticsService topticsService;
 
     public List selectTopicAll() throws Exception {
         List<Map<String,Object>> list = new ArrayList<>();
@@ -29,7 +31,7 @@ public class TopticsDao {
      * @param excelList
      * @return flag
      */
-    public static boolean insetForExcel( List<List<Object>> excelList)  {
+    public boolean insetForExcel( List<List<Object>> excelList)  {
         boolean flag = true;
         StringBuffer sb = new StringBuffer();
         StringBuffer sbForOptions = new StringBuffer();
@@ -40,7 +42,7 @@ public class TopticsDao {
             PreparedStatement stmt = connection.prepareStatement(sbForOptions.toString());
             ResultSet rs ;
             PreparedStatement ps = connection.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
-            int chooseCount = getChooseCount(excelList.get(0));
+            int chooseCount = topticsService.getChooseCount(excelList.get(0));
             for (int i = 1; i < excelList.size(); i++) {
                 String description = String.valueOf(excelList.get(i).get(0));
                 String correctKey = String.valueOf(excelList.get(i).get(chooseCount + 1));
@@ -80,7 +82,7 @@ public class TopticsDao {
     }
 
 
-    public static int deleteTopics(String idName,String[] idArrays){
+    public int deleteTopics(String idName,String[] idArrays){
         int count = JDBCUtils.deleteForRecord("topics","flag",idName,idArrays);
         return count;
     }

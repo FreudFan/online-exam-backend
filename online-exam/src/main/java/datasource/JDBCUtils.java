@@ -1,6 +1,5 @@
 package datasource;
 
-import model.Topics;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
