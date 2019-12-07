@@ -116,7 +116,7 @@ public class TopicsController {
         List topicsList = (List)topicsMap.get("topics_id");
         String id = (String)topicsList.get(0);
         String[] idArrays = id.split(",");
-        int count = TopticsService.topicsDeleteService("topics_id",idArrays);
+        int count = topticsService.topicsDeleteService("topics_id",idArrays);
         if(count > 0){
             return "success";
         }else{
@@ -132,7 +132,7 @@ public class TopicsController {
     @Produces({ MediaType.APPLICATION_JSON })
     public  String topicDelete_JSON( Map<String,String> topicsMap)  {
         String[] idArrays = topicsMap.get("topics_id").substring(1,topicsMap.get("topics_id").length()-1).split(",");
-        int count = TopticsService.topicsDeleteService("topics_id",idArrays);
+        int count = topticsService.topicsDeleteService("topics_id",idArrays);
         if(count > 0){
             return "success";
         }else{

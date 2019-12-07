@@ -33,7 +33,7 @@ public class TopticsService {
     }
 
 
-    public static int getChooseCount( List<Object> titleList)  {
+    public int getChooseCount( List<Object> titleList)  {
         int title = 0;
         for (int i = 1; i < titleList.size(); i++) {
             if(!titleList.get(i).toString().contains("选项")){
@@ -44,7 +44,7 @@ public class TopticsService {
         return title;
     }
 
-    public static int topicsDeleteService(String idName,String[] idArrays){
+    public int topicsDeleteService(String idName,String[] idArrays){
         return TopticsDao.deleteTopics(idName,idArrays);
     }
 }
