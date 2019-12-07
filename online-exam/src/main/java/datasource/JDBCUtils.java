@@ -1,5 +1,6 @@
 package datasource;
 
+import model.Topics;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
@@ -173,6 +174,28 @@ public class JDBCUtils {
             colNames[i - 1] = metaData.getColumnLabel(i);
         }
         return colNames;
+    }
+
+    /***
+     *批量启动禁用功能
+     * @param tableName,flag,idList
+     * @return count.length
+     */
+    public static int deleteForRecord(String tableName, String flag,String idName,String[] idArrays){
+        try {
+            Connection connection = ConnectionManager.getConnection();
+            PreparedStatement statement = connection.prepareStatement("update " + tableName + " set " + flag + " = 0 where " + idName+ " = ?");
+
+            for (String id : idArrays) {
+                statement.setInt(1,Integer.parseInt(id));
+                statement.addBatch();
+            }
+           int[] count = statement.executeBatch();
+            return count.length;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
 }

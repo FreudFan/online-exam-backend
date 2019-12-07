@@ -2,6 +2,7 @@ package dao;
 
 import datasource.ConnectionManager;
 import datasource.JDBCUtils;
+import model.Topics;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +19,7 @@ public class TopticsDao {
     public List selectTopicAll() throws Exception {
         List<Map<String,Object>> list = new ArrayList<>();
         String sql = "select a.topics_id, description,correctkey,topicmark,analysis,b.option,b.value from topics  a " +
-                "left join options  b on a.topics_id = b.topics_id";
+                "left join options  b on a.topics_id = b.topics_id where flag = 1";
         list = JDBCUtils.queryForList(sql);
         return list;
     }
@@ -76,6 +77,12 @@ public class TopticsDao {
             e.printStackTrace();
         }
        return flag;
+    }
+
+
+    public static int deleteTopics(String idName,String[] idArrays){
+        int count = JDBCUtils.deleteForRecord("topics","flag",idName,idArrays);
+        return count;
     }
 
 }

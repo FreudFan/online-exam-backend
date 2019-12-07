@@ -2,12 +2,14 @@ package service;
 
 import dao.TopticsDao;
 import model.TopicFile;
+import model.Topics;
 import org.springframework.stereotype.Service;
 import utils.ExcelUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TopticsService {
@@ -42,4 +44,7 @@ public class TopticsService {
         return title;
     }
 
+    public static int topicsDeleteService(String idName,String[] idArrays){
+        return TopticsDao.deleteTopics(idName,idArrays);
+    }
 }
