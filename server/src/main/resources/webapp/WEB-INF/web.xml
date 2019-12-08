@@ -36,10 +36,13 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
-
     <listener>
         <listener-class>datasource.ConnectionManager</listener-class>
     </listener>
+
+    <session-config>
+        <session-timeout>20</session-timeout>
+    </session-config>
 
     <!--配置durid监控-->
     <servlet>
@@ -61,6 +64,7 @@
             <param-value>admin</param-value>
         </init-param>
     </servlet>
+
 
     <!--durid监控url
     http://localhost:8888/druid

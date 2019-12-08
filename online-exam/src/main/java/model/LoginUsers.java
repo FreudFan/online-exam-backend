@@ -1,11 +1,11 @@
 package model;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 public class LoginUsers implements Serializable {
@@ -21,6 +21,10 @@ public class LoginUsers implements Serializable {
     private String email;
     private String telephone;
     private String subject_id;
-    private Integer role;   // 0:试题管理员 1:试题管理员 2:系统管理员
+    private Integer role;   // 0:普通用户 1:试题管理员 2:系统管理员
 
+    @JSONField(serialize = false)
+    private @Getter Date createtime;
+    @JSONField(serialize = false)
+    private @Getter Date updatetime;
 }
