@@ -13,11 +13,11 @@
     <name>tomcat服务</name>
 
     <dependencies>
-        <dependency>
-            <groupId>edu.sandau</groupId>
-            <artifactId>online-exam</artifactId>
-            <version>1.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>edu.sandau</groupId>-->
+            <!--<artifactId>online-exam</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
 
         <!--会和test模块里的UserService类起冲突-->
         <!--<dependency>-->

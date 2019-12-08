@@ -12,4 +12,11 @@
     <artifactId>online-exam</artifactId>
     <name>后端业务模块</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>edu.sandau</groupId>
+            <artifactId>server</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
 </project>

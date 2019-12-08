@@ -56,10 +56,13 @@ public class LoginController {
     @Path("register")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public LoginUsers register(LoginUsers loginUsers) throws Exception {
+    public ResponseEntity register(LoginUsers loginUsers) throws Exception {
         loginUsers = userService.addUser(loginUsers);
+        if ( loginUsers == null ) {
+            return new ResponseEntity<>("same value", HttpStatus.EXPECTATION_FAILED);
+        }
         httpSession.setAttribute("user", JSONObject.toJSON(loginUsers));
-        return loginUsers;
+        return new ResponseEntity<>(loginUsers, HttpStatus.OK);
     }
 
     /***
