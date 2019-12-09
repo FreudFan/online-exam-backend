@@ -3,6 +3,7 @@ package rest;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import model.LoginUsers;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,8 @@ public class LoginController {
     /***
      * 用户使用 用户名、手机号、邮箱 和 密码 登入
      * 判断 手机号：全数字 邮箱：包含'@'
-     * @param multivaluedMap
+     * @param name
+     * @param password
      * @return 用户信息
      * @throws Exception
      */
@@ -37,10 +39,18 @@ public class LoginController {
     @Path("login")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity login(MultivaluedMap multivaluedMap) throws Exception {
-        Map<String,Object> map = new HashMap<>(3);
-        map.put("errno",0);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+    public ResponseEntity login(@FormParam("name") String name, @FormParam("password") String password) throws Exception {
+        String loginValue;
+        if ( name.contains("@") ) { //识别是否是邮箱
+            loginValue = "email";
+        } else if ( name.length() == 11 && NumberUtils.isDigits(name) ) {   //识别是手机号
+            loginValue = "telephone";
+        } else {
+            loginValue = "username";
+        }
+        LoginUsers loginUsers = userService.login(loginValue, name, password);
+        httpSession.setAttribute("user", JSONObject.toJSON(loginUsers));
+        return new ResponseEntity<>(loginUsers, HttpStatus.OK);
     }
 
     /***

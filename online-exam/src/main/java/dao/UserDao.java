@@ -77,4 +77,10 @@ public class UserDao {
         return mapList.size() <= 0;
     }
 
+    public LoginUsers login(String loginValue, String loginNmae, String password) throws  Exception {
+        String SQL = " SELECT * FROM login_users WHERE " + loginValue + " = ? AND password = ? ";
+        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(SQL, new Object[]{loginNmae, password});
+        LoginUsers user = (LoginUsers) CommonsUtils.mapToObject(mapList.get(0), LoginUsers.class);
+        return user;
+    }
 }
