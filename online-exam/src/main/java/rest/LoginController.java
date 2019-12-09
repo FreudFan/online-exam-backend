@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import service.UserService;
+import utils.CommonsUtils;
 
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
@@ -58,7 +59,7 @@ public class LoginController {
      * 注：用户名（username）不允许包含'@' 不允许全数字
      * 注：邮箱（email） 必须包含'@'
      * 注：手机号只允许中国大陆手机号，只允许全数字
-     * @param loginUsers
+     * @param map
      * @return 用户信息（脱敏）
      * @throws Exception
      */
@@ -66,8 +67,8 @@ public class LoginController {
     @Path("register")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity register(LoginUsers loginUsers) throws Exception {
-        loginUsers = userService.addUser(loginUsers);
+    public ResponseEntity register(Map<String,Object> map) throws Exception {
+        LoginUsers loginUsers = userService.addUser(map);
         if ( loginUsers == null ) {
             return new ResponseEntity<>("same value", HttpStatus.EXPECTATION_FAILED);
         }
@@ -76,21 +77,29 @@ public class LoginController {
     }
 
     /***
-     * 检查是否有重复注册信息，不允许有相同用户名，邮箱，手机号
+     * 检查是否有存在指定用户，不允许有相同用户名，邮箱，手机号
      * @param map { username，email，telephone }
-     * @return true 无重复 | false 有重复
+     * @return 若存在，返回用户，不存在，返回null
      * @throws Exception
      */
     @PUT
     @Path("check")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity check(Map<String,String> map) throws Exception {
+    public ResponseEntity check(Map<String,Object> map) throws Exception {
         if ( map.containsKey("username") || map.containsKey("email") || map.containsKey("telephone") ) {
-            boolean flag = userService.check(map);
-            return new ResponseEntity<>(flag, HttpStatus.OK);
+            LoginUsers user = userService.check(map);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
     }
 
+
+    @POST
+    @Path("reset-password")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public ResponseEntity resetPassword(Map<String,Object> map) throws Exception {
+        return null;
+    }
 }

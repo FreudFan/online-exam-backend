@@ -1,14 +1,16 @@
 package service;
 
-import dao.UserDao;
+import dao.LoginUsersDao;
+import dao.LoginUsersSecurityDao;
 import model.LoginUsers;
+import model.LoginUsersSecurity;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import utils.CommonsUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,37 +18,39 @@ import java.util.Map;
 public class UserService {
 
     @Autowired
-    private UserDao userDao;
+    private LoginUsersDao loginUsersDao;
+    @Autowired
+    private LoginUsersSecurityDao loginUsersSecurityDao;
 
-    public LoginUsers addUser(LoginUsers loginUsers) throws Exception {
+    public LoginUsers addUser(Map<String,Object> loginMap) throws Exception {
+        LoginUsers loginUsers = (LoginUsers)CommonsUtils.mapToObject(loginMap, LoginUsers.class);
+        LoginUsersSecurity usersSecurity = (LoginUsersSecurity)CommonsUtils.mapToObject(loginMap, LoginUsersSecurity.class);
+        //添加用户主表
         if ( loginUsers.getRole() == null ) {
             loginUsers.setRole(0);  //默认为注册用户
         }
-        Map<String,String> map = new HashMap<>();
-        map.put("username", loginUsers.getUsername());
-        map.put("email", loginUsers.getEmail());
-        map.put("telephone", loginUsers.getTelephone());
-        loginUsers = userDao.save(loginUsers);
-        if ( this.check(map) ) {
-            loginUsers = userDao.save(loginUsers);
+        if ( check(loginMap) == null ) { //查重
+            loginUsers = loginUsersDao.save(loginUsers);
         } else {
             return null;
         }
+        //添加用户密保表
+        if ( usersSecurity.getAnswer() != null && usersSecurity.getQuestion() != null
+                && usersSecurity.getAnswer().size() > 0 && usersSecurity.getQuestion().size() > 0 ) {
+            usersSecurity.setLogin_users_id(loginUsers.getLogin_users_id());
+            loginUsersSecurityDao.save(usersSecurity);
+        }
 
-//        if ( userDao.getUserByRealname(loginUsers.getRealname()).size() <= 0 ) {
-//            loginUsers = userDao.save(loginUsers);
-//        } else {
-//            return null;
-//        }
         return loginUsers;
     }
 
     /***
-     * 查重
+     * 查询是否存在指定用户
      * @param map { username，email，telephone }
-     * @return true 无重复 | false 有重复
+     * @return 若存在用户，返回用户
+     * @throws Exception
      */
-    public Boolean check(Map<String,String> map) throws Exception {
+    public LoginUsers check(Map<String,Object> map) throws Exception {
         List<String> keys = new ArrayList<>();
         List<String> values = new ArrayList<>();
 
@@ -65,11 +69,11 @@ public class UserService {
             keys.add("telephone");
             values.add(telephone);
         }
-        return userDao.checkSameValue(keys, values);
+        return loginUsersDao.getUserByFields(keys, values);
     }
 
     public LoginUsers login(String loginValue, String loginNmae, String password) throws  Exception {
-        return userDao.login(loginValue,loginNmae,password);
+        return loginUsersDao.login(loginValue,loginNmae,password);
     }
 
 }

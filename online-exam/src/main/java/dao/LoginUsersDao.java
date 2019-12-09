@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class UserDao {
+public class LoginUsersDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -50,19 +50,22 @@ public class UserDao {
 
     public List<LoginUsers> getUserByRealname( String realname ) throws Exception {
         String SQL = " SELECT * FROM login_users WHERE realname = ? ";
-        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(SQL, realname);
-        List usersList = CommonsUtils.mapToObject(mapList, LoginUsers.class);
-        return usersList;
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(SQL, realname);
+        if (mapList.size() == 0) {
+            return null;
+        } else {
+            return (List) CommonsUtils.mapToObject(mapList, LoginUsers.class);
+        }
     }
 
     /***
-     * 检查是否有重复值
+     * 通过 username, telephone, email 查询
      * @param keys 数据库列名
      * @param values 列对应的值
-     * @return true 无重复 | false 有重复
+     * @return
      * @throws Exception
      */
-    public Boolean checkSameValue(List<String> keys, List<String> values) throws Exception {
+    public LoginUsers getUserByFields(List<String> keys, List<String> values) throws Exception {
         StringBuilder SQL = new StringBuilder(" SELECT * FROM login_users WHERE 1=1 ");
         if ( keys.size() == values.size() && keys.size() > 0 ) {
             SQL.append(" AND ");
@@ -73,14 +76,21 @@ public class UserDao {
                 SQL.append(keys.get(i)).append(" = ? ");
             }
         }
-        List mapList = jdbcTemplate.queryForList(SQL.toString(), values.toArray());
-        return mapList.size() <= 0;
+        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(SQL.toString(), values.toArray());
+        if (mapList.size() == 0) {
+            return null;
+        } else {
+            return (LoginUsers) CommonsUtils.mapToObject(mapList.get(0), LoginUsers.class);
+        }
     }
 
     public LoginUsers login(String loginValue, String loginNmae, String password) throws  Exception {
         String SQL = " SELECT * FROM login_users WHERE " + loginValue + " = ? AND password = ? ";
         List<Map<String,Object>> mapList = jdbcTemplate.queryForList(SQL, new Object[]{loginNmae, password});
-        LoginUsers user = (LoginUsers) CommonsUtils.mapToObject(mapList.get(0), LoginUsers.class);
-        return user;
+        if (mapList.size() == 0) {
+            return null;
+        } else {
+            return (LoginUsers) CommonsUtils.mapToObject(mapList.get(0), LoginUsers.class);
+        }
     }
 }

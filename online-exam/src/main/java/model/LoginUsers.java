@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 public class LoginUsers implements Serializable {
     @JSONField(serialize = false)
-    private @Getter final String TABLE_NAME = "login_users";
+    @Getter private final String TABLE_NAME = "login_users";
 
     private Integer login_users_id;
     private String username;

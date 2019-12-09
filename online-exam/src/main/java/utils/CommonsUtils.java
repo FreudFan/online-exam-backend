@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class CommonsUtils {
 
-    public static Object mapToObject(Map<String, Object> map, Class<?> beanClass) {
+    public static Object mapToObject(Map map, Class<?> beanClass) {
         if (map == null) {
             return null;
         }
@@ -26,7 +26,7 @@ public class CommonsUtils {
 
     public static List<Object> mapToObject(List<Map<String, Object>> mapList, Class<?> beanClass) {
         List<Object> list = new ArrayList();
-        for ( Map<String, Object> map: mapList ) {
+        for ( Map map: mapList ) {
             Object object = mapToObject(map, beanClass);
             list.add(object);
         }
