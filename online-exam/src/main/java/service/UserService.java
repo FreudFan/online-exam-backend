@@ -76,4 +76,8 @@ public class UserService {
         return loginUsersDao.login(loginValue,loginNmae,password);
     }
 
+    public boolean resetPassword(Integer id, String password) throws Exception {
+        return loginUsersDao.updateUserById(id, "password", password);
+    }
+
 }

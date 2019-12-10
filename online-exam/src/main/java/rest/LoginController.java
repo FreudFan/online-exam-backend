@@ -8,18 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import service.UserService;
-import utils.CommonsUtils;
 
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Path("/")
+@Path("user")
 public class LoginController {
 
     @Autowired
@@ -97,9 +93,23 @@ public class LoginController {
 
     @POST
     @Path("reset-password")
+    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public ResponseEntity resetPassword(@FormParam("id") Integer id, @FormParam("password") String password) throws Exception {
+        boolean ok = userService.resetPassword(id, password);
+        if ( ok ) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
+    }
+
+    @GET
+    @Path("security-question")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity resetPassword(Map<String,Object> map) throws Exception {
-        return null;
+    public ResponseEntity getSecurityQuestion(Integer id) throws Exception {
+
+        return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
     }
+
 }

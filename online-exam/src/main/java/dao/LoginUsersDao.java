@@ -93,4 +93,11 @@ public class LoginUsersDao {
             return (LoginUsers) CommonsUtils.mapToObject(mapList.get(0), LoginUsers.class);
         }
     }
+
+    public boolean updateUserById(Integer id, String column, String value ) throws Exception {
+        String SQL = "UPDATE login_users SET " + column + " = ? WHERE login_users_id = ? ";
+        int num = jdbcTemplate.update(SQL, new Object[]{value, id});
+        return num > 0;
+    }
+
 }
