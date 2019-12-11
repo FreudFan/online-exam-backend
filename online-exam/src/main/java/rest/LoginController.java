@@ -11,6 +11,7 @@ import service.UserService;
 
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
 
@@ -103,11 +104,11 @@ public class LoginController {
         return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
     }
 
-    @GET
+    @PUT
     @Path("security-question")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity getSecurityQuestion(Integer id) throws Exception {
+    public ResponseEntity getSecurityQuestion(Map<String,Object> map) throws Exception {
 
         return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
     }

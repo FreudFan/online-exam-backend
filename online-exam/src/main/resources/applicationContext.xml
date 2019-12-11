@@ -8,7 +8,7 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-<context:component-scan base-package="dao"/>
+    <context:component-scan base-package="dao"/>
     <context:component-scan base-package="rest"/>
     <context:component-scan base-package="service"/>
     <context:component-scan base-package="utils"/>
