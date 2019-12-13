@@ -13,6 +13,7 @@ import javax.ws.rs.ext.ReaderInterceptorContext;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ public class RestConfig extends ResourceConfig {
     	packages=this.loadPackages();
 		LOGGER.info("in packages="+packages);
     	this.packages(packages);
+		this.register(MultiPartFeature.class);
     	// can add thread following
     	
     	//if(use_gzip){

@@ -3,6 +3,7 @@ package rest;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import model.LoginUsers;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -92,6 +94,13 @@ public class LoginController {
     }
 
 
+    /***
+     * 重置密码
+     * @param id 用户id
+     * @param password 用户新密码
+     * @return
+     * @throws Exception
+     */
     @POST
     @Path("reset-password")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
@@ -104,12 +113,22 @@ public class LoginController {
         return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
     }
 
+    /***
+     * 获取用户密保问题
+     * @param map 需有参数 id
+     * @return 问题list
+     * @throws Exception
+     */
     @PUT
     @Path("security-question")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public ResponseEntity getSecurityQuestion(Map<String,Object> map) throws Exception {
-
+        Integer id = MapUtils.getInteger(map,"id", null);
+        if ( id != null ) {
+            List<String> questions = userService.getSecurityQuestion(id);
+            return new ResponseEntity<>(questions, HttpStatus.OK);
+        }
         return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
     }
 

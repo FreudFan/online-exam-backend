@@ -82,4 +82,8 @@ public class UserService {
         return loginUsersDao.updateUserById(id, "password", password);
     }
 
+    public List<String> getSecurityQuestion(Integer id) throws Exception {
+        return loginUsersSecurityDao.getQuestionById(id);
+    }
+
 }

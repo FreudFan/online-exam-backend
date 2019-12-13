@@ -3,14 +3,12 @@ package dao;
 import model.LoginUsersSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class LoginUsersSecurityDao {
@@ -34,6 +32,13 @@ public class LoginUsersSecurityDao {
 
         jdbcTemplate.batchUpdate(SQL, batchArgs);
         return usersSecurity;
+    }
+
+    public List<String> getQuestionById( Integer id ) throws Exception {
+        String SQL = " SELECT question FROM online_exam.login_users_security WHERE login_users_id = ? ";
+        List<Map<String,Object>> results = jdbcTemplate.queryForList(SQL, id);
+        List questions = results.stream().map(value -> value.get("question") ).collect(Collectors.toList());
+        return questions;
     }
 
 }

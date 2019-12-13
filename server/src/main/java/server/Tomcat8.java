@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -45,15 +46,12 @@ public class Tomcat8 implements Runnable {
 		Service service = tomcat.getService();
 		service.setName("Tomcat-embbeded-opt");
 
-
 		Connector connector = tomcat.getConnector();
 		connector.setPort(PORT);
 		connector.setMaxPostSize(1024*5);
 		connector.setEnableLookups(false);
 		connector.setAllowTrace(false);
-		connector.setURIEncoding("UTF-8");
-
-
+		connector.setURIEncoding(String.valueOf(StandardCharsets.UTF_8));
 
 		//connector.setAttribute(name, value);
 

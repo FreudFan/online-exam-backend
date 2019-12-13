@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,14 +41,17 @@ public class ExcelUtils {
     /**
      * 要求excel版本在2007以上
      *
-     * @param fileInputStream 文件信息
+     * @param inputStream 文件信息
      * @return
      * @throws Exception
      */
-    public static List<List<Object>> readExcel(FileInputStream fileInputStream) throws Exception {
-        XSSFWorkbook xwb = new XSSFWorkbook(fileInputStream);
+    public static List<List<Object>> readExcel(InputStream inputStream) throws Exception {
+        XSSFWorkbook xwb = new XSSFWorkbook(inputStream);
         // 读取第一张表格内容
         XSSFSheet sheet = xwb.getSheetAt(0);
+        if ( sheet.getPhysicalNumberOfRows() == 0 ) {
+            return null; //若该表为空，返回空
+        }
         return analysisExcel(sheet);
     }
 

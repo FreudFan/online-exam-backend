@@ -3,15 +3,25 @@ package rest;
 import dao.TopticsDao;
 import model.TopicFile;
 import org.apache.commons.fileupload.FileItem;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import service.TopticsService;
+import utils.ExcelUtils;
 import utils.RequestUtils;
+import utils.TimeUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /***
@@ -25,10 +35,11 @@ public class TopicsController {
     @Autowired
     private TopticsService topticsService;
 
+    @Deprecated
     @POST
-    @Path("import")
+    @Path("@import")
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })   //此方法以弃用
     public Map topicImport(@Context HttpServletRequest request) throws Exception {
         Map<String,Object> response = new HashMap<>();
         List<FileItem> fileItemList = RequestUtils.getFileItemList(request,"xlsx");
@@ -58,6 +69,43 @@ public class TopicsController {
 
         response.put("topics", topicList);
         return response;
+    }
+
+
+    @POST
+    @Path("import")
+    @Consumes({ MediaType.MULTIPART_FORM_DATA })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public ResponseEntity topic(@FormDataParam("file") InputStream fileInputStream,
+                                     @FormDataParam("file") FormDataContentDisposition disposition) throws Exception {
+        String fileName = new String(disposition.getFileName().getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        //截取文件名
+        String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+        if ( !fileType.equals("xlsx") ) {
+            return new ResponseEntity("请上传xlsx格式文件", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        //需将流克隆成两个流才可进行读和谐操作，读和写操作会使流数据被写完而读不到数据
+        //思路：先把InputStream转化成ByteArrayOutputStream  后面要使用InputStream对象时，再从ByteArrayOutputStream转化回来
+        ByteArrayOutputStream baos = RequestUtils.cloneInputStream(fileInputStream);
+        // 打开两个新的输入流
+        assert baos != null;
+        InputStream stream1 = new ByteArrayInputStream(baos.toByteArray());
+        InputStream stream2 = new ByteArrayInputStream(baos.toByteArray());
+
+        List<List<Object>> data = ExcelUtils.readExcel(stream1);
+        if ( data == null || data.size() == 0 ) {
+            return new ResponseEntity("请勿上传空文件", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        //文件名要唯一
+        fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtils.fileNow() + "." + fileType;
+        TopicFile topicFile = RequestUtils.saveFile(stream2, fileName);//将文件保存至本地
+
+        if ( topicFile == null ) {
+            return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity(data, HttpStatus.OK);
     }
 
 

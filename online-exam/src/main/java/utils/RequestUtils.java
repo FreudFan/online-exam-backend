@@ -9,14 +9,18 @@ import service.TopticsService;
 
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.List;
 
 
 public class RequestUtils {
+
+    private final static String upload_dir = "topics";
+
+    static {
+        File f = new File(upload_dir); //新建保存目录
+        if ( !f.exists() ) f.mkdir();
+    }
 
     /***
      * 把request请求转成文件对象列表，
@@ -85,6 +89,51 @@ public class RequestUtils {
             fileItem.delete();
         }
         return topicFile;
+    }
+
+    public synchronized static TopicFile saveFile(InputStream inputStream, String fileName) {
+        File file = new File(upload_dir,fileName);
+        TopicFile topicFile = new TopicFile();
+        try(
+                FileOutputStream outputStream = new FileOutputStream(file)
+        ) {
+            // 流的对拷
+            byte[] buffer = new byte[1024]; //每次读取1个字节
+            int len;
+            // 开始读取上传文件的字节，并将其输出到服务端的撒花姑娘穿文件的输出流中
+            while ( ( len = inputStream.read(buffer) ) > 0 ) {
+                outputStream.write(buffer, 0, len);
+            }
+
+            topicFile.setFilePath(upload_dir + fileName);
+            topicFile.setFile(file);
+        } catch ( Exception e ) {
+            e.printStackTrace();
+            return null;
+        } finally {
+        }
+        return topicFile;
+    }
+
+    /***
+     * 复制流
+     * @param input
+     * @return
+     */
+    public static ByteArrayOutputStream cloneInputStream(InputStream input) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = input.read(buffer)) > -1) {
+                baos.write(buffer, 0, len);
+            }
+            baos.flush();
+            return baos;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
