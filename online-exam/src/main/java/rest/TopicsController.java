@@ -88,12 +88,14 @@ public class TopicsController {
         //需将流克隆成两个流才可进行读和谐操作，读和写操作会使流数据被写完而读不到数据
         //思路：先把InputStream转化成ByteArrayOutputStream  后面要使用InputStream对象时，再从ByteArrayOutputStream转化回来
         ByteArrayOutputStream baos = RequestUtils.cloneInputStream(fileInputStream);
+        fileInputStream.close();
         // 打开两个新的输入流
         assert baos != null;
         InputStream stream1 = new ByteArrayInputStream(baos.toByteArray());
         InputStream stream2 = new ByteArrayInputStream(baos.toByteArray());
 
         List<List<Object>> data = ExcelUtils.readExcel(stream1);
+        stream1.close();
         if ( data == null || data.size() == 0 ) {
             return new ResponseEntity("请勿上传空文件", HttpStatus.EXPECTATION_FAILED);
         }
@@ -101,7 +103,7 @@ public class TopicsController {
         //文件名要唯一
         fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtils.fileNow() + "." + fileType;
         TopicFile topicFile = RequestUtils.saveFile(stream2, fileName);//将文件保存至本地
-
+        stream2.close();
         if ( topicFile == null ) {
             return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
         }
