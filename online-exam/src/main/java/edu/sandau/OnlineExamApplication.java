@@ -1,4 +1,6 @@
-import datasource.ConnectionManager;
+package edu.sandau;
+
+import edu.sandau.datasource.ConnectionManager;
 import lombok.extern.slf4j.Slf4j;
 import server.Tomcat8;
 

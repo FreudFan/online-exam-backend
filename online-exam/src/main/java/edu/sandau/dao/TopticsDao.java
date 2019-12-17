@@ -1,11 +1,11 @@
-package dao;
+package edu.sandau.dao;
 
-import datasource.ConnectionManager;
-import datasource.JDBCUtils;
+import edu.sandau.datasource.ConnectionManager;
+import edu.sandau.datasource.JDBCUtils;
+import edu.sandau.service.TopticsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import service.TopticsService;
 
 import java.sql.*;
 import java.util.ArrayList;

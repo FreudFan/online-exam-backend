@@ -1,4 +1,4 @@
-package datasource;
+package edu.sandau.datasource;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import org.slf4j.Logger;

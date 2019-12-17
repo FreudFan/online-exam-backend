@@ -1,4 +1,4 @@
-package model;
+package edu.sandau.model;
 
 import lombok.Data;
 

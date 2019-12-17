@@ -1,15 +1,15 @@
-package service;
+package edu.sandau.service;
 
-import dao.LoginUsersDao;
-import dao.LoginUsersSecurityDao;
+import edu.sandau.dao.LoginUsersDao;
+import edu.sandau.dao.LoginUsersSecurityDao;
+import edu.sandau.model.LoginUsersSecurity;
+import edu.sandau.utils.CommonsUtils;
 import model.LoginUsers;
-import model.LoginUsersSecurity;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import utils.CommonsUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class UserService {
     private LoginUsersSecurityDao loginUsersSecurityDao;
 
     public LoginUsers addUser(Map<String,Object> loginMap) throws Exception {
-        LoginUsers loginUsers = (LoginUsers)CommonsUtils.mapToObject(loginMap, LoginUsers.class);
+        LoginUsers loginUsers = (LoginUsers) CommonsUtils.mapToObject(loginMap, LoginUsers.class);
         LoginUsersSecurity usersSecurity = (LoginUsersSecurity)CommonsUtils.mapToObject(loginMap, LoginUsersSecurity.class);
         //添加用户主表
         if ( loginUsers.getRole() == null ) {

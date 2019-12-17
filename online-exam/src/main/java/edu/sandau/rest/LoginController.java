@@ -1,6 +1,7 @@
-package rest;
+package edu.sandau.rest;
 
 import com.alibaba.fastjson.JSONObject;
+import edu.sandau.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import model.LoginUsers;
 import org.apache.commons.collections4.MapUtils;
@@ -8,7 +9,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import service.UserService;
 
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;

@@ -1,17 +1,17 @@
-package rest;
+package edu.sandau.rest;
 
-import dao.TopticsDao;
-import model.TopicFile;
+import edu.sandau.dao.TopticsDao;
+import edu.sandau.model.TopicFile;
+import edu.sandau.service.TopticsService;
+import edu.sandau.utils.ExcelUtils;
+import edu.sandau.utils.RequestUtils;
+import edu.sandau.utils.TimeUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import service.TopticsService;
-import utils.ExcelUtils;
-import utils.RequestUtils;
-import utils.TimeUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;

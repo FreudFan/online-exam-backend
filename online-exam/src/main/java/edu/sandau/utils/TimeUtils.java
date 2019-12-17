@@ -1,4 +1,4 @@
-package utils;
+package edu.sandau.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

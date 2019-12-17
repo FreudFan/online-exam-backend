@@ -1,4 +1,4 @@
-package utils;
+package edu.sandau.utils;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.beanutils.BeanUtils;

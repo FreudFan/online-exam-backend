@@ -38,7 +38,7 @@
     <!--</servlet-mapping>-->
 
     <listener>
-        <listener-class>datasource.ConnectionManager</listener-class>
+        <listener-class>edu.sandau.datasource.ConnectionManager</listener-class>
     </listener>
 
     <session-config>

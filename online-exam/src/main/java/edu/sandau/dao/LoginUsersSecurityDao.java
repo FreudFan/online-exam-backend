@@ -1,6 +1,6 @@
-package dao;
+package edu.sandau.dao;
 
-import model.LoginUsersSecurity;
+import edu.sandau.model.LoginUsersSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -16,7 +16,7 @@ public class LoginUsersSecurityDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public LoginUsersSecurity save ( LoginUsersSecurity usersSecurity ) throws Exception {
+    public LoginUsersSecurity save (LoginUsersSecurity usersSecurity ) throws Exception {
         String SQL = " INSERT INTO login_users_security " +
                 "( login_users_id, question, answer ) VALUES " +
                 "( ?, ?, ? )";
