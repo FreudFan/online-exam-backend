@@ -1,6 +1,6 @@
 package edu.sandau.utils;
 
-import edu.sandau.model.TopicFile;
+import edu.sandau.model.UploadFile;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.List;
 
 
-public class RequestUtils {
+public class FileUtil {
 
     private final static String upload_dir = "topics";
 
@@ -57,16 +57,16 @@ public class RequestUtils {
      * @param filePath  文件路径，以'/'结尾
      * @return
      */
-    public synchronized static TopicFile saveFile(FileItem fileItem, String filePath) {
+    public synchronized static UploadFile saveFile(FileItem fileItem, String filePath) {
         String fileName = fileItem.getName();   //文件名
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);    //文件类型
         //文件名要唯一
-        fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtils.fileNow();
+        fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtil.fileNow();
         //保存在服务器端
         filePath = filePath + fileName + "." + fileType;
 
         File file = new File(filePath);
-        TopicFile topicFile = new TopicFile();
+        UploadFile uploadFile = new UploadFile();
         try(
                 InputStream inputStream = fileItem.getInputStream();
                 FileOutputStream outputStream = new FileOutputStream(file)
@@ -79,19 +79,19 @@ public class RequestUtils {
                 outputStream.write(buffer, 0, len);
             }
 
-            topicFile.setFilePath(filePath);
-            topicFile.setFile(file);
+            uploadFile.setFilePath(filePath);
+            uploadFile.setFile(file);
         } catch ( Exception e ) {
             e.printStackTrace();
         } finally {
             fileItem.delete();
         }
-        return topicFile;
+        return uploadFile;
     }
 
-    public synchronized static TopicFile saveFile(InputStream inputStream, String fileName) {
+    public synchronized static UploadFile saveFile(InputStream inputStream, String fileName) {
         File file = new File(upload_dir,fileName);
-        TopicFile topicFile = new TopicFile();
+        UploadFile uploadFile = new UploadFile();
         try(
                 FileOutputStream outputStream = new FileOutputStream(file)
         ) {
@@ -103,14 +103,14 @@ public class RequestUtils {
                 outputStream.write(buffer, 0, len);
             }
 
-            topicFile.setFilePath(upload_dir + fileName);
-            topicFile.setFile(file);
+            uploadFile.setFilePath(upload_dir + fileName);
+            uploadFile.setFile(file);
         } catch ( Exception e ) {
             e.printStackTrace();
             return null;
         } finally {
         }
-        return topicFile;
+        return uploadFile;
     }
 
     /***

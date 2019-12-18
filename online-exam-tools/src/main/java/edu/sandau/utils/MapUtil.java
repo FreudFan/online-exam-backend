@@ -2,13 +2,14 @@ package edu.sandau.utils;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.MapUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class CommonsUtils {
+public class MapUtil extends MapUtils {
 
     public static Object mapToObject(Map map, Class<?> beanClass) {
         if (map == null) {

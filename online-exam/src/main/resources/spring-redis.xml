@@ -7,6 +7,7 @@
     <!--引入配置文件-->
     <context:property-placeholder location="classpath:*.properties"/>
 
+
     <!--配置 jedis pool-->
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <!-- 最大连接数 -->

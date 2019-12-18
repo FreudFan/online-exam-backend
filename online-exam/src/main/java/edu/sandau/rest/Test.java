@@ -1,6 +1,8 @@
 package edu.sandau.rest;
 
 import com.alibaba.fastjson.JSON;
+import edu.sandau.service.EmailService;
+import edu.sandau.model.EmailVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;
@@ -23,6 +25,22 @@ public class Test {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private EmailService emailService;
+
+    @GET
+    @Path("mail")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public String sendMail() throws Exception {
+        EmailVo emailVo = new EmailVo();
+        emailVo.setTos("test@test.com");
+        emailVo.setContent("你好，测试");
+        emailVo.setSubject("test");
+        emailService.send(emailVo);
+        return null;
+    }
 
     @GET
     @Path("show")

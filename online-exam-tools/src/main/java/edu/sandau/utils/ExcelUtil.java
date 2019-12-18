@@ -19,8 +19,8 @@ import java.util.Map;
 
 import static org.apache.poi.ss.usermodel.CellType.STRING;
 
-public class ExcelUtils {
-    private final static Logger LOGGER = LoggerFactory.getLogger(ExcelUtils.class);
+public class ExcelUtil {
+    private final static Logger LOGGER = LoggerFactory.getLogger(ExcelUtil.class);
     /**
      * 要求excel版本在2007以上
      *

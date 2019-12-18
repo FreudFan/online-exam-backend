@@ -1,11 +1,11 @@
 package edu.sandau.rest;
 
 import edu.sandau.dao.TopticsDao;
-import edu.sandau.model.TopicFile;
+import edu.sandau.model.UploadFile;
 import edu.sandau.service.TopticsService;
-import edu.sandau.utils.ExcelUtils;
-import edu.sandau.utils.RequestUtils;
-import edu.sandau.utils.TimeUtils;
+import edu.sandau.utils.ExcelUtil;
+import edu.sandau.utils.FileUtil;
+import edu.sandau.utils.TimeUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -42,13 +42,13 @@ public class TopicsController {
     @Produces({ MediaType.APPLICATION_JSON })   //此方法以弃用
     public Map topicImport(@Context HttpServletRequest request) throws Exception {
         Map<String,Object> response = new HashMap<>();
-        List<FileItem> fileItemList = RequestUtils.getFileItemList(request,"xlsx");
+        List<FileItem> fileItemList = FileUtil.getFileItemList(request,"xlsx");
         if ( fileItemList == null || fileItemList.size() == 0 ) {
             response.put("status", "请上传文件");
             return response;
         }
 
-        List<TopicFile> fileList = new ArrayList<>(fileItemList.size());
+        List<UploadFile> fileList = new ArrayList<>(fileItemList.size());
         for (FileItem fileItem : fileItemList) {
             //判断是否是普通字段
             if ( !fileItem.isFormField() )  {
@@ -60,8 +60,8 @@ public class TopicsController {
                         response.put("status", "请上传xlsx格式文件");
                         return response;
                     }
-                    TopicFile topicFile = RequestUtils.saveFile(fileItem,"topics/");//将文件保存至本地
-                    fileList.add(topicFile);
+                    UploadFile uploadFile = FileUtil.saveFile(fileItem,"topics/");//将文件保存至本地
+                    fileList.add(uploadFile);
                 }
             }
         }
@@ -87,24 +87,24 @@ public class TopicsController {
 
         //需将流克隆成两个流才可进行读和谐操作，读和写操作会使流数据被写完而读不到数据
         //思路：先把InputStream转化成ByteArrayOutputStream  后面要使用InputStream对象时，再从ByteArrayOutputStream转化回来
-        ByteArrayOutputStream baos = RequestUtils.cloneInputStream(fileInputStream);
+        ByteArrayOutputStream baos = FileUtil.cloneInputStream(fileInputStream);
         fileInputStream.close();
         // 打开两个新的输入流
         assert baos != null;
         InputStream stream1 = new ByteArrayInputStream(baos.toByteArray());
         InputStream stream2 = new ByteArrayInputStream(baos.toByteArray());
 
-        List<List<Object>> data = ExcelUtils.readExcel(stream1);
+        List<List<Object>> data = ExcelUtil.readExcel(stream1);
         stream1.close();
         if ( data == null || data.size() == 0 ) {
             return new ResponseEntity("请勿上传空文件", HttpStatus.EXPECTATION_FAILED);
         }
 
         //文件名要唯一
-        fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtils.fileNow() + "." + fileType;
-        TopicFile topicFile = RequestUtils.saveFile(stream2, fileName);//将文件保存至本地
+        fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtil.fileNow() + "." + fileType;
+        UploadFile uploadFile = FileUtil.saveFile(stream2, fileName);//将文件保存至本地
         stream2.close();
-        if ( topicFile == null ) {
+        if ( uploadFile == null ) {
             return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity(data, HttpStatus.OK);

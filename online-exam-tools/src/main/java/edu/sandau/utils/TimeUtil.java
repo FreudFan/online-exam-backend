@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class TimeUtils {
+public class TimeUtil {
 
     public static String now() {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00"));

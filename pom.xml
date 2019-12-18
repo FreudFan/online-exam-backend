@@ -14,6 +14,7 @@
         <module>server</module>
         <module>test</module>
         <module>client</module>
+        <module>online-exam-tools</module>
     </modules>
 
     <name>在线考试系统app</name>
@@ -211,11 +212,6 @@
             <version>2.6</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-email</artifactId>
-            <version>1.5</version>
-        </dependency>
-        <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.9.4</version>
@@ -224,6 +220,11 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>4.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

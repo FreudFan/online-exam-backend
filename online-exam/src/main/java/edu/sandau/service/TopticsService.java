@@ -1,8 +1,8 @@
 package edu.sandau.service;
 
 import edu.sandau.dao.TopticsDao;
-import edu.sandau.model.TopicFile;
-import edu.sandau.utils.ExcelUtils;
+import edu.sandau.model.UploadFile;
+import edu.sandau.utils.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +20,14 @@ public class TopticsService {
 
     /***
      * 解析excel文件内容
-     * @param topicFiles
+     * @param uploadFiles
      * @throws Exception
      */
-    public List readTopicExcel( List<TopicFile> topicFiles ) throws Exception {
+    public List readTopicExcel( List<UploadFile> uploadFiles) throws Exception {
         List<List<List<Object>>> topicList = new ArrayList<>();
-        for ( TopicFile topicFile: topicFiles ) {
-            File file = topicFile.getFile();
-            List<List<Object>> listList = ExcelUtils.readExcel(file);
+        for ( UploadFile uploadFile : uploadFiles) {
+            File file = uploadFile.getFile();
+            List<List<Object>> listList = ExcelUtil.readExcel(file);
             if ( topticsDao.insetForExcel(listList) ) {
                 topicList.add(listList);
             }

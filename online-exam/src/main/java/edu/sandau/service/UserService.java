@@ -3,7 +3,7 @@ package edu.sandau.service;
 import edu.sandau.dao.LoginUsersDao;
 import edu.sandau.dao.LoginUsersSecurityDao;
 import edu.sandau.model.LoginUsersSecurity;
-import edu.sandau.utils.CommonsUtils;
+import edu.sandau.utils.MapUtil;
 import model.LoginUsers;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,8 +25,8 @@ public class UserService {
     private LoginUsersSecurityDao loginUsersSecurityDao;
 
     public LoginUsers addUser(Map<String,Object> loginMap) throws Exception {
-        LoginUsers loginUsers = (LoginUsers) CommonsUtils.mapToObject(loginMap, LoginUsers.class);
-        LoginUsersSecurity usersSecurity = (LoginUsersSecurity)CommonsUtils.mapToObject(loginMap, LoginUsersSecurity.class);
+        LoginUsers loginUsers = (LoginUsers) MapUtil.mapToObject(loginMap, LoginUsers.class);
+        LoginUsersSecurity usersSecurity = (LoginUsersSecurity) MapUtil.mapToObject(loginMap, LoginUsersSecurity.class);
         //添加用户主表
         if ( loginUsers.getRole() == null ) {
             loginUsers.setRole(0);  //默认为注册用户

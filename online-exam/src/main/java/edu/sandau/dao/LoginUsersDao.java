@@ -1,6 +1,6 @@
 package edu.sandau.dao;
 
-import edu.sandau.utils.CommonsUtils;
+import edu.sandau.utils.MapUtil;
 import model.LoginUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -54,7 +54,7 @@ public class LoginUsersDao {
         if (mapList.size() == 0) {
             return null;
         } else {
-            return (List) CommonsUtils.mapToObject(mapList, LoginUsers.class);
+            return (List) MapUtil.mapToObject(mapList, LoginUsers.class);
         }
     }
 
@@ -80,7 +80,7 @@ public class LoginUsersDao {
         if (mapList.size() == 0) {
             return null;
         } else {
-            return (LoginUsers) CommonsUtils.mapToObject(mapList.get(0), LoginUsers.class);
+            return (LoginUsers) MapUtil.mapToObject(mapList.get(0), LoginUsers.class);
         }
     }
 
@@ -90,7 +90,7 @@ public class LoginUsersDao {
         if (mapList.size() == 0) {
             return null;
         } else {
-            return (LoginUsers) CommonsUtils.mapToObject(mapList.get(0), LoginUsers.class);
+            return (LoginUsers) MapUtil.mapToObject(mapList.get(0), LoginUsers.class);
         }
     }
 
