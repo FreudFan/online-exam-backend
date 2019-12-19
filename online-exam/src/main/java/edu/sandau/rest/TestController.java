@@ -1,21 +1,21 @@
 package edu.sandau.rest;
 
 import com.alibaba.fastjson.JSON;
+import edu.sandau.model.LoginUsers;
 import edu.sandau.service.EmailService;
 import edu.sandau.model.EmailMessage;
+import edu.sandau.session.SessionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundSetOperations;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Path("test")
@@ -38,7 +38,7 @@ public class TestController {
         emailMessage.setTos("test@test.com");
         emailMessage.setContent("你好，测试");
         emailMessage.setSubject("test");
-        emailService.sendHTMLMail(emailMessage);
+        emailService.sendHTMLMail(emailMessage, new HashMap<>());
         return null;
     }
 
@@ -84,33 +84,45 @@ public class TestController {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String redis() throws Exception {
-        SetOperations setOperations = redisTemplate.opsForSet();
-
-        /**
-         * 添加，类似于
-         *
-         *  Map<Object, Set<Object>> map = new HashMap<Object, Set<Object>>();
-         *  Set<Object> set = new HashSet<Object>();
-         *  map.put(key,set);
-         *  Set<Object> set = map.get(key);
-         *  set.add(value);
-         */
-        setOperations.add("springData","redis");
-        //获取
-        Set springData = setOperations.members("springData");
-        System.out.println(springData);
-        //获取两个key的value(Set)交集
-        setOperations.intersect("springData","SpringData1");
-
-        //获取两个key的value(Set)补集
-        setOperations.difference("springData","SpringData1");
-
-        //获取两个key的value(Set)并集
-        setOperations.union("springData","SpringData1");
-
-        String key = "springData";
-        BoundSetOperations boundSetOperations = redisTemplate.boundSetOps(key);
+        HashOperations hops = redisTemplate.opsForHash();
+        Map<String,String> map=new HashMap<String,String>();
+        map.put("key1","value1");
+        map.put("key2","value2");
+        map.put("key3","value3");
+        map.put("key4","value4");
+        map.put("key5","value5");
+        hops.putAll("spring.key",map);
         return null;
+    }
+
+    @Autowired
+    private HttpSession httpSession;
+    @Autowired
+    private SessionWrapper sessionWrapper;
+    @GET
+    @Path("session")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public String session() throws Exception {
+        LoginUsers users = new LoginUsers();
+        users.setEmail("faf@fdasf.com");
+        users.setPassword("11111");
+        sessionWrapper.addSessionToRedis(httpSession, users);
+        return sessionWrapper.getId(httpSession);
+    }
+
+    @GET
+    @Path("sessionId")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Object sessionId() throws Exception {
+//        return sessionWrapper.getRedisKeyFromSession(httpSession);
+//        sessionWrapper.refresh(httpSession);
+//        sessionWrapper.invalidate(httpSession);
+        LoginUsers users = sessionWrapper.getCurrentUser(httpSession);
+        sessionWrapper.setAttribute(httpSession, "23432", "fadsfjaidosfjaijfaidso");
+        Map<String,Object> map = sessionWrapper.getAllAttribute(httpSession);
+        return map;
     }
 
 }

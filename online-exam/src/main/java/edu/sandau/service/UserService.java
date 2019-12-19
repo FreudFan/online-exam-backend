@@ -74,6 +74,14 @@ public class UserService {
         return loginUsersDao.getUserByFields(keys, values);
     }
 
+    /***
+     * 若登录失败，返回null
+     * @param loginValue
+     * @param loginNmae
+     * @param password
+     * @return
+     * @throws Exception
+     */
     public LoginUsers login(String loginValue, String loginNmae, String password) throws  Exception {
         return loginUsersDao.login(loginValue,loginNmae,password);
     }

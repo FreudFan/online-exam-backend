@@ -3,6 +3,7 @@ package edu.sandau.rest;
 import com.alibaba.fastjson.JSONObject;
 import edu.sandau.model.LoginUsers;
 import edu.sandau.service.UserService;
+import edu.sandau.session.SessionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,8 @@ public class LoginController {
 
     @Autowired
     HttpSession httpSession;
+    @Autowired
+    SessionWrapper sessionWrapper;
 
     @Autowired
     private UserService userService;
@@ -47,9 +51,16 @@ public class LoginController {
         } else {
             loginValue = "username";
         }
-        LoginUsers loginUsers = userService.login(loginValue, name, password);
-        httpSession.setAttribute("user", JSONObject.toJSON(loginUsers));
-        return new ResponseEntity<>(loginUsers, HttpStatus.OK);
+        LoginUsers loginUser = userService.login(loginValue, name, password);
+        if ( loginUser == null ) {
+            return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
+        }
+
+        String token = sessionWrapper.addSessionToRedis(httpSession, loginUser);
+        Map<String, Object> param = new HashMap<>();
+        param.put("user", loginUser);
+        param.put("token", token);
+        return new ResponseEntity<>(param, HttpStatus.OK);
     }
 
     /***

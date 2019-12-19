@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -52,14 +53,14 @@ public class EmailService {
     }
 
     //带附件的HTML格式的Email
-    public void sendHTMLMail(EmailMessage emailMessage) throws MessagingException, IOException, TemplateException {
+    public void sendHTMLMail(EmailMessage emailMessage, Map<String,Object> model) throws MessagingException, IOException, TemplateException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
         messageHelper.setSubject(emailMessage.getSubject()); //设置邮件主题
         messageHelper.setText(emailMessage.getContent());   //设置邮件主题内容
         messageHelper.setTo(emailMessage.getTos());          //设定收件人Email
 
-        String text = FreemarkerUtil.getTemplate("email.ftl").toString();
+        String text = FreemarkerUtil.getTemplate("email.ftl", model);
         messageHelper.setText(text, true);
         javaMailSender.send(mimeMessage);
     }
