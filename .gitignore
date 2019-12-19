@@ -27,7 +27,8 @@ hs_err_pid*
 *.iml
 *.ipr
 *.iws
-target/*
-out/*
+*/target/*
+*/out/*
 topics/*
+files/*
 .idea/*

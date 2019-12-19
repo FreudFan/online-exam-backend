@@ -16,8 +16,8 @@ import java.sql.Statement;
 import java.util.Properties;
 
 @Scope("singleton")
-public class ConnectionManager extends ContextLoaderListener {
-    private final static Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
+public class DruidManager extends ContextLoaderListener {
+    private final static Logger LOGGER = LoggerFactory.getLogger(DruidManager.class);
 
     private static DataSource dataSource;
 
@@ -27,7 +27,7 @@ public class ConnectionManager extends ContextLoaderListener {
         try {
             Properties properties = new Properties();
             //通过类加载器加载配置文件
-            InputStream inputStream = ConnectionManager.class.getClassLoader().getResourceAsStream("druid.properties");
+            InputStream inputStream = DruidManager.class.getClassLoader().getResourceAsStream("druid.properties");
             properties.load(inputStream);
             LOGGER.info("配置文件：" + properties.toString());
             if ( dataSource == null ) {

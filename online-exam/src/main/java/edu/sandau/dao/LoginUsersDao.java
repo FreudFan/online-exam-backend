@@ -1,7 +1,7 @@
 package edu.sandau.dao;
 
+import edu.sandau.model.LoginUsers;
 import edu.sandau.utils.MapUtil;
-import model.LoginUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -24,7 +24,7 @@ public class LoginUsersDao {
      * @param loginUsers
      * @return
      */
-    public LoginUsers save( LoginUsers loginUsers ) throws Exception {
+    public LoginUsers save(LoginUsers loginUsers ) throws Exception {
         String SQL = " INSERT INTO login_users " +
                 "( username, password, realname, gender, email, telephone, subject_id, role ) VALUES " +
                 "( ?, ?, ?, ?, ?, ?, ?, ? )";

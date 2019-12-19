@@ -1,8 +1,8 @@
 package datasource;
 
 import com.alibaba.fastjson.JSONObject;
-import edu.sandau.datasource.ConnectionManager;
-import edu.sandau.datasource.JDBCUtils;
+import edu.sandau.datasource.DruidManager;
+import edu.sandau.utils.JDBCUtil;
 import edu.sandau.model.Topics;
 
 import java.lang.reflect.InvocationTargetException;
@@ -23,25 +23,25 @@ public class Dtest {
         topics.setSubject_id(11165186);
         topics.setTopics_id(12);
 //        JDBCUtils.insertOrUpdate(topics);
-        List<Topics> topicsList = JDBCUtils.get(Topics.class, 0 ,5);
+        List<Topics> topicsList = JDBCUtil.get(Topics.class, 0 ,5);
         topicsList.size();
     }
 
     private static void testSQLExcute() throws SQLException {
         String sql = "SELECT * FROM MENU";
-        List<Map<String,Object>> list = JDBCUtils.queryForList(sql);
+        List<Map<String,Object>> list = JDBCUtil.queryForList(sql);
         for ( Map<String,Object> map: list ) {
             System.out.println(new JSONObject(map).toJSONString());
         }
     }
 
     private static void testSQLUtil() throws SQLException {
-        ConnectionManager.getConnection();
+        DruidManager.getConnection();
         for (int i = 0; i < 100000; i++) {
             String sql = "SELECT * FROM MENU";
 //            List<Map<String,Object>> list = JDBCUtils.queryForList(sql);
 //            System.out.println(list.toString());
-            ResultSet resultSet = JDBCUtils.queryForResultSet(sql);
+            ResultSet resultSet = JDBCUtil.queryForResultSet(sql);
             System.out.println(resultSet.toString());
         }
     }
@@ -49,9 +49,9 @@ public class Dtest {
     private static void testConnection(){
         //超过最大限制或报"TimeoutException",每打开一个关闭一个就不会发生异常
         for (int i = 0; i < 100000; i++) {
-            Connection connection = ConnectionManager.getConnection();
+            Connection connection = DruidManager.getConnection();
             System.out.println(connection.toString() + "\n------------------------------------");
-            ConnectionManager.closeAll(connection, null, null);
+            DruidManager.closeAll(connection, null, null);
         }
     }
 
@@ -72,7 +72,7 @@ public class Dtest {
         System.out.println("开始执行JDBCUtils.queryForResultSet");
         startTime = System.currentTimeMillis(); // 获取开始时间
         for (int i = 0; i < count; i++) {
-            JDBCUtils.queryForResultSet(sql);
+            JDBCUtil.queryForResultSet(sql);
         }
         endTime = System.currentTimeMillis(); // 获取结束时间
         System.out.println("执行结束");

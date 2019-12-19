@@ -1,18 +1,22 @@
 package edu.sandau.service;
 
-import edu.sandau.model.EmailVo;
+import edu.sandau.dao.EmailVoDao;
+import edu.sandau.model.EmailMessage;
+import edu.sandau.utils.FreemarkerUtil;
+import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 
 @Slf4j
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class EmailService {
 
     @Autowired
@@ -21,26 +25,43 @@ public class EmailService {
     @Autowired
     private SimpleMailMessage simpleMailMessage;
 
+    @Autowired
+    private EmailVoDao emailVoDao;
+
     /***
-     * 发送邮件
-     * @param emailVo 邮箱发送对象
+     * 发送邮件 只能发文字
+     * @param emailMessage 邮箱发送对象
      * @throws Exception
      */
-    public void send(EmailVo emailVo) throws Exception {
+    public void sendSimpleMail(EmailMessage emailMessage) throws Exception {
         try {
             //用于接收邮件的邮箱
-            simpleMailMessage.setTo(emailVo.getTos());
+            simpleMailMessage.setTo(emailMessage.getTos());
             //邮件的主题
-            simpleMailMessage.setSubject(emailVo.getSubject());
+            simpleMailMessage.setSubject(emailMessage.getSubject());
             //邮件的正文，第二个boolean类型的参数代表html格式
-            simpleMailMessage.setText(emailVo.getContent());
+            simpleMailMessage.setText(emailMessage.getContent());
 
-            log.info("发送邮件：{}", simpleMailMessage);
-            //发送
+            //发送邮件
             javaMailSender.send(simpleMailMessage);
+            log.info("发送邮件：{}", simpleMailMessage);
+//            emailVoDao.save(emailMessage);
         } catch (Exception e) {
             throw new MessagingException("failed to send mail!", e);
         }
+    }
+
+    //带附件的HTML格式的Email
+    public void sendHTMLMail(EmailMessage emailMessage) throws MessagingException, IOException, TemplateException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
+        messageHelper.setSubject(emailMessage.getSubject()); //设置邮件主题
+        messageHelper.setText(emailMessage.getContent());   //设置邮件主题内容
+        messageHelper.setTo(emailMessage.getTos());          //设定收件人Email
+
+        String text = FreemarkerUtil.getTemplate("email.ftl").toString();
+        messageHelper.setText(text, true);
+        javaMailSender.send(mimeMessage);
     }
 
     /***
@@ -54,4 +75,6 @@ public class EmailService {
     public void setSimpleMailMessage(SimpleMailMessage simpleMailMessage) {
         this.simpleMailMessage = simpleMailMessage;
     }
+
+
 }

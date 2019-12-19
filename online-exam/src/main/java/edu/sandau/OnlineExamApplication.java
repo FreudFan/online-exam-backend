@@ -1,6 +1,6 @@
 package edu.sandau;
 
-import edu.sandau.datasource.ConnectionManager;
+import edu.sandau.datasource.DruidManager;
 import lombok.extern.slf4j.Slf4j;
 import server.Tomcat8;
 
@@ -20,8 +20,8 @@ public class OnlineExamApplication {
      * 初始化连接池
      */
     private static void initDatabaseConnectionPool() {
-        java.sql.Connection connection = ConnectionManager.getConnection();
-        ConnectionManager.closeAll(connection,null,null);
+        java.sql.Connection connection = DruidManager.getConnection();
+        DruidManager.closeAll(connection,null,null);
     }
 
 }

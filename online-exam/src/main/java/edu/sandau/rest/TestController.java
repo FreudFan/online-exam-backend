@@ -2,7 +2,7 @@ package edu.sandau.rest;
 
 import com.alibaba.fastjson.JSON;
 import edu.sandau.service.EmailService;
-import edu.sandau.model.EmailVo;
+import edu.sandau.model.EmailMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;
@@ -19,7 +19,7 @@ import java.util.Set;
 
 @Slf4j
 @Path("test")
-public class Test {
+public class TestController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -34,11 +34,11 @@ public class Test {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String sendMail() throws Exception {
-        EmailVo emailVo = new EmailVo();
-        emailVo.setTos("test@test.com");
-        emailVo.setContent("你好，测试");
-        emailVo.setSubject("test");
-        emailService.send(emailVo);
+        EmailMessage emailMessage = new EmailMessage();
+        emailMessage.setTos("test@test.com");
+        emailMessage.setContent("你好，测试");
+        emailMessage.setSubject("test");
+        emailService.sendHTMLMail(emailMessage);
         return null;
     }
 

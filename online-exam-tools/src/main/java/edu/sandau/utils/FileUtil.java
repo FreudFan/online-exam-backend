@@ -13,7 +13,7 @@ import java.util.List;
 
 public class FileUtil {
 
-    private final static String upload_dir = "topics";
+    private final static String upload_dir = "files";
 
     static {
         File f = new File(upload_dir); //新建保存目录
@@ -29,15 +29,11 @@ public class FileUtil {
      * @throws UnsupportedEncodingException
      * @throws FileUploadException
      */
-    public static List<FileItem> getFileItemList( HttpServletRequest request, String fileType ) throws UnsupportedEncodingException, FileUploadException {
+    public static List<FileItem> getFileItemList( HttpServletRequest request, String fileType )
+            throws UnsupportedEncodingException, FileUploadException {
         request.setCharacterEncoding("UTF-8");
         String contentType = request.getContentType();
         if ((contentType.contains("multipart/form-data"))) {
-            if ( fileType.equals("xlsx") ) {
-                File f = new File("topics"); //新建保存目录
-                if ( !f.exists() ) f.mkdir();
-            }
-
             // 创建一个新的文件上传处理程序
             DiskFileItemFactory factory = new DiskFileItemFactory();
             ServletFileUpload fileUpload = new ServletFileUpload(factory);
@@ -57,7 +53,7 @@ public class FileUtil {
      * @param filePath  文件路径，以'/'结尾
      * @return
      */
-    public synchronized static UploadFile saveFile(FileItem fileItem, String filePath) {
+    public static UploadFile saveFile(FileItem fileItem, String filePath) {
         String fileName = fileItem.getName();   //文件名
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);    //文件类型
         //文件名要唯一
@@ -89,7 +85,7 @@ public class FileUtil {
         return uploadFile;
     }
 
-    public synchronized static UploadFile saveFile(InputStream inputStream, String fileName) {
+    public static UploadFile saveFile(InputStream inputStream, String fileName) {
         File file = new File(upload_dir,fileName);
         UploadFile uploadFile = new UploadFile();
         try(
@@ -108,7 +104,6 @@ public class FileUtil {
         } catch ( Exception e ) {
             e.printStackTrace();
             return null;
-        } finally {
         }
         return uploadFile;
     }

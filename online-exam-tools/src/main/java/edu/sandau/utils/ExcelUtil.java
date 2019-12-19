@@ -1,5 +1,6 @@
 package edu.sandau.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -19,8 +20,9 @@ import java.util.Map;
 
 import static org.apache.poi.ss.usermodel.CellType.STRING;
 
+@Slf4j
 public class ExcelUtil {
-    private final static Logger LOGGER = LoggerFactory.getLogger(ExcelUtil.class);
+
     /**
      * 要求excel版本在2007以上
      *

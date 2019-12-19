@@ -1,5 +1,6 @@
-package edu.sandau.datasource;
+package edu.sandau.utils;
 
+import edu.sandau.datasource.DruidManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,10 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JDBCUtils {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+public class JDBCUtil {
 
     /***
      * 查询返回 ResultSet
@@ -26,7 +24,7 @@ public class JDBCUtils {
     public static ResultSet queryForResultSet( String sql ) throws SQLException {
         if ( !StringUtils.isEmpty(sql) ) {
             try(
-                    Connection connection = ConnectionManager.getConnection();
+                    Connection connection = DruidManager.getConnection();
                     PreparedStatement statement = connection.prepareStatement(sql);
             ) {
                 return statement.executeQuery();
@@ -48,7 +46,7 @@ public class JDBCUtils {
         if ( !StringUtils.isEmpty(sql) ) {
             List<Map<String, Object>> resultList = new ArrayList<>();
             try(
-                    Connection connection = ConnectionManager.getConnection();
+                    Connection connection = DruidManager.getConnection();
                     PreparedStatement statement = connection.prepareStatement(sql);
                     ResultSet resultSet = statement.executeQuery();
                 ) {
@@ -90,7 +88,7 @@ public class JDBCUtils {
         }
         List<Object> objects = new ArrayList<Object>();
         try(
-                Connection connection = ConnectionManager.getConnection();
+                Connection connection = DruidManager.getConnection();
                 PreparedStatement statement = connection.prepareStatement(SQL);
         ) {
             statement.setString(1, clazzName+"_id");    //order by key
@@ -134,36 +132,6 @@ public class JDBCUtils {
     }
 
     /***
-     * 插入实体类实现 insertOrUpdate (未实现)
-     * key_id 为 null ? INSERT : UPDATE
-     * @param object
-     * @return  key_id
-     * @throws NoSuchFieldException
-     * @throws IllegalAccessException
-     */
-    @Deprecated
-    public static Integer insertOrUpdate( Object object ) throws NoSuchFieldException, IllegalAccessException {
-        Class clazz = object.getClass();
-        String clazzName = clazz.getName(); //类名
-        clazzName = clazzName.substring(clazzName.lastIndexOf(".")+1);
-        //表名
-        String TABLE_NAME = clazzName.toLowerCase();
-        boolean INSERT_FLAG = true;
-        Field[] fields = clazz.getDeclaredFields(); //获取所有属性对象
-        for (Field field1 : fields) {
-            String field = field1.getName();
-
-            if (field.endsWith(TABLE_NAME + "_id")) {   //判断主键的值是否存在，如果不存在则insert
-                field1.setAccessible(true);
-                if (field1.get(object) == null) {
-                    INSERT_FLAG = false; //key为空 使用insert
-                }
-            }
-        }
-        return null;
-    }
-
-    /***
      * 获取ResultSet查询结果的列名
      * @param rs
      * @return
@@ -188,7 +156,7 @@ public class JDBCUtils {
      */
     public static int deleteForRecord(String tableName, String flag,String idName,String[] idArrays){
         try {
-            Connection connection = ConnectionManager.getConnection();
+            Connection connection = DruidManager.getConnection();
             PreparedStatement statement = connection.prepareStatement("update " + tableName + " set " + flag + " = 0 where " + idName+ " = ?");
 
             for (String id : idArrays) {

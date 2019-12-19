@@ -1,7 +1,7 @@
 package edu.sandau.dao;
 
-import edu.sandau.datasource.ConnectionManager;
-import edu.sandau.datasource.JDBCUtils;
+import edu.sandau.datasource.DruidManager;
+import edu.sandau.utils.JDBCUtil;
 import edu.sandau.service.TopticsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class TopticsDao {
         List<Map<String,Object>> list = new ArrayList<>();
         String sql = "select a.topics_id, description,correctkey,topicmark,analysis,b.option,b.value from topics  a " +
                 "left join options  b on a.topics_id = b.topics_id where flag = 1";
-        list = JDBCUtils.queryForList(sql);
+        list = JDBCUtil.queryForList(sql);
         return list;
     }
 
@@ -38,7 +38,7 @@ public class TopticsDao {
         sb.append("INSERT INTO topics(description,correctkey,topicmark,analysis)VALUES(?,?,?,?);" );
         sbForOptions.append("INSERT INTO options(topics_id,options.option,options.value)VALUES(?,?,?);" );
         try {
-            Connection connection = ConnectionManager.getConnection();
+            Connection connection = DruidManager.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sbForOptions.toString());
             ResultSet rs ;
             PreparedStatement ps = connection.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
@@ -83,7 +83,7 @@ public class TopticsDao {
 
 
     public int deleteTopics(String idName,String[] idArrays){
-        int count = JDBCUtils.deleteForRecord("topics","flag",idName,idArrays);
+        int count = JDBCUtil.deleteForRecord("topics","flag",idName,idArrays);
         return count;
     }
 

@@ -37,4 +37,16 @@
         <property name="simpleMailMessage" ref="simpleMailMessage"/>
     </bean>
 
+    <!-- freemarker -->
+    <bean id="configuration"
+          class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+        <property name="templateLoaderPath" value="/WEB-INF/" />
+        <!-- 设置FreeMarker环境变量 -->
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="default_encoding">UTF-8</prop>
+            </props>
+        </property>
+    </bean>
+
 </beans>
