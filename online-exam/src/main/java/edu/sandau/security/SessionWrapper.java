@@ -22,7 +22,7 @@ public class SessionWrapper {
     /***
      * !!! 此方法只允许在用户登录时使用，并只允许使用一次 !!!
      * 使用场景：用户登录成功后需在redis里集中管理session，在此处生成唯一的 key
-     * 唯一key规则：sessionId + 随机数
+     * 唯一key规则：auth + 随机数
      * 会将用户对象信息存入redis，key保存在服务器的session里
      * redis 保存成功后会将 key 发给前端，前端需在每次请求中加上 key
      * @return key 会话唯一标识
@@ -30,10 +30,10 @@ public class SessionWrapper {
      */
     public String addSessionToRedis(HttpSession httpSession, LoginUsers loginUsers) {
         String uuid = UUID.randomUUID().toString().replaceAll("-","");
-        String key = "sessionId" + uuid; //确保redis的key唯一
+        String key = "auth" + uuid; //确保redis的key唯一
         while ( redisTemplate.hasKey(key) ) {   //若已存在相同key，重新生成随机数
             uuid = UUID.randomUUID().toString().replaceAll("-","");
-            key = "sessionId" + uuid;
+            key = "auth" + uuid;
         }
         Map attribute = new HashMap();
         attribute.put("user", JSON.toJSON(loginUsers).toString());

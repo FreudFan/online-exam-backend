@@ -2,6 +2,7 @@ package edu.sandau.rest;
 
 import com.alibaba.fastjson.JSON;
 import edu.sandau.model.LoginUsers;
+import authorization.Auth;
 import edu.sandau.service.EmailService;
 import edu.sandau.model.EmailMessage;
 import edu.sandau.security.SessionWrapper;
@@ -19,6 +20,7 @@ import java.util.*;
 
 @Slf4j
 @Path("test")
+@Auth
 public class TestController {
 
     @Autowired
@@ -99,6 +101,7 @@ public class TestController {
     private HttpSession httpSession;
     @Autowired
     private SessionWrapper sessionWrapper;
+
     @GET
     @Path("session")
     @Consumes({ MediaType.APPLICATION_JSON })

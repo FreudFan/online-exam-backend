@@ -12,12 +12,12 @@
     <artifactId>online-exam-tools</artifactId>
     <name>工具模块</name>
 
-    <dependencies>
-        <dependency>
-            <groupId>edu.sandau</groupId>
-            <artifactId>server</artifactId>
-            <version>1.0</version>
-        </dependency>
-    </dependencies>
+<!--    <dependencies>-->
+<!--        <dependency>-->
+<!--            <groupId>edu.sandau</groupId>-->
+<!--            <artifactId>server</artifactId>-->
+<!--            <version>1.0</version>-->
+<!--        </dependency>-->
+<!--    </dependencies>-->
 
 </project>

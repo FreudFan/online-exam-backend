@@ -13,6 +13,7 @@ import javax.ws.rs.ext.ReaderInterceptorContext;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
+import authorization.AuthorizationFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
@@ -36,13 +37,9 @@ public class RestConfig extends ResourceConfig {
 		LOGGER.info("in packages="+packages);
     	this.packages(packages);
 		this.register(MultiPartFeature.class);
-    	// can add thread following
-    	
-    	//if(use_gzip){
-      	    //this.register(GzipInterceptor.class); //支持压缩
-      	    this.register(TestReaderIntercetor.class);
-      	//}
-    	
+		this.register(TestReaderIntercetor.class);
+
+		this.register(AuthorizationFilter.class);
     }
     
     public String loadPackages()
@@ -96,17 +93,14 @@ public class RestConfig extends ResourceConfig {
 			MultivaluedMap<String, String> headers=context.getHeaders();
 			
 			java.util.Iterator<String>  keys=headers.keySet().iterator();
-//			System.out.println("request filter:{");
 			String log = "request filter:{\n";
 			while(keys.hasNext())
 			{
 				String key =keys.next();
 				String v=headers.getFirst(key);
 				log += "     " + key + "=" + v + "\n";
-//				System.out.println("     "+key+"="+v);
 			}
 			log += "}";
-//			System.out.println("}");
 			LOGGER.info(log);
 			return context.proceed();
 		}
