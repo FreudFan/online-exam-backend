@@ -1,4 +1,4 @@
-package edu.sandau.session;
+package edu.sandau.security;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

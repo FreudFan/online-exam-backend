@@ -3,7 +3,7 @@ package edu.sandau.rest;
 import com.alibaba.fastjson.JSONObject;
 import edu.sandau.model.LoginUsers;
 import edu.sandau.service.UserService;
-import edu.sandau.session.SessionWrapper;
+import edu.sandau.security.SessionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.math.NumberUtils;

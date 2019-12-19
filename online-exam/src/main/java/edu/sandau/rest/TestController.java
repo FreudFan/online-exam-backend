@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import edu.sandau.model.LoginUsers;
 import edu.sandau.service.EmailService;
 import edu.sandau.model.EmailMessage;
-import edu.sandau.session.SessionWrapper;
+import edu.sandau.security.SessionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
