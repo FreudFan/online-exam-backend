@@ -13,12 +13,12 @@ import javax.ws.rs.ext.ReaderInterceptorContext;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
-import authorization.AuthorizationFilter;
+import authorization.RequestFilter;
+import authorization.ResponseFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class RestConfig extends ResourceConfig {
 	private final static Logger LOGGER = LoggerFactory.getLogger(RestConfig.class);
@@ -39,7 +39,8 @@ public class RestConfig extends ResourceConfig {
 		this.register(MultiPartFeature.class);
 		this.register(TestReaderIntercetor.class);
 
-		this.register(AuthorizationFilter.class);
+		this.register(RequestFilter.class);
+		this.register(ResponseFilter.class);
     }
     
     public String loadPackages()

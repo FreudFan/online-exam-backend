@@ -22,28 +22,9 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
-    <!--<servlet>-->
-        <!--<servlet-name>jerseySpring</servlet-name>-->
-        <!--<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>-->
-        <!--&lt;!&ndash; 配置自己的资源加载类去加载资源 &ndash;&gt;-->
-        <!--<init-param>-->
-            <!--<param-name>javax.ws.rs.Application</param-name>-->
-            <!--<param-value>server.RestConfig</param-value>-->
-        <!--</init-param>-->
-        <!--<load-on-startup>1</load-on-startup>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>jerseySpring</servlet-name>-->
-        <!--<url-pattern>/rest/*</url-pattern>-->
-    <!--</servlet-mapping>-->
-
     <listener>
         <listener-class>edu.sandau.datasource.DruidManager</listener-class>
     </listener>
-
-    <session-config>
-        <session-timeout>20</session-timeout>
-    </session-config>
 
     <!--配置durid监控-->
     <servlet>
