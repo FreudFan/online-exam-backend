@@ -1,7 +1,7 @@
 package edu.sandau.rest;
 
 import com.alibaba.fastjson.JSONObject;
-import edu.sandau.model.LoginUsers;
+import edu.sandau.model.LoginUser;
 import edu.sandau.service.UserService;
 import edu.sandau.security.SessionWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
@@ -22,8 +21,6 @@ import java.util.Map;
 @Path("user")
 public class LoginController {
 
-    @Autowired
-    HttpSession httpSession;
     @Autowired
     SessionWrapper sessionWrapper;
 
@@ -51,12 +48,12 @@ public class LoginController {
         } else {
             loginValue = "username";
         }
-        LoginUsers loginUser = userService.login(loginValue, name, password);
+        LoginUser loginUser = userService.login(loginValue, name, password);
         if ( loginUser == null ) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
 
-        String token = sessionWrapper.addSessionToRedis(httpSession, loginUser);
+        String token = sessionWrapper.addSessionToRedis(loginUser);
         Map<String, Object> param = new HashMap<>();
         param.put("user", loginUser);
         param.put("token", token);
@@ -77,12 +74,11 @@ public class LoginController {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public ResponseEntity register(Map<String,Object> map) throws Exception {
-        LoginUsers loginUsers = userService.addUser(map);
-        if ( loginUsers == null ) {
+        LoginUser loginUser = userService.addUser(map);
+        if ( loginUser == null ) {
             return new ResponseEntity<>("same value", HttpStatus.EXPECTATION_FAILED);
         }
-        httpSession.setAttribute("user", JSONObject.toJSON(loginUsers));
-        return new ResponseEntity<>(loginUsers, HttpStatus.OK);
+        return new ResponseEntity<>(loginUser, HttpStatus.OK);
     }
 
     /***
@@ -97,7 +93,7 @@ public class LoginController {
     @Produces({ MediaType.APPLICATION_JSON })
     public ResponseEntity check(Map<String,Object> map) throws Exception {
         if ( map.containsKey("username") || map.containsKey("email") || map.containsKey("telephone") ) {
-            LoginUsers user = userService.check(map);
+            LoginUser user = userService.check(map);
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

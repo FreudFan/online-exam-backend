@@ -3,28 +3,37 @@ package edu.sandau.model;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@Data
-public class LoginUsers implements Serializable {
+public class LoginUser implements Serializable {
     @JSONField(serialize = false)
-    @Getter private final String TABLE_NAME = "login_users";
+    private final String TABLE_NAME = "login_user";
 
-    private Integer login_users_id;
+    @Getter @Setter
+    private Integer login_user_id;
+    @Getter @Setter
     private String username;
+    @Getter @Setter
     @JSONField(serialize = false)
     private String password;
+    @Getter @Setter
     private String realname;
+    @Getter @Setter
     private Integer gender;
+    @Getter @Setter
     private String email;
+    @Getter @Setter
     private String telephone;
+    @Getter @Setter
     private String subject_id;
+    @Getter @Setter
     private Integer role;   // 0:普通用户 1:试题管理员 2:系统管理员
 
-    @JSONField(serialize = false)
-    private @Getter Date createtime;
-    @JSONField(serialize = false)
-    private @Getter Date updatetime;
+    @Getter @JSONField(serialize = false)
+    private Date createtime;
+    @Getter @JSONField(serialize = false)
+    private Date updatetime;
 }

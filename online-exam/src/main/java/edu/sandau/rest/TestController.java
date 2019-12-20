@@ -1,7 +1,7 @@
 package edu.sandau.rest;
 
 import com.alibaba.fastjson.JSON;
-import edu.sandau.model.LoginUsers;
+import edu.sandau.model.LoginUser;
 import authorization.Auth;
 import edu.sandau.service.EmailService;
 import edu.sandau.model.EmailMessage;
@@ -12,10 +12,11 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.SecurityContext;
 import java.util.*;
 
 @Slf4j
@@ -98,20 +99,20 @@ public class TestController {
     }
 
     @Autowired
-    private HttpSession httpSession;
-    @Autowired
     private SessionWrapper sessionWrapper;
+    @Context
+    private SecurityContext securityContext;
 
     @GET
     @Path("session")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String session() throws Exception {
-        LoginUsers users = new LoginUsers();
-        users.setEmail("faf@fdasf.com");
-        users.setPassword("11111");
-        sessionWrapper.addSessionToRedis(httpSession, users);
-        return sessionWrapper.getId(httpSession);
+        LoginUser user = new LoginUser();
+        user.setEmail("faf@fdasf.com");
+        user.setPassword("11111");
+//        sessionWrapper.addSessionToRedis(securityContext, user);
+        return null;
     }
 
     @GET
@@ -122,10 +123,10 @@ public class TestController {
 //        return sessionWrapper.getRedisKeyFromSession(httpSession);
 //        sessionWrapper.refresh(httpSession);
 //        sessionWrapper.invalidate(httpSession);
-        LoginUsers users = sessionWrapper.getCurrentUser(httpSession);
-        sessionWrapper.setAttribute(httpSession, "23432", "fadsfjaidosfjaijfaidso");
-        Map<String,Object> map = sessionWrapper.getAllAttribute(httpSession);
-        return map;
+        LoginUser users = sessionWrapper.getCurrentUser(securityContext);
+//        sessionWrapper.setAttribute(httpSession, "23432", "fadsfjaidosfjaijfaidso");
+//        Map<String,Object> map = sessionWrapper.getAllAttribute(httpSession);
+        return users;
     }
 
 }

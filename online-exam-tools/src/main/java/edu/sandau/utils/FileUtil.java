@@ -5,12 +5,13 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.List;
 
-
+@Component
 public class FileUtil {
 
     private final static String upload_dir = "files";
@@ -29,7 +30,7 @@ public class FileUtil {
      * @throws UnsupportedEncodingException
      * @throws FileUploadException
      */
-    public static List<FileItem> getFileItemList( HttpServletRequest request, String fileType )
+    public List<FileItem> getFileItemList( HttpServletRequest request, String fileType )
             throws UnsupportedEncodingException, FileUploadException {
         request.setCharacterEncoding("UTF-8");
         String contentType = request.getContentType();
@@ -53,7 +54,7 @@ public class FileUtil {
      * @param filePath  文件路径，以'/'结尾
      * @return
      */
-    public static UploadFile saveFile(FileItem fileItem, String filePath) {
+    public UploadFile saveFile(FileItem fileItem, String filePath) {
         String fileName = fileItem.getName();   //文件名
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);    //文件类型
         //文件名要唯一
@@ -74,9 +75,8 @@ public class FileUtil {
             while ( ( len = inputStream.read(buffer) ) > 0 ) {
                 outputStream.write(buffer, 0, len);
             }
-
-            uploadFile.setFilePath(filePath);
             uploadFile.setFile(file);
+            uploadFile.setFilePath(filePath);
         } catch ( Exception e ) {
             e.printStackTrace();
         } finally {
@@ -85,22 +85,20 @@ public class FileUtil {
         return uploadFile;
     }
 
-    public static UploadFile saveFile(InputStream inputStream, String fileName) {
+    public UploadFile saveFile(InputStream inputStream, String fileName) {
         File file = new File(upload_dir,fileName);
         UploadFile uploadFile = new UploadFile();
         try(
                 FileOutputStream outputStream = new FileOutputStream(file)
         ) {
-            // 流的对拷
             byte[] buffer = new byte[1024]; //每次读取1个字节
             int len;
             // 开始读取上传文件的字节，并将其输出到服务端的撒花姑娘穿文件的输出流中
             while ( ( len = inputStream.read(buffer) ) > 0 ) {
                 outputStream.write(buffer, 0, len);
             }
-
-            uploadFile.setFilePath(upload_dir + fileName);
             uploadFile.setFile(file);
+            uploadFile.setFilePath(upload_dir + fileName);
         } catch ( Exception e ) {
             e.printStackTrace();
             return null;
@@ -113,7 +111,7 @@ public class FileUtil {
      * @param input
      * @return
      */
-    public static ByteArrayOutputStream cloneInputStream(InputStream input) {
+    public ByteArrayOutputStream cloneInputStream(InputStream input) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];

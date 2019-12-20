@@ -14,7 +14,6 @@ import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
 import authorization.RequestFilter;
-import authorization.ResponseFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
@@ -40,7 +39,6 @@ public class RestConfig extends ResourceConfig {
 		this.register(TestReaderIntercetor.class);
 
 		this.register(RequestFilter.class);
-		this.register(ResponseFilter.class);
     }
     
     public String loadPackages()

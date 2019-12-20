@@ -5,11 +5,9 @@
     <!-- Servlet declaration can be omitted in which case
          it would be automatically added by Jersey  -->
 
-    <!--<listener>-->
-        <!--<listener-class>-->
-            <!--org.springframework.web.context.ContextLoaderListener-->
-        <!--</listener-class>-->
-    <!--</listener>-->
+<!--    <listener> 不可加入，由于用jersey接管了controller，注入此监听器将报异常 -->
+<!--        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>-->
+<!--    </listener>-->
 
     <servlet>
         <servlet-name>server.RestConfig</servlet-name>

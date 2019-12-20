@@ -1,45 +1,73 @@
 package authorization;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
+import java.security.Principal;
 
 @Auth
 public class RequestFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-
         //获取客户端Header中提交的token
         String token = requestContext.getHeaderString("Authorization");
         //判断用户是否已登录
-        if (StringUtils.isEmpty(token) || !check(token)) {
-            //拦截
+        boolean access = true;
+        if ( !StringUtils.isEmpty(token) && token.startsWith("auth") && redisTemplate.hasKey(token) ) {
+            try {
+                String value = redisTemplate.opsForHash().get(token, "user").toString();
+                JSONObject params = JSONObject.parseObject(value);
+                String userId = params.get("login_user_id").toString();
+                if ( !StringUtils.isEmpty(userId) ) {
+                    final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
+                    requestContext.setSecurityContext(new SecurityContext() {
+                        //重写当前请求的安全信息
+                        //获取用户id: 通过 getUserPrincipal().getName() 方法
+                        //获取用户redis的key: 通过 getAuthenticationScheme() 方法
+                        @Override
+                        public Principal getUserPrincipal() {
+                            return () -> userId;
+                        }
+
+                        @Override
+                        public boolean isUserInRole(String role) {
+                            return true;
+                        }
+
+                        @Override
+                        public boolean isSecure() {
+                            return currentSecurityContext.isSecure();
+                        }
+
+                        @Override
+                        public String getAuthenticationScheme() {
+                            return token;
+                        }
+                    });
+                } else {
+                    access = false;
+                }
+            } catch (Exception e) {
+                access = false;
+            }
+        } else {
+            access = false;
+        }
+        if ( !access ) {    //拦截
             requestContext.abortWith(Response
                     .status(Response.Status.UNAUTHORIZED)
                     .entity("请先登录哦~")
                     .build());
         }
     }
-
-    private boolean check(String token) {
-        HashOperations hashOperations = redisTemplate.opsForHash();
-        if ( redisTemplate.hasKey(token) && hashOperations.hasKey(token, "user") ) {
-            httpSession.setAttribute("user", token);
-            return true;
-        }
-        return false;
-    }
-
-    @Autowired
-    private HttpSession httpSession;
 
     @Autowired
     private RedisTemplate redisTemplate;

@@ -1,9 +1,9 @@
 package edu.sandau.service;
 
-import edu.sandau.dao.LoginUsersDao;
-import edu.sandau.dao.LoginUsersSecurityDao;
-import edu.sandau.model.LoginUsers;
-import edu.sandau.model.LoginUsersSecurity;
+import edu.sandau.dao.LoginUserDao;
+import edu.sandau.dao.LoginUserSecurityDao;
+import edu.sandau.model.LoginUser;
+import edu.sandau.model.LoginUserSecurity;
 import edu.sandau.utils.MapUtil;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,30 +20,30 @@ import java.util.Map;
 public class UserService {
 
     @Autowired
-    private LoginUsersDao loginUsersDao;
+    private LoginUserDao loginUserDao;
     @Autowired
-    private LoginUsersSecurityDao loginUsersSecurityDao;
+    private LoginUserSecurityDao loginUserSecurityDao;
 
-    public LoginUsers addUser(Map<String,Object> loginMap) throws Exception {
-        LoginUsers loginUsers = (LoginUsers) MapUtil.mapToObject(loginMap, LoginUsers.class);
-        LoginUsersSecurity usersSecurity = (LoginUsersSecurity) MapUtil.mapToObject(loginMap, LoginUsersSecurity.class);
+    public LoginUser addUser(Map<String,Object> loginMap) throws Exception {
+        LoginUser loginUser = (LoginUser) MapUtil.mapToObject(loginMap, LoginUser.class);
+        LoginUserSecurity usersSecurity = (LoginUserSecurity) MapUtil.mapToObject(loginMap, LoginUserSecurity.class);
         //添加用户主表
-        if ( loginUsers.getRole() == null ) {
-            loginUsers.setRole(0);  //默认为注册用户
+        if ( loginUser.getRole() == null ) {
+            loginUser.setRole(0);  //默认为注册用户
         }
         if ( check(loginMap) == null ) { //查重
-            loginUsers = loginUsersDao.save(loginUsers);
+            loginUser = loginUserDao.save(loginUser);
         } else {
             return null;
         }
         //添加用户密保表
         if ( usersSecurity.getAnswer() != null && usersSecurity.getQuestion() != null
                 && usersSecurity.getAnswer().size() > 0 && usersSecurity.getQuestion().size() > 0 ) {
-            usersSecurity.setLogin_users_id(loginUsers.getLogin_users_id());
-            loginUsersSecurityDao.save(usersSecurity);
+            usersSecurity.setLogin_user_id(loginUser.getLogin_user_id());
+            loginUserSecurityDao.save(usersSecurity);
         }
 
-        return loginUsers;
+        return loginUser;
     }
 
     /***
@@ -52,7 +52,7 @@ public class UserService {
      * @return 若存在用户，返回用户
      * @throws Exception
      */
-    public LoginUsers check(Map<String,Object> map) throws Exception {
+    public LoginUser check(Map<String,Object> map) throws Exception {
         List<String> keys = new ArrayList<>();
         List<String> values = new ArrayList<>();
 
@@ -71,7 +71,7 @@ public class UserService {
             keys.add("telephone");
             values.add(telephone);
         }
-        return loginUsersDao.getUserByFields(keys, values);
+        return loginUserDao.getUserByFields(keys, values);
     }
 
     /***
@@ -82,16 +82,16 @@ public class UserService {
      * @return
      * @throws Exception
      */
-    public LoginUsers login(String loginValue, String loginNmae, String password) throws  Exception {
-        return loginUsersDao.login(loginValue,loginNmae,password);
+    public LoginUser login(String loginValue, String loginNmae, String password) throws  Exception {
+        return loginUserDao.login(loginValue,loginNmae,password);
     }
 
     public boolean resetPassword(Integer id, String password) throws Exception {
-        return loginUsersDao.updateUserById(id, "password", password);
+        return loginUserDao.updateUserById(id, "password", password);
     }
 
     public List<String> getSecurityQuestion(Integer id) throws Exception {
-        return loginUsersSecurityDao.getQuestionById(id);
+        return loginUserSecurityDao.getQuestionById(id);
     }
 
 }

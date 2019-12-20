@@ -19,6 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.SecurityContext;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -36,6 +37,10 @@ public class TopicsController {
     private TopticsDao topticsDao;
     @Autowired
     private TopticsService topticsService;
+    @Autowired
+    private FileUtil fileUtil;
+    @Context
+    private SecurityContext securityContext;
 
     @Deprecated
     @POST
@@ -44,7 +49,7 @@ public class TopicsController {
     @Produces({ MediaType.APPLICATION_JSON })   //此方法以弃用
     public Map topicImport(@Context HttpServletRequest request) throws Exception {
         Map<String,Object> response = new HashMap<>();
-        List<FileItem> fileItemList = FileUtil.getFileItemList(request,"xlsx");
+        List<FileItem> fileItemList = fileUtil.getFileItemList(request,"xlsx");
         if ( fileItemList == null || fileItemList.size() == 0 ) {
             response.put("status", "请上传文件");
             return response;
@@ -62,7 +67,7 @@ public class TopicsController {
                         response.put("status", "请上传xlsx格式文件");
                         return response;
                     }
-                    UploadFile uploadFile = FileUtil.saveFile(fileItem,"topics/");//将文件保存至本地
+                    UploadFile uploadFile = fileUtil.saveFile(fileItem, "topics/");//将文件保存至本地
                     fileList.add(uploadFile);
                 }
             }
@@ -72,7 +77,6 @@ public class TopicsController {
         response.put("topics", topicList);
         return response;
     }
-
 
     @POST
     @Path("import")
@@ -89,7 +93,7 @@ public class TopicsController {
 
         //需将流克隆成两个流才可进行读和谐操作，读和写操作会使流数据被写完而读不到数据
         //思路：先把InputStream转化成ByteArrayOutputStream  后面要使用InputStream对象时，再从ByteArrayOutputStream转化回来
-        ByteArrayOutputStream baos = FileUtil.cloneInputStream(fileInputStream);
+        ByteArrayOutputStream baos = fileUtil.cloneInputStream(fileInputStream);
         fileInputStream.close();
         // 打开两个新的输入流
         assert baos != null;
@@ -101,10 +105,12 @@ public class TopicsController {
         if ( data == null || data.size() == 0 ) {
             return new ResponseEntity("请勿上传空文件", HttpStatus.EXPECTATION_FAILED);
         }
-
         //文件名要唯一
         fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtil.fileNow() + "." + fileType;
-        UploadFile uploadFile = FileUtil.saveFile(stream2, fileName);//将文件保存至本地
+        UploadFile uploadFile = fileUtil.saveFile(stream2, fileName);//将文件保存至本地
+        int userId = Integer.parseInt(securityContext.getUserPrincipal().getName());
+        uploadFile.setUser_id(userId);
+
         stream2.close();
         if ( uploadFile == null ) {
             return new ResponseEntity(data, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -169,8 +175,6 @@ public class TopicsController {
             return "fail";
         }
     }
-
-
 
     @POST
     @Path("deleteJSON")

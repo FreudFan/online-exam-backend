@@ -1,6 +1,6 @@
 package edu.sandau.dao;
 
-import edu.sandau.model.LoginUsers;
+import edu.sandau.model.LoginUser;
 import edu.sandau.utils.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,47 +14,47 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class LoginUsersDao {
+public class LoginUserDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     /***
      * 插入返回自增主键
-     * @param loginUsers
+     * @param loginUser
      * @return
      */
-    public LoginUsers save(LoginUsers loginUsers ) throws Exception {
-        String SQL = " INSERT INTO login_users " +
+    public LoginUser save(LoginUser loginUser) throws Exception {
+        String SQL = " INSERT INTO login_user " +
                 "( username, password, realname, gender, email, telephone, subject_id, role ) VALUES " +
                 "( ?, ?, ?, ?, ?, ?, ?, ? )";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
             PreparedStatement ps = conn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, loginUsers.getUsername());
-            ps.setString(2, loginUsers.getPassword());
-            ps.setString(3, loginUsers.getRealname());
-            ps.setInt(4, loginUsers.getGender());
-            ps.setString(5,loginUsers.getEmail());
-            ps.setString(6,loginUsers.getTelephone());
-            ps.setString(7,loginUsers.getSubject_id());
-            ps.setInt(8, loginUsers.getRole());
+            ps.setString(1, loginUser.getUsername());
+            ps.setString(2, loginUser.getPassword());
+            ps.setString(3, loginUser.getRealname());
+            ps.setInt(4, loginUser.getGender());
+            ps.setString(5, loginUser.getEmail());
+            ps.setString(6, loginUser.getTelephone());
+            ps.setString(7, loginUser.getSubject_id());
+            ps.setInt(8, loginUser.getRole());
             return ps;
         }, keyHolder);
 
         int keyId = keyHolder.getKey().intValue();
-        loginUsers.setLogin_users_id(keyId);
-        return loginUsers;
+        loginUser.setLogin_user_id(keyId);
+        return loginUser;
     }
 
-    public List<LoginUsers> getUserByRealname( String realname ) throws Exception {
-        String SQL = " SELECT * FROM login_users WHERE realname = ? ";
+    public List<LoginUser> getUserByRealname(String realname ) throws Exception {
+        String SQL = " SELECT * FROM login_user WHERE realname = ? ";
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(SQL, realname);
         if (mapList.size() == 0) {
             return null;
         } else {
-            return (List) MapUtil.mapToObject(mapList, LoginUsers.class);
+            return (List) MapUtil.mapToObject(mapList, LoginUser.class);
         }
     }
 
@@ -65,8 +65,8 @@ public class LoginUsersDao {
      * @return
      * @throws Exception
      */
-    public LoginUsers getUserByFields(List<String> keys, List<String> values) throws Exception {
-        StringBuilder SQL = new StringBuilder(" SELECT * FROM login_users WHERE 1=1 ");
+    public LoginUser getUserByFields(List<String> keys, List<String> values) throws Exception {
+        StringBuilder SQL = new StringBuilder(" SELECT * FROM login_user WHERE 1=1 ");
         if ( keys.size() == values.size() && keys.size() > 0 ) {
             SQL.append(" AND ");
             for ( int i = 0; i < keys.size(); i++ ) {
@@ -80,22 +80,22 @@ public class LoginUsersDao {
         if (mapList.size() == 0) {
             return null;
         } else {
-            return (LoginUsers) MapUtil.mapToObject(mapList.get(0), LoginUsers.class);
+            return (LoginUser) MapUtil.mapToObject(mapList.get(0), LoginUser.class);
         }
     }
 
-    public LoginUsers login(String loginValue, String loginNmae, String password) throws  Exception {
-        String SQL = " SELECT * FROM login_users WHERE " + loginValue + " = ? AND password = ? ";
+    public LoginUser login(String loginValue, String loginNmae, String password) throws  Exception {
+        String SQL = " SELECT * FROM login_user WHERE " + loginValue + " = ? AND password = ? ";
         List<Map<String,Object>> mapList = jdbcTemplate.queryForList(SQL, new Object[]{loginNmae, password});
         if (mapList.size() == 0) {
             return null;
         } else {
-            return (LoginUsers) MapUtil.mapToObject(mapList.get(0), LoginUsers.class);
+            return (LoginUser) MapUtil.mapToObject(mapList.get(0), LoginUser.class);
         }
     }
 
     public boolean updateUserById(Integer id, String column, String value ) throws Exception {
-        String SQL = "UPDATE login_users SET " + column + " = ? WHERE login_users_id = ? ";
+        String SQL = "UPDATE login_user SET " + column + " = ? WHERE login_user_id = ? ";
         int num = jdbcTemplate.update(SQL, new Object[]{value, id});
         return num > 0;
     }

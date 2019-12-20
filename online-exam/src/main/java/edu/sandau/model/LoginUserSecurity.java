@@ -5,32 +5,23 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
-/**
- * 发送邮件时，接收参数的类
- */
-@Data
-public class EmailMessage implements Serializable {
+public class LoginUserSecurity {
     @JSONField(serialize = false)
-    @Getter private final String TABLE_NAME = "email_message";
-
+    private final String TABLE_NAME = "login_user_security";
     @Getter @Setter
-    private Integer email_message_id;
-    // 收件人
+    private Integer login_user_security_id;
     @Getter @Setter
-    private String tos;
-    //邮件主题
+    private Integer login_user_id;
     @Getter @Setter
-    private String subject;
-    //邮件正文
+    private List<String> question;
     @Getter @Setter
-    private String content;
+    private List<String> answer;
 
     @Getter @JSONField(serialize = false)
     private Date createtime;
     @Getter @JSONField(serialize = false)
     private Date updatetime;
-
 }
