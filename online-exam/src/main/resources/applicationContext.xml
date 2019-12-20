@@ -9,5 +9,5 @@
 
     <import resource="classpath:spring-*.xml" />
 
-    <context:property-placeholder location="classpath:session.properties" file-encoding="UTF-8" />
+    <context:property-placeholder location="classpath:application.properties" file-encoding="UTF-8" />
 </beans>

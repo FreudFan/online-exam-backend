@@ -6,15 +6,15 @@ import edu.sandau.model.LoginUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-@Repository
+@Component
 public class SessionWrapper {
-    @Value("${session.session_timeout:30}")
+    @Value("${redis.session_timeout:30}")
     private Integer SESSION_TIMEOUT;
     @Autowired
     private RedisTemplate redisTemplate;

@@ -2,6 +2,7 @@ package server;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
@@ -20,17 +21,34 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.valves.AccessLogValve;
 import org.apache.catalina.webresources.StandardRoot;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 public class Tomcat8 implements Runnable {
 	static public ExecutorService fixedThreadPool = Executors.newFixedThreadPool(1);
 	private final static Logger LOGGER = LoggerFactory.getLogger(Tomcat8.class);
 
-	private static Integer PORT = 8888;	//服务端口号
-	private static String CONTEXT_PATH = "";	//服务url根路径 /demo
-	private static String PROJECT_PATH = System.getProperty("user.dir");// 工程物理的绝对路径
-	private static String WEB_APP_PATH = PROJECT_PATH + File.separatorChar
+	public Tomcat8() {
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("application.properties");
+		if( is != null ) {
+			Properties p = new Properties();
+			try {
+				p.load(is);
+			} catch (IOException e) {
+				LOGGER.error("无法加载application.properties文件。。。。。。");
+				e.printStackTrace();
+			}
+			String port = p.getProperty("sever.port","8080");
+			this.PORT = NumberUtils.toInt(port);
+		}
+	}
+
+	private Integer PORT;	//服务端口号
+	private String CONTEXT_PATH = "";	//服务url根路径 /demo
+	private String PROJECT_PATH = System.getProperty("user.dir");// 工程物理的绝对路径
+	private String WEB_APP_PATH = PROJECT_PATH + File.separatorChar
 			+ "server/src/main/resources/webapp";
 
 	private void init() throws Exception {

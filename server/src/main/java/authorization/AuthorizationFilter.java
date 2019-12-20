@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
@@ -23,7 +24,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
             //拦截
             requestContext.abortWith(Response
                     .status(Response.Status.UNAUTHORIZED)
-                    .entity("无权访问该资源.")
+                    .entity("请先登录哦~")
                     .build());
         }
     }
@@ -31,10 +32,14 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     private boolean check(String token) {
         HashOperations hashOperations = redisTemplate.opsForHash();
         if ( redisTemplate.hasKey(token) && hashOperations.hasKey(token, "user") ) {
+            httpSession.setAttribute("user", token);
             return true;
         }
         return false;
     }
+
+    @Autowired
+    private HttpSession httpSession;
 
     @Autowired
     private RedisTemplate redisTemplate;

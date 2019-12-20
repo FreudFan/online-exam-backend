@@ -1,5 +1,6 @@
 package edu.sandau.rest;
 
+import authorization.Auth;
 import edu.sandau.dao.TopticsDao;
 import edu.sandau.model.UploadFile;
 import edu.sandau.service.TopticsService;
@@ -28,6 +29,7 @@ import java.util.*;
  * 题库
  */
 @Path("topic")
+@Auth
 public class TopicsController {
 
     @Autowired
