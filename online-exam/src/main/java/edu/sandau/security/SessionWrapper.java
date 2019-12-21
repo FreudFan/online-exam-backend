@@ -12,6 +12,11 @@ import javax.ws.rs.core.SecurityContext;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+/***
+ * 管理redis-session的工具类
+ * 使用时请确保注入的 SecurityContext 不为空
+ * 建议在 controller 层调用，在其它层可能会出现注入 SecurityContext 为空情况
+ */
 @Component
 public class SessionWrapper {
     @Value("${redis.session_timeout:30}")
