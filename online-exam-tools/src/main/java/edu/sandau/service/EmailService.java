@@ -22,12 +22,12 @@ public class EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
-
     @Autowired
     private SimpleMailMessage simpleMailMessage;
-
     @Autowired
     private EmailVoDao emailVoDao;
+    @Autowired
+    private FreemarkerUtil freemarkerUtil;
 
     /***
      * 发送邮件 只能发文字
@@ -60,7 +60,7 @@ public class EmailService {
         messageHelper.setText(emailMessage.getContent());   //设置邮件主题内容
         messageHelper.setTo(emailMessage.getTos());          //设定收件人Email
 
-        String text = FreemarkerUtil.getTemplate("email.ftl", model);
+        String text = freemarkerUtil.getTemplate("email.ftl", model);
         messageHelper.setText(text, true);
         javaMailSender.send(mimeMessage);
     }

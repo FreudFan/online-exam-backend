@@ -1,4 +1,4 @@
-package server;
+package edu.sandau.tomcat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +13,7 @@ import javax.ws.rs.ext.ReaderInterceptorContext;
 import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
-import authorization.RequestFilter;
+import edu.sandau.security.RequestFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;

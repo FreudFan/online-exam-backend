@@ -2,7 +2,7 @@ package edu.sandau;
 
 import edu.sandau.datasource.DruidManager;
 import lombok.extern.slf4j.Slf4j;
-import server.Tomcat8;
+import edu.sandau.tomcat.Tomcat8;
 
 @Slf4j
 public class OnlineExamApplication {

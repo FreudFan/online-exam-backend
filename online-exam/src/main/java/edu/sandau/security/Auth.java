@@ -1,4 +1,4 @@
-package authorization;
+package edu.sandau.security;
 
 import javax.ws.rs.NameBinding;
 import java.lang.annotation.Retention;

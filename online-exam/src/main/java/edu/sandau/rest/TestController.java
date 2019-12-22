@@ -2,7 +2,7 @@ package edu.sandau.rest;
 
 import com.alibaba.fastjson.JSON;
 import edu.sandau.model.LoginUser;
-import authorization.Auth;
+import edu.sandau.security.Auth;
 import edu.sandau.service.EmailService;
 import edu.sandau.model.EmailMessage;
 import edu.sandau.security.SessionWrapper;

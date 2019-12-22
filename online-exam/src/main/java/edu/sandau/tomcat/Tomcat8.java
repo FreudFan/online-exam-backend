@@ -1,4 +1,4 @@
-package server;
+package edu.sandau.tomcat;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,6 @@ import org.apache.catalina.webresources.StandardRoot;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 public class Tomcat8 implements Runnable {
 	static public ExecutorService fixedThreadPool = Executors.newFixedThreadPool(1);
@@ -42,14 +41,16 @@ public class Tomcat8 implements Runnable {
 			}
 			String port = p.getProperty("sever.port","8080");
 			this.PORT = NumberUtils.toInt(port);
+			String dir = p.getProperty("resources.dir");
+			// 工程物理的绝对路径
+			String PROJECT_PATH = System.getProperty("user.dir");
+			this.WEB_APP_PATH = PROJECT_PATH + File.separatorChar + dir + "\\webapp";
 		}
 	}
 
 	private Integer PORT;	//服务端口号
 	private String CONTEXT_PATH = "";	//服务url根路径 /demo
-	private String PROJECT_PATH = System.getProperty("user.dir");// 工程物理的绝对路径
-	private String WEB_APP_PATH = PROJECT_PATH + File.separatorChar
-			+ "server/src/main/resources/webapp";
+	private String WEB_APP_PATH;
 
 	private void init() throws Exception {
 		File tmpdir=Files.createTempDirectory("tomcat-temp").toFile();
@@ -107,22 +108,17 @@ public class Tomcat8 implements Runnable {
 	}
 
 	private Valve loadAccessLog() {
-		String path=Tomcat8.class.getPackage().getName().replace('.','/');
-		String fileName=path+"/"+"accesslog.prop";
-
 		AccessLogValve log= new org.apache.catalina.valves.AccessLogValve();
 
-		Properties p=new Properties();
+		Properties p = new Properties();
 		try {
-			p.load(log.getClass().getClassLoader().getResourceAsStream(fileName));
+			p.load(log.getClass().getClassLoader().getResourceAsStream("accesslog.prop"));
 			p.keySet().forEach(name->{
 				String field=name+"";
 				String v=p.getProperty(field)+"";
 				setFieldValue(field, log, v.trim());
-
 			});
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

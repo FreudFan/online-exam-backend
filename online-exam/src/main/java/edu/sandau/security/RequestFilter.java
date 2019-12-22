@@ -1,6 +1,7 @@
-package authorization;
+package edu.sandau.security;
 
 import com.alibaba.fastjson.JSONObject;
+import edu.sandau.model.LoginUser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,12 +22,15 @@ public class RequestFilter implements ContainerRequestFilter {
         String token = requestContext.getHeaderString("Authorization");
         //判断用户是否已登录
         boolean access = true;
-        if ( !StringUtils.isEmpty(token) && token.startsWith("auth") && redisTemplate.hasKey(token) ) {
+        if ( !StringUtils.isEmpty(token) && token.startsWith("auth") ) {
             try {
-                String value = redisTemplate.opsForHash().get(token, "user").toString();
-                JSONObject params = JSONObject.parseObject(value);
-                String userId = params.get("login_user_id").toString();
-                if ( !StringUtils.isEmpty(userId) ) {
+//                String value = redisTemplate.opsForHash().get(token, "user").toString();
+//                JSONObject params = JSONObject.parseObject(value);
+//                String userId = params.get("login_user_id").toString();
+
+                LoginUser user = sessionWrapper.getCurrentUser(token);
+                int userId = user.getLogin_user_id();
+                if ( userId > -1 ) {
                     final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
                     requestContext.setSecurityContext(new SecurityContext() {
                         //重写当前请求的安全信息
@@ -34,7 +38,7 @@ public class RequestFilter implements ContainerRequestFilter {
                         //获取用户redis的key: 通过 getAuthenticationScheme() 方法
                         @Override
                         public Principal getUserPrincipal() {
-                            return () -> userId;
+                            return () -> String.valueOf(userId);
                         }
 
                         @Override
@@ -71,5 +75,6 @@ public class RequestFilter implements ContainerRequestFilter {
 
     @Autowired
     private RedisTemplate redisTemplate;
-
+    @Autowired
+    private SessionWrapper sessionWrapper;
 }

@@ -59,6 +59,12 @@ public class SessionWrapper {
         return user;
     }
 
+    public LoginUser getCurrentUser(String key) {
+        String value =  redisTemplate.opsForHash().get(key, "user").toString();
+        LoginUser user = JSONObject.parseObject(value, LoginUser.class);
+        return user;
+    }
+
     /***
      * 添加属性
      * @param securityContext
@@ -87,7 +93,7 @@ public class SessionWrapper {
      */
     public void setMaxInactiveInterval(SecurityContext securityContext, int interval) {
         this.SESSION_TIMEOUT = interval;
-        refresh(securityContext);
+        this.refresh(this.getId(securityContext));
     }
 
     /***
@@ -142,8 +148,11 @@ public class SessionWrapper {
 
     /***
      * 刷新redis key过期时间
-     * @param securityContext
+     * @param key
      */
+    public void refresh(String key) {
+        redisTemplate.expire(key, SESSION_TIMEOUT, TimeUnit.MINUTES); //设置超时时间10秒 第三个参数控制
+    }
     public void refresh(SecurityContext securityContext) {
         String key = getId(securityContext);
         redisTemplate.expire(key, SESSION_TIMEOUT, TimeUnit.MINUTES); //设置超时时间10秒 第三个参数控制

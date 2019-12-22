@@ -11,13 +11,13 @@
 <!--    </listener>-->
 
     <servlet>
-        <servlet-name>server.RestConfig</servlet-name>
+        <servlet-name>edu.sandau.tomcat.RestConfig</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>server.RestConfig</servlet-name>
+        <servlet-name>edu.sandau.tomcat.RestConfig</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 

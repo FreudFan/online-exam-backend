@@ -15,11 +15,6 @@
     <dependencies>
         <dependency>
             <groupId>edu.sandau</groupId>
-            <artifactId>server</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>edu.sandau</groupId>
             <artifactId>online-exam-tools</artifactId>
             <version>1.0</version>
         </dependency>

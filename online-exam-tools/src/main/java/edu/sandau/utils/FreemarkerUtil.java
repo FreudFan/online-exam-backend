@@ -2,6 +2,8 @@ package edu.sandau.utils;
 
 import freemarker.template.*;
 import org.apache.commons.io.output.StringBuilderWriter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,11 +12,13 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class FreemarkerUtil {
 
-    private static String PROJECT_PATH = System.getProperty("user.dir");// 工程物理的绝对路径
-    private static String WEB_APP_PATH = PROJECT_PATH + File.separatorChar
-            + "online-exam/src/main/resources/template";
+    @Value("${resources.dir}")
+    private String dir;
+    private String PROJECT_PATH = System.getProperty("user.dir");// 工程物理的绝对路径
+    private String WEB_APP_PATH = PROJECT_PATH + File.separatorChar + dir + "\\template";
 
     /***
      * 读取freemarker模板转成字符串
@@ -24,7 +28,7 @@ public class FreemarkerUtil {
      * @throws IOException
      * @throws TemplateException
      */
-    public static String getTemplate(String fileName, Map<String,Object> model) throws IOException, TemplateException {
+    public String getTemplate(String fileName, Map<String,Object> model) throws IOException, TemplateException {
         //2.创建一个Configuration对象
         Configuration configuration=new Configuration(Configuration.getVersion());
         //3.设置模版文件的保存目录
