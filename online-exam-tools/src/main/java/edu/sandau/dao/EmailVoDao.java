@@ -24,7 +24,7 @@ public class EmailVoDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
             PreparedStatement ps = conn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, emailMessage.getTos());
+            ps.setString(1, emailMessage.getEmail());
             ps.setString(2, emailMessage.getSubject());
             ps.setString(3, emailMessage.getContent());
             return ps;

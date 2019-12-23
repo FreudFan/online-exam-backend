@@ -31,6 +31,49 @@ public class TestController {
 
     @Autowired
     private EmailService emailService;
+/*
+    @GET //1
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_XML)
+    public List<Department> list() {
+        List<Department> dept = new ArrayList<>();
+        dept.add(new Department(1L, "dept1"));
+        dept.add(new Department(2L, "dept2"));
+        return dept;
+    }
+
+    @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_XML)
+    public Department get(@PathParam("id") Long id) {
+        return new Department(id, "dept2");
+    }
+
+    @POST //2
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_XML)
+    public Department save(@FormParam("name") String name) {
+        Department d = new Department(1L, name);
+        return d;
+    }
+
+    @PUT //3
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_XML)
+    public Department update(@PathParam("id") Long id, @FormParam("name") String name) {
+        Department d = new Department(id, name);
+        return d;
+    }
+
+    @DELETE //4
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_XML)
+    public void delete(@PathParam("id") Long id) {
+        System.out.println("删除部门：" + id);
+    }
+*/
 
     @GET
     @Path("mail")
@@ -38,10 +81,10 @@ public class TestController {
     @Produces({ MediaType.APPLICATION_JSON })
     public String sendMail() throws Exception {
         EmailMessage emailMessage = new EmailMessage();
-        emailMessage.setTos("test@test.com");
+        emailMessage.setEmail("test@test.com");
         emailMessage.setContent("你好，测试");
         emailMessage.setSubject("test");
-        emailService.sendHTMLMail(emailMessage, new HashMap<>());
+//        emailService.sendHTMLMail(emailMessage, new HashMap<>());
         return null;
     }
 

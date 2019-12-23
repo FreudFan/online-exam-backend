@@ -18,7 +18,6 @@ public class FreemarkerUtil {
     @Value("${resources.dir}")
     private String dir;
     private String PROJECT_PATH = System.getProperty("user.dir");// 工程物理的绝对路径
-    private String WEB_APP_PATH = PROJECT_PATH + File.separatorChar + dir + "\\template";
 
     /***
      * 读取freemarker模板转成字符串
@@ -29,6 +28,7 @@ public class FreemarkerUtil {
      * @throws TemplateException
      */
     public String getTemplate(String fileName, Map<String,Object> model) throws IOException, TemplateException {
+        String WEB_APP_PATH = PROJECT_PATH + File.separatorChar + dir + File.separatorChar + "template";
         //2.创建一个Configuration对象
         Configuration configuration=new Configuration(Configuration.getVersion());
         //3.设置模版文件的保存目录
@@ -38,7 +38,6 @@ public class FreemarkerUtil {
         //5.加载一个模版文件，创建一个模版对象。
         Template template = configuration.getTemplate(fileName);
         //6.创建一个数据集，可以是pojo可以是map，推荐使用map
-        model.put("code", "23333");
 
         // 合并数据模型与模板
         Writer out = new StringBuilderWriter();

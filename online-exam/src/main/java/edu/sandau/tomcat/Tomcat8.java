@@ -44,7 +44,7 @@ public class Tomcat8 implements Runnable {
 			String dir = p.getProperty("resources.dir");
 			// 工程物理的绝对路径
 			String PROJECT_PATH = System.getProperty("user.dir");
-			this.WEB_APP_PATH = PROJECT_PATH + File.separatorChar + dir + "\\webapp";
+			this.WEB_APP_PATH = PROJECT_PATH + File.separatorChar + dir + File.separatorChar + "webapp";
 		}
 	}
 

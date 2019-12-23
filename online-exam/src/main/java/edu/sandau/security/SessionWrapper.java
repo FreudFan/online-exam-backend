@@ -3,6 +3,7 @@ package edu.sandau.security;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import edu.sandau.model.LoginUser;
+import edu.sandau.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,6 +24,8 @@ public class SessionWrapper {
     private Integer SESSION_TIMEOUT;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private RedisUtil redisUtil;
 
     /***
      * !!! 此方法只允许在用户登录时使用，并只允许使用一次 !!!
@@ -34,12 +37,7 @@ public class SessionWrapper {
      * @param loginUser
      */
     public String addSessionToRedis(LoginUser loginUser) {
-        String uuid = UUID.randomUUID().toString().replaceAll("-","");
-        String key = "auth" + uuid; //确保redis的key唯一
-        while ( redisTemplate.hasKey(key) ) {   //若已存在相同key，重新生成随机数
-            uuid = UUID.randomUUID().toString().replaceAll("-","");
-            key = "auth" + uuid;
-        }
+        String key = redisUtil.createKey(); //确保redis的key唯一
         Map attribute = new HashMap();
         attribute.put("user", JSON.toJSON(loginUser).toString());
         redisTemplate.opsForHash().putAll(key, attribute);

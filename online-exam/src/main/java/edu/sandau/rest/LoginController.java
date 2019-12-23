@@ -1,17 +1,21 @@
 package edu.sandau.rest;
 
 import edu.sandau.model.LoginUser;
+import edu.sandau.service.MessageService;
 import edu.sandau.service.UserService;
 import edu.sandau.security.SessionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +25,13 @@ import java.util.Map;
 public class LoginController {
 
     @Autowired
-    SessionWrapper sessionWrapper;
-
+    private SessionWrapper sessionWrapper;
     @Autowired
     private UserService userService;
+    @Context
+    private SecurityContext securityContext;
+    @Autowired
+    private MessageService messageService;
 
     /***
      * 用户使用 用户名、手机号、邮箱 和 密码 登入
@@ -98,7 +105,6 @@ public class LoginController {
         return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
     }
 
-
     /***
      * 重置密码
      * @param id 用户id
@@ -133,6 +139,36 @@ public class LoginController {
         if ( id != null ) {
             List<String> questions = userService.getSecurityQuestion(id);
             return new ResponseEntity<>(questions, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
+    }
+
+    /***
+     * 发邮件、短信验证
+     *  to 短信、邮件
+     *  type 邮件：0， 短信：1
+     * @return
+     */
+    @PUT
+    @Path("verification-code")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public ResponseEntity getVerificationCode(Map<String,Object> map) throws Exception {
+        String to = MapUtils.getString(map, "to", null); //短信、邮件地址
+        Integer type = MapUtils.getInteger(map, "type", null);  //邮件：0， 短信：1
+        String uuid = null;
+        if ( !StringUtils.isEmpty(to) ) {
+            switch (type){
+                case 0: //sendEmail
+                    uuid = messageService.sendEmailVerification(to);
+                    break;
+                case 1: //sendMessage
+
+                    break;
+            }
+        }
+        if ( uuid != null ) {
+            return new ResponseEntity<>(uuid, HttpStatus.OK);
         }
         return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
     }

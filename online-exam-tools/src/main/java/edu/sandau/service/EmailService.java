@@ -3,7 +3,6 @@ package edu.sandau.service;
 import edu.sandau.dao.EmailVoDao;
 import edu.sandau.model.EmailMessage;
 import edu.sandau.utils.FreemarkerUtil;
-import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.IOException;
 import java.util.Map;
 
 @Slf4j
@@ -37,7 +35,7 @@ public class EmailService {
     public void sendSimpleMail(EmailMessage emailMessage) throws Exception {
         try {
             //用于接收邮件的邮箱
-            simpleMailMessage.setTo(emailMessage.getTos());
+            simpleMailMessage.setTo(emailMessage.getEmail());
             //邮件的主题
             simpleMailMessage.setSubject(emailMessage.getSubject());
             //邮件的正文，第二个boolean类型的参数代表html格式
@@ -53,15 +51,15 @@ public class EmailService {
     }
 
     //带附件的HTML格式的Email
-    public void sendHTMLMail(EmailMessage emailMessage, Map<String,Object> model) throws MessagingException, IOException, TemplateException {
+    public void sendHTMLMail(EmailMessage emailMessage, Map<String,Object> model, String templateFileName) throws Exception{
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
-        messageHelper.setSubject(emailMessage.getSubject()); //设置邮件主题
-        messageHelper.setText(emailMessage.getContent());   //设置邮件主题内容
-        messageHelper.setTo(emailMessage.getTos());          //设定收件人Email
+        messageHelper.setSubject(emailMessage.getSubject());    //设置邮件主题
+//        messageHelper.setText(emailMessage.getContent());   //设置邮件主题内容
+        messageHelper.setTo(emailMessage.getEmail());   //设定收件人Email
 
-        String text = freemarkerUtil.getTemplate("email.ftl", model);
-        messageHelper.setText(text, true);
+        String text = freemarkerUtil.getTemplate(templateFileName, model);
+        messageHelper.setText(text, true);  //设置邮件主题内容
         javaMailSender.send(mimeMessage);
     }
 
