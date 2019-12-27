@@ -1,10 +1,12 @@
 package edu.sandau.utils;
 
+import edu.sandau.dao.UploadFileDao;
 import edu.sandau.model.UploadFile;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +22,8 @@ public class FileUtil {
         File f = new File(upload_dir); //新建保存目录
         if ( !f.exists() ) f.mkdir();
     }
+    @Autowired
+    private UploadFileDao uploadFileDao;
 
     /***
      * 把request请求转成文件对象列表，
@@ -85,7 +89,7 @@ public class FileUtil {
         return uploadFile;
     }
 
-    public UploadFile saveFile(InputStream inputStream, String fileName) {
+    public UploadFile saveFile(InputStream inputStream, String fileName, Integer userId) {
         File file = new File(upload_dir,fileName);
         UploadFile uploadFile = new UploadFile();
         try(
@@ -97,8 +101,11 @@ public class FileUtil {
             while ( ( len = inputStream.read(buffer) ) > 0 ) {
                 outputStream.write(buffer, 0, len);
             }
+            uploadFile.setFileName(fileName);
             uploadFile.setFile(file);
-            uploadFile.setFilePath(upload_dir + fileName);
+            uploadFile.setFilePath(upload_dir + File.separatorChar + fileName);
+            uploadFile.setUser_id(userId);
+            uploadFileDao.save(uploadFile);
         } catch ( Exception e ) {
             e.printStackTrace();
             return null;

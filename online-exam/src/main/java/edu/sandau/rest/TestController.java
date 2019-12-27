@@ -10,18 +10,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.*;
 import java.util.*;
 
 @Slf4j
 @Path("test")
-@Auth
+//@Auth
 public class TestController {
 
     @Autowired
@@ -170,6 +168,12 @@ public class TestController {
 //        sessionWrapper.setAttribute(httpSession, "23432", "fadsfjaidosfjaijfaidso");
 //        Map<String,Object> map = sessionWrapper.getAllAttribute(httpSession);
         return users;
+    }
+
+    @GET
+    @Path("res")
+    public Response get() {
+        return Response.ok("fafadsdf").status(HttpStatus.BAD_REQUEST.value()).build();
     }
 
 }

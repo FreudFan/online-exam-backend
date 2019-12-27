@@ -1,6 +1,6 @@
 package edu.sandau.service;
 
-import edu.sandau.dao.EmailVoDao;
+import edu.sandau.dao.EmailMessageDao;
 import edu.sandau.model.EmailMessage;
 import edu.sandau.utils.FreemarkerUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class EmailService {
     @Autowired
     private SimpleMailMessage simpleMailMessage;
     @Autowired
-    private EmailVoDao emailVoDao;
+    private EmailMessageDao emailMessageDao;
     @Autowired
     private FreemarkerUtil freemarkerUtil;
 

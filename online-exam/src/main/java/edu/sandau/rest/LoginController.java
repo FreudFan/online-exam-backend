@@ -10,11 +10,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +45,7 @@ public class LoginController {
     @Path("login")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity login(@FormParam("name") String name, @FormParam("password") String password) throws Exception {
+    public Response login(@FormParam("name") String name, @FormParam("password") String password) throws Exception {
         String loginValue;
         if ( name.contains("@") ) { //识别是否是邮箱
             loginValue = "email";
@@ -56,14 +56,15 @@ public class LoginController {
         }
         LoginUser loginUser = userService.login(loginValue, name, password);
         if ( loginUser == null ) {
-            return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
+            return Response.accepted().status(HttpStatus.BAD_REQUEST.value()).build();
         }
 
         String token = sessionWrapper.addSessionToRedis(loginUser);
         Map<String, Object> param = new HashMap<>();
         param.put("user", loginUser);
         param.put("token", token);
-        return new ResponseEntity<>(param, HttpStatus.OK);
+
+        return Response.ok(param).build();
     }
 
     /***
@@ -79,12 +80,12 @@ public class LoginController {
     @Path("register")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity register(Map<String,Object> map) throws Exception {
+    public Response register(Map<String,Object> map) throws Exception {
         LoginUser loginUser = userService.addUser(map);
         if ( loginUser == null ) {
-            return new ResponseEntity<>("same value", HttpStatus.EXPECTATION_FAILED);
+            return Response.accepted("same value").status(HttpStatus.BAD_REQUEST.value()).build();
         }
-        return new ResponseEntity<>(loginUser, HttpStatus.OK);
+        return Response.accepted(loginUser).build();
     }
 
     /***
@@ -97,12 +98,12 @@ public class LoginController {
     @Path("check")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity check(Map<String,Object> map) throws Exception {
+    public Response check(Map<String,Object> map) throws Exception {
         if ( map.containsKey("username") || map.containsKey("email") || map.containsKey("telephone") ) {
             LoginUser user = userService.check(map);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            return Response.ok().build();
         }
-        return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        return Response.accepted().status(500).build();
     }
 
     /***
@@ -116,12 +117,12 @@ public class LoginController {
     @Path("reset-password")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity resetPassword(@FormParam("id") Integer id, @FormParam("password") String password) throws Exception {
+    public Response resetPassword(@FormParam("id") Integer id, @FormParam("password") String password) throws Exception {
         boolean ok = userService.resetPassword(id, password);
         if ( ok ) {
-            return new ResponseEntity<>(true, HttpStatus.OK);
+            return Response.ok(true).build();
         }
-        return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
+        return Response.accepted(false).status(500).build();
     }
 
     /***
@@ -134,13 +135,13 @@ public class LoginController {
     @Path("security-question")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity getSecurityQuestion(Map<String,Object> map) throws Exception {
+    public Response getSecurityQuestion(Map<String,Object> map) throws Exception {
         Integer id = MapUtils.getInteger(map,"id", null);
         if ( id != null ) {
             List<String> questions = userService.getSecurityQuestion(id);
-            return new ResponseEntity<>(questions, HttpStatus.OK);
+            return Response.ok(questions).build();
         }
-        return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
+        return Response.accepted(false).status(500).build();
     }
 
     /***
@@ -153,7 +154,7 @@ public class LoginController {
     @Path("verification-code")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity getVerificationCode(Map<String,Object> map) throws Exception {
+    public Response getVerificationCode(Map<String,Object> map) throws Exception {
         String to = MapUtils.getString(map, "to", null); //短信、邮件地址
         Integer type = MapUtils.getInteger(map, "type", null);  //邮件：0， 短信：1
         String uuid = null;
@@ -168,9 +169,9 @@ public class LoginController {
             }
         }
         if ( uuid != null ) {
-            return new ResponseEntity<>(uuid, HttpStatus.OK);
+            return Response.accepted(uuid).build();
         }
-        return new ResponseEntity<>(false, HttpStatus.EXPECTATION_FAILED);
+        return Response.accepted(false).status(500).build();
     }
 
 }

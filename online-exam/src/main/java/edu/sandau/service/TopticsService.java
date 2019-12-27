@@ -48,10 +48,9 @@ public class TopticsService {
         }
         //文件名要唯一
         fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtil.fileNow() + "." + fileType;
-        UploadFile uploadFile = fileUtil.saveFile(stream2, fileName);//将文件保存至本地
+        UploadFile uploadFile = fileUtil.saveFile(stream2, fileName, userId);//将文件保存至本地
         stream2.close();
 
-        uploadFile.setUser_id(userId);
         if ( uploadFile == null ) {
             return null;
         }

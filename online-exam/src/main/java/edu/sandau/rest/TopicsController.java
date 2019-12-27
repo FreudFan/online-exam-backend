@@ -2,22 +2,14 @@ package edu.sandau.rest;
 
 import edu.sandau.security.Auth;
 import edu.sandau.dao.TopticsDao;
-import edu.sandau.model.UploadFile;
 import edu.sandau.service.TopticsService;
-import edu.sandau.utils.FileUtil;
-import org.apache.commons.fileupload.FileItem;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.*;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -33,70 +25,34 @@ public class TopicsController {
     private TopticsDao topticsDao;
     @Autowired
     private TopticsService topticsService;
-    @Autowired
-    private FileUtil fileUtil;
     @Context
     private SecurityContext securityContext;
-
-    @Deprecated
-    @POST
-    @Path("@import")
-    @Consumes({ MediaType.MULTIPART_FORM_DATA })
-    @Produces({ MediaType.APPLICATION_JSON })   //此方法以弃用
-    public Map topicImport(@Context HttpServletRequest request) throws Exception {
-        Map<String,Object> response = new HashMap<>();
-        List<FileItem> fileItemList = fileUtil.getFileItemList(request,"xlsx");
-        if ( fileItemList == null || fileItemList.size() == 0 ) {
-            response.put("status", "请上传文件");
-            return response;
-        }
-
-        List<UploadFile> fileList = new ArrayList<>(fileItemList.size());
-        for (FileItem fileItem : fileItemList) {
-            //判断是否是普通字段
-            if ( !fileItem.isFormField() )  {
-                String fileName = fileItem.getName();
-                if ( fileName != null && !fileName.equals("") ) {
-                    //截取文件名
-                    String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
-                    if ( !fileType.equals("xlsx") ) {
-                        response.put("status", "请上传xlsx格式文件");
-                        return response;
-                    }
-                    UploadFile uploadFile = fileUtil.saveFile(fileItem, "topics/");//将文件保存至本地
-                    fileList.add(uploadFile);
-                }
-            }
-        }
-        List topicList = topticsService.saveTopicExcel(fileList);
-
-        response.put("topics", topicList);
-        return response;
-    }
 
     @POST
     @Path("import")
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
     @Produces({ MediaType.APPLICATION_JSON })
-    public ResponseEntity topic(@FormDataParam("file") InputStream fileInputStream,
-                                     @FormDataParam("file") FormDataContentDisposition disposition) throws Exception {
-        String fileName = new String(disposition.getFileName().getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+    public Response topic(@FormDataParam("file") InputStream fileInputStream,
+                          @FormDataParam("file") FormDataContentDisposition disposition) throws Exception {
+        if ( fileInputStream == null || disposition == null )
+            return Response.accepted("请上传xlsx格式文件").status(HttpStatus.BAD_REQUEST.value()).build();
+
+        String fileName = new String(disposition.getFileName()
+                .getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 
         int userId = Integer.parseInt(securityContext.getUserPrincipal().getName());
         List data = topticsService.readTopicExcel(fileInputStream, fileName, userId);
         if ( data == null ) {
-            return new ResponseEntity("请上传xlsx格式文件", HttpStatus.EXPECTATION_FAILED);
+            return Response.ok("请上传xlsx格式文件").status(HttpStatus.BAD_REQUEST.value()).build();
         }
-
-        return new ResponseEntity(data, HttpStatus.OK);
+        return Response.ok(data).build();
     }
-
 
     @GET
     @Path("show")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public List topicShow() throws Exception {
+    public Response topicShow() throws Exception {
         List<Map<String, Object>> topicsList = topticsDao.selectTopicAll();
         List<Map<String, Object>> showList = new ArrayList<>();
         Map<String, Object> showMap = null;
@@ -128,7 +84,7 @@ public class TopicsController {
 
             }
         }
-        return showList;
+        return Response.accepted(showList).build();
     }
 
 

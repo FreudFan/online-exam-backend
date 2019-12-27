@@ -22,7 +22,7 @@ public class RequestFilter implements ContainerRequestFilter {
         String token = requestContext.getHeaderString("Authorization");
         //判断用户是否已登录
         boolean access = true;
-        if ( !StringUtils.isEmpty(token) && token.startsWith("auth") ) {
+        if ( !StringUtils.isEmpty(token) ) {
             try {
 //                String value = redisTemplate.opsForHash().get(token, "user").toString();
 //                JSONObject params = JSONObject.parseObject(value);
