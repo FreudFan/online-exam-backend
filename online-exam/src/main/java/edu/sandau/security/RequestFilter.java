@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
@@ -19,15 +20,11 @@ public class RequestFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         //获取客户端Header中提交的token
-        String token = requestContext.getHeaderString("Authorization");
+        String token = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         //判断用户是否已登录
         boolean access = true;
         if ( !StringUtils.isEmpty(token) ) {
             try {
-//                String value = redisTemplate.opsForHash().get(token, "user").toString();
-//                JSONObject params = JSONObject.parseObject(value);
-//                String userId = params.get("login_user_id").toString();
-
                 LoginUser user = sessionWrapper.getCurrentUser(token);
                 int userId = user.getLogin_user_id();
                 if ( userId > -1 ) {

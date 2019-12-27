@@ -1,6 +1,7 @@
 package edu.sandau.service;
 
 import edu.sandau.dao.TopticsDao;
+import edu.sandau.dao.UploadFileDao;
 import edu.sandau.model.UploadFile;
 import edu.sandau.utils.ExcelUtil;
 import edu.sandau.utils.FileUtil;
@@ -24,6 +25,8 @@ public class TopticsService {
     private TopticsDao topticsDao;
     @Autowired
     private FileUtil fileUtil;
+    @Autowired
+    UploadFileDao uploadFileDao;
 
     public List readTopicExcel(InputStream fileInputStream, String fileName, Integer userId) throws Exception {
         //截取文件名
@@ -56,6 +59,11 @@ public class TopticsService {
         }
 
         return data;
+    }
+
+    public UploadFile getFileById(Integer id) throws Exception {
+        UploadFile uploadFile = uploadFileDao.getFileById(id);
+        return uploadFile;
     }
 
     /***

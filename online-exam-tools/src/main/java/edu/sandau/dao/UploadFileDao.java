@@ -1,6 +1,7 @@
 package edu.sandau.dao;
 
 import edu.sandau.model.UploadFile;
+import edu.sandau.utils.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class UploadFileDao {
@@ -34,4 +37,13 @@ public class UploadFileDao {
         return file;
     }
 
+    public UploadFile getFileById(Integer id) throws Exception {
+        String SQL = " SELECT * FROM upload_file WHERE upload_file_id = ? ";
+        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(SQL, id);
+        if (mapList.size() == 0) {
+            return null;
+        } else {
+            return (UploadFile) MapUtil.mapToObject(mapList.get(0), UploadFile.class);
+        }
+    }
 }

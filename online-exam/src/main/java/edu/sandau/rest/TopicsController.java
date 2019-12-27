@@ -1,16 +1,17 @@
 package edu.sandau.rest;
 
+import edu.sandau.model.UploadFile;
 import edu.sandau.security.Auth;
 import edu.sandau.dao.TopticsDao;
 import edu.sandau.service.TopticsService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -35,7 +36,7 @@ public class TopicsController {
     public Response topic(@FormDataParam("file") InputStream fileInputStream,
                           @FormDataParam("file") FormDataContentDisposition disposition) throws Exception {
         if ( fileInputStream == null || disposition == null )
-            return Response.accepted("请上传xlsx格式文件").status(HttpStatus.BAD_REQUEST.value()).build();
+            return Response.accepted("请上传xlsx格式文件").status(Response.Status.BAD_REQUEST).build();
 
         String fileName = new String(disposition.getFileName()
                 .getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
@@ -43,9 +44,39 @@ public class TopicsController {
         int userId = Integer.parseInt(securityContext.getUserPrincipal().getName());
         List data = topticsService.readTopicExcel(fileInputStream, fileName, userId);
         if ( data == null ) {
-            return Response.ok("请上传xlsx格式文件").status(HttpStatus.BAD_REQUEST.value()).build();
+            return Response.ok("请上传xlsx格式文件").status(Response.Status.BAD_REQUEST).build();
         }
         return Response.ok(data).build();
+    }
+
+    /***
+     * 下载用户上传的文件
+     * @param fid 文件id
+     * @param httpHeaders
+     * @return
+     * @throws Exception
+     */
+    @GET
+    @Path("download")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response download(@QueryParam("fid") Integer fid, @Context HttpHeaders httpHeaders) throws Exception {
+        UploadFile uploadFile = topticsService.getFileById(fid);
+        File f = new File(uploadFile.getFilePath());
+        String fileName = uploadFile.getFileName();
+        if (!f.exists()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else {
+            String agent = httpHeaders.getHeaderString("USER-AGENT");
+            //需要对文件名进行编码，否则会乱码 火狐浏览器下载文件需单独处理文件编码
+            if( agent != null && agent.toLowerCase().indexOf("firefox") > 0 ) {
+                fileName = "=?UTF-8?B?" + Base64.getEncoder().encodeToString(fileName.getBytes(StandardCharsets.UTF_8)) + "?=";
+            } else {
+                fileName = URLEncoder.encode(fileName, "UTF-8");
+            }
+            return Response.ok(f).header("Content-disposition", "attachment;filename=" + fileName)
+                    .header("Cache-Control", "no-cache").build();
+        }
     }
 
     @GET

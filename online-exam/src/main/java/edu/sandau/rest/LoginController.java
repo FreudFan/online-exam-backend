@@ -9,7 +9,6 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -56,7 +55,7 @@ public class LoginController {
         }
         LoginUser loginUser = userService.login(loginValue, name, password);
         if ( loginUser == null ) {
-            return Response.accepted().status(HttpStatus.BAD_REQUEST.value()).build();
+            return Response.accepted().status(Response.Status.BAD_REQUEST).build();
         }
 
         String token = sessionWrapper.addSessionToRedis(loginUser);
@@ -83,7 +82,7 @@ public class LoginController {
     public Response register(Map<String,Object> map) throws Exception {
         LoginUser loginUser = userService.addUser(map);
         if ( loginUser == null ) {
-            return Response.accepted("same value").status(HttpStatus.BAD_REQUEST.value()).build();
+            return Response.accepted("same value").status(Response.Status.BAD_REQUEST).build();
         }
         return Response.accepted(loginUser).build();
     }
