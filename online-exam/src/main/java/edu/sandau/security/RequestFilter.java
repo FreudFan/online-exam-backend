@@ -1,10 +1,8 @@
 package edu.sandau.security;
 
-import com.alibaba.fastjson.JSONObject;
 import edu.sandau.model.LoginUser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -27,7 +25,8 @@ public class RequestFilter implements ContainerRequestFilter {
             try {
                 LoginUser user = sessionWrapper.getCurrentUser(token);
                 int userId = user.getLogin_user_id();
-                if ( userId > -1 ) {
+                if ( userId > -1 ) { //是登录用户
+                    sessionWrapper.refresh(token);
                     final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
                     requestContext.setSecurityContext(new SecurityContext() {
                         //重写当前请求的安全信息
@@ -70,8 +69,6 @@ public class RequestFilter implements ContainerRequestFilter {
         }
     }
 
-    @Autowired
-    private RedisTemplate redisTemplate;
     @Autowired
     private SessionWrapper sessionWrapper;
 }
