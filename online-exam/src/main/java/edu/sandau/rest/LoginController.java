@@ -46,9 +46,11 @@ public class LoginController {
     @Produces({ MediaType.APPLICATION_JSON })
     public Response login(@FormParam("name") String name, @FormParam("password") String password) throws Exception {
         String loginValue;
-        if ( name.contains("@") ) { //识别是否是邮箱
+        if ( name.contains("@") ) {
+            //识别是否是邮箱
             loginValue = "email";
-        } else if ( name.length() == 11 && NumberUtils.isDigits(name) ) {   //识别是手机号
+        } else if ( name.length() == 11 && NumberUtils.isDigits(name) ) {
+            //识别是手机号
             loginValue = "telephone";
         } else {
             loginValue = "username";
@@ -59,7 +61,7 @@ public class LoginController {
         }
 
         String token = sessionWrapper.addSessionToRedis(loginUser);
-        Map<String, Object> param = new HashMap<>();
+        Map<String, Object> param = new HashMap<>(2);
         param.put("user", loginUser);
         param.put("token", token);
 
@@ -100,7 +102,9 @@ public class LoginController {
     public Response check(Map<String,Object> map) throws Exception {
         if ( map.containsKey("username") || map.containsKey("email") || map.containsKey("telephone") ) {
             LoginUser user = userService.check(map);
-            return Response.ok().build();
+            if (user != null) {
+                return Response.ok().build();
+            }
         }
         return Response.accepted().status(500).build();
     }
@@ -154,16 +158,22 @@ public class LoginController {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response getVerificationCode(Map<String,Object> map) throws Exception {
-        String to = MapUtils.getString(map, "to", null); //短信、邮件地址
-        Integer type = MapUtils.getInteger(map, "type", null);  //邮件：0， 短信：1
+        //短信、邮件地址
+        String to = MapUtils.getString(map, "to", null);
+        //邮件：0， 短信：1
+        Integer type = MapUtils.getInteger(map, "type", null);
         String uuid = null;
         if ( !StringUtils.isEmpty(to) ) {
             switch (type){
-                case 0: //sendEmail
+                case 0:
+                    //sendEmail
                     uuid = messageService.sendEmailVerification(to);
                     break;
-                case 1: //sendMessage
+                case 1:
+                    //sendMessage
 
+                    break;
+                default:
                     break;
             }
         }

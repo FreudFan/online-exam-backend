@@ -21,7 +21,9 @@ public class DruidManager extends ContextLoaderListener {
 
     private static DataSource dataSource;
 
-    //1.初始化Druid连接池
+    /***
+     * 1.初始化Druid连接池
+     */
     private static void init() {
         //第二种方式:使用软编码通过配置文件初始化DBCP
         try {
@@ -39,10 +41,15 @@ public class DruidManager extends ContextLoaderListener {
         }
     }
 
-    //2.获取连接
+    /***
+     * 2.获取连接
+     * @return
+     */
     public synchronized static Connection getConnection() {
         try {
-            if ( dataSource == null ) init();
+            if ( dataSource == null ) {
+                init();
+            }
             return dataSource.getConnection();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,11 +58,18 @@ public class DruidManager extends ContextLoaderListener {
     }
 
     public synchronized static DataSource getDataSource() {
-        if ( dataSource == null ) init();
+        if ( dataSource == null ) {
+            init();
+        }
         return dataSource;
     }
 
-    //3.关闭连接
+    /***
+     * 3.关闭连接
+     * @param connection
+     * @param statement
+     * @param resultSet
+     */
     public synchronized static void closeAll(Connection connection, Statement statement, ResultSet resultSet) {
         try {
             if (resultSet != null) {

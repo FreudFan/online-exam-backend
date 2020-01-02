@@ -37,11 +37,13 @@ public class SessionWrapper {
      * @param loginUser
      */
     public String addSessionToRedis(LoginUser loginUser) {
-        String key = redisUtil.createKey(); //确保redis的key唯一
-        Map attribute = new HashMap();
+        //确保redis的key唯一
+        String key = redisUtil.createKey();
+        Map attribute = new HashMap(1);
         attribute.put("user", JSON.toJSON(loginUser).toString());
         redisTemplate.opsForHash().putAll(key, attribute);
-        redisTemplate.expire(key, SESSION_TIMEOUT, TimeUnit.MINUTES); //设置超时时间10秒 第三个参数控制
+        //设置超时时间10秒 第三个参数控制
+        redisTemplate.expire(key, SESSION_TIMEOUT, TimeUnit.MINUTES);
         return key;
     }
 
@@ -122,7 +124,9 @@ public class SessionWrapper {
      */
     public Map<String, Object> getAllAttribute(SecurityContext securityContext) {
         String key = securityContext.getAuthenticationScheme();
-        if ( key == null ) return null;
+        if ( key == null ) {
+            return null;
+        }
         return (Map<String ,Object>) redisTemplate.opsForHash().entries(key);
     }
 

@@ -35,9 +35,9 @@ public class TopicsController {
     @Produces({ MediaType.APPLICATION_JSON })
     public Response topic(@FormDataParam("file") InputStream fileInputStream,
                           @FormDataParam("file") FormDataContentDisposition disposition) throws Exception {
-        if ( fileInputStream == null || disposition == null )
+        if ( fileInputStream == null || disposition == null ) {
             return Response.accepted("请上传xlsx格式文件").status(Response.Status.BAD_REQUEST).build();
-
+        }
         String fileName = new String(disposition.getFileName()
                 .getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 
@@ -91,8 +91,7 @@ public class TopicsController {
         if(!topicsList.isEmpty()){
             for (int i = 0; i < topicsList.size(); i+=count) {
                 count = 1;
-                Map<String, Object> tempMap = new HashMap<>();
-                tempMap = topicsList.get(i);
+                Map<String, Object> tempMap = topicsList.get(i);
                 String option = tempMap.get("option").toString();
                 String value = tempMap.get("value").toString();
                 showMap = new LinkedHashMap<>();

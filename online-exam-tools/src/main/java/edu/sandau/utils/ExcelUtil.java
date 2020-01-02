@@ -93,7 +93,7 @@ public class ExcelUtil {
                 boolean flag = true;
                 int cont = 0;
                 for ( Object v: valueLinked ) {
-                    if ( v == null || v.equals("") ) {
+                    if ( v == null || "".equals(v) ) {
                         cont++;
                     }
                 }

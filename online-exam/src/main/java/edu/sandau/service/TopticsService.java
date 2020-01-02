@@ -28,10 +28,12 @@ public class TopticsService {
     @Autowired
     UploadFileDao uploadFileDao;
 
+    private final String excel_type = "xlsx";
+
     public List readTopicExcel(InputStream fileInputStream, String fileName, Integer userId) throws Exception {
         //截取文件名
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
-        if ( !fileType.equals("xlsx") ) {
+        if ( !excel_type.equals(fileType) ) {
             return null;
         }
 

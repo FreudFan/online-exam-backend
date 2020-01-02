@@ -1,6 +1,7 @@
 package edu.sandau.security;
 
 import edu.sandau.model.LoginUser;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.security.Principal;
 
 @Auth
+@Slf4j
 public class RequestFilter implements ContainerRequestFilter {
 
     @Override
@@ -20,12 +22,13 @@ public class RequestFilter implements ContainerRequestFilter {
         //获取客户端Header中提交的token
         String token = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         //判断用户是否已登录
-        boolean access = true;
+        boolean access = false;
         if ( !StringUtils.isEmpty(token) ) {
             try {
                 LoginUser user = sessionWrapper.getCurrentUser(token);
                 int userId = user.getLogin_user_id();
-                if ( userId > -1 ) { //是登录用户
+                //是登录用户
+                if (userId > -1) {
                     sessionWrapper.refresh(token);
                     final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
                     requestContext.setSecurityContext(new SecurityContext() {
@@ -52,16 +55,13 @@ public class RequestFilter implements ContainerRequestFilter {
                             return token;
                         }
                     });
-                } else {
-                    access = false;
+                    access = true;
                 }
-            } catch (Exception e) {
-                access = false;
+            } catch (Exception ignored) {
             }
-        } else {
-            access = false;
         }
-        if ( !access ) {    //拦截
+        //拦截
+        if ( !access ) {
             requestContext.abortWith(Response
                     .status(Response.Status.UNAUTHORIZED)
                     .entity("请先登录哦~")

@@ -29,8 +29,9 @@ public class LoginUser implements Serializable {
     private String telephone;
     @Getter @Setter
     private String subject_id;
+    // 0:普通用户 1:试题管理员 2:系统管理员
     @Getter @Setter
-    private Integer role;   // 0:普通用户 1:试题管理员 2:系统管理员
+    private Integer role;
 
     @Getter @JSONField(serialize = false)
     private Date createtime;

@@ -16,11 +16,14 @@ import java.util.List;
 @Component
 public class FileUtil {
 
-    private final static String upload_dir = "files";
+    private final static String UPLOAD_DIR = "files";
 
     static {
-        File f = new File(upload_dir); //新建保存目录
-        if ( !f.exists() ) f.mkdir();
+        //新建保存目录
+        File f = new File(UPLOAD_DIR);
+        if ( !f.exists() ) {
+            f.mkdir();
+        }
     }
     @Autowired
     private UploadFileDao uploadFileDao;
@@ -90,7 +93,7 @@ public class FileUtil {
     }
 
     public UploadFile saveFile(InputStream inputStream, String fileName, Integer userId) {
-        File file = new File(upload_dir,fileName);
+        File file = new File(UPLOAD_DIR,fileName);
         UploadFile uploadFile = new UploadFile();
         try(
                 FileOutputStream outputStream = new FileOutputStream(file)
@@ -103,7 +106,7 @@ public class FileUtil {
             }
             uploadFile.setFileName(fileName);
             uploadFile.setFile(file);
-            uploadFile.setFilePath(upload_dir + File.separatorChar + fileName);
+            uploadFile.setFilePath(UPLOAD_DIR + File.separatorChar + fileName);
             uploadFile.setUser_id(userId);
             uploadFileDao.save(uploadFile);
         } catch ( Exception e ) {

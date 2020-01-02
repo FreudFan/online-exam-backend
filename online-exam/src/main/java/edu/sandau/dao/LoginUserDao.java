@@ -25,13 +25,13 @@ public class LoginUserDao {
      * @return
      */
     public LoginUser save(LoginUser loginUser) throws Exception {
-        String SQL = " INSERT INTO login_user " +
+        String sql = " INSERT INTO login_user " +
                 "( username, password, realname, gender, email, telephone, subject_id, role ) VALUES " +
                 "( ?, ?, ?, ?, ?, ?, ?, ? )";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
-            PreparedStatement ps = conn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, loginUser.getUsername());
             ps.setString(2, loginUser.getPassword());
             ps.setString(3, loginUser.getRealname());
@@ -49,8 +49,8 @@ public class LoginUserDao {
     }
 
     public List<LoginUser> getUserByRealname(String realname ) throws Exception {
-        String SQL = " SELECT * FROM login_user WHERE realname = ? ";
-        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(SQL, realname);
+        String sql = " SELECT * FROM login_user WHERE realname = ? ";
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, realname);
         if (mapList.size() == 0) {
             return null;
         } else {
@@ -66,17 +66,17 @@ public class LoginUserDao {
      * @throws Exception
      */
     public LoginUser getUserByFields(List<String> keys, List<String> values) throws Exception {
-        StringBuilder SQL = new StringBuilder(" SELECT * FROM login_user WHERE 1=1 ");
+        StringBuilder sql = new StringBuilder(" SELECT * FROM login_user WHERE 1=1 ");
         if ( keys.size() == values.size() && keys.size() > 0 ) {
-            SQL.append(" AND ");
+            sql.append(" AND ");
             for ( int i = 0; i < keys.size(); i++ ) {
                 if ( i != 0 ) {
-                    SQL.append(" OR ");
+                    sql.append(" OR ");
                 }
-                SQL.append(keys.get(i)).append(" = ? ");
+                sql.append(keys.get(i)).append(" = ? ");
             }
         }
-        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(SQL.toString(), values.toArray());
+        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(sql.toString(), values.toArray());
         if (mapList.size() == 0) {
             return null;
         } else {
@@ -85,8 +85,8 @@ public class LoginUserDao {
     }
 
     public LoginUser login(String loginValue, String loginNmae, String password) throws  Exception {
-        String SQL = " SELECT * FROM login_user WHERE " + loginValue + " = ? AND password = ? ";
-        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(SQL, new Object[]{loginNmae, password});
+        String sql = " SELECT * FROM login_user WHERE " + loginValue + " = ? AND password = ? ";
+        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{loginNmae, password});
         if (mapList.size() == 0) {
             return null;
         } else {
@@ -95,8 +95,8 @@ public class LoginUserDao {
     }
 
     public boolean updateUserById(Integer id, String column, String value ) throws Exception {
-        String SQL = "UPDATE login_user SET " + column + " = ? WHERE login_user_id = ? ";
-        int num = jdbcTemplate.update(SQL, new Object[]{value, id});
+        String sql = "UPDATE login_user SET " + column + " = ? WHERE login_user_id = ? ";
+        int num = jdbcTemplate.update(sql, new Object[]{value, id});
         return num > 0;
     }
 

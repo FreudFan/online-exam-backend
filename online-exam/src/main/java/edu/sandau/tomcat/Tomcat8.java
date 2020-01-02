@@ -8,8 +8,6 @@ import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.Server;
@@ -26,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Tomcat8 implements Runnable {
-	static public ExecutorService fixedThreadPool = Executors.newFixedThreadPool(1);
 	private final static Logger LOGGER = LoggerFactory.getLogger(Tomcat8.class);
 
 	public Tomcat8() {
@@ -40,17 +37,19 @@ public class Tomcat8 implements Runnable {
 				e.printStackTrace();
 			}
 			String port = p.getProperty("sever.port","8080");
-			this.PORT = NumberUtils.toInt(port);
+			this.port = NumberUtils.toInt(port);
 			String dir = p.getProperty("resources.dir");
 			// 工程物理的绝对路径
-			String PROJECT_PATH = System.getProperty("user.dir");
-			this.WEB_APP_PATH = PROJECT_PATH + File.separatorChar + dir + File.separatorChar + "webapp";
+			String projectPath = System.getProperty("user.dir");
+			this.webAppPath = projectPath + File.separatorChar + dir + File.separatorChar + "webapp";
 		}
 	}
 
-	private Integer PORT;	//服务端口号
-	private String CONTEXT_PATH = "";	//服务url根路径 /demo
-	private String WEB_APP_PATH;
+	/***
+	 * 服务端口号
+	 */
+	private Integer port;
+	private String webAppPath;
 
 	private void init() throws Exception {
 		File tmpdir=Files.createTempDirectory("tomcat-temp").toFile();
@@ -66,7 +65,7 @@ public class Tomcat8 implements Runnable {
 		service.setName("Tomcat-embbeded-opt");
 
 		Connector connector = tomcat.getConnector();
-		connector.setPort(PORT);
+		connector.setPort(port);
 		connector.setMaxPostSize(1024*5);
 		connector.setEnableLookups(false);
 		connector.setAllowTrace(false);
@@ -76,7 +75,11 @@ public class Tomcat8 implements Runnable {
 
 //	        File appdir=new File("webapp");//一定要绝对路径，不然无法启动
 //	        String context_path="/";
-		Context context =tomcat.addWebapp(CONTEXT_PATH, WEB_APP_PATH);
+		/***
+		 * 服务url根路径 /demo
+		 */
+		String contextPath = "";
+		Context context =tomcat.addWebapp(contextPath, webAppPath);
 
 		StandardContext ctx=(StandardContext )context;
 		WebResourceRoot resources = new StandardRoot(ctx);
@@ -102,7 +105,7 @@ public class Tomcat8 implements Runnable {
 		LOGGER.info("started tomcat at port="+connector.getPort()+" , for webapp ["+context.getName()+"]");
 
 		LOGGER.info("tomcat workdir="+tmpdir.toString());
-		LOGGER.info("tomcat workurl= " + "http://localhost:" + PORT + CONTEXT_PATH);
+		LOGGER.info("tomcat workurl= " + "http://localhost:" + port + contextPath);
 
 		server.await();
 	}

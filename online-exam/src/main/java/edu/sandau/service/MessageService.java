@@ -31,10 +31,11 @@ public class MessageService {
      * @return
      */
     public String sendEmailVerification(String email) {
-        int code = (int) ((Math.random()*9+1) * 100000);//随机6位数
+        //随机6位数
+        int code = (int) ((Math.random()*9+1) * 100000);
         String uuid = redisUtil.createKey();
         EmailMessage message = new EmailMessage(email, "验证码", null);
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>(1);
         model.put("code", code);
         try {
             redisTemplate.opsForValue().set(uuid, String.valueOf(code));

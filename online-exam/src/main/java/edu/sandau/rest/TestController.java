@@ -129,7 +129,7 @@ public class TestController {
     @Produces({ MediaType.APPLICATION_JSON })
     public String redis() throws Exception {
         HashOperations hops = redisTemplate.opsForHash();
-        Map<String,String> map=new HashMap<String,String>();
+        Map<String,String> map=new HashMap<>(5);
         map.put("key1","value1");
         map.put("key2","value2");
         map.put("key3","value3");
