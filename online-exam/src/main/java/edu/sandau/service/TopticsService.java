@@ -28,8 +28,6 @@ public class TopticsService {
     private FileUtil fileUtil;
     @Autowired
     private UploadFileDao uploadFileDao;
-    @Autowired
-    private HttpSession httpSession;
 
     private final String excel_type = "xlsx";
 

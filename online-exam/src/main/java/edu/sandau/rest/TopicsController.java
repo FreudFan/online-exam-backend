@@ -3,6 +3,7 @@ package edu.sandau.rest;
 import edu.sandau.model.UploadFile;
 import edu.sandau.security.Auth;
 import edu.sandau.dao.TopticsDao;
+import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.TopticsService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -28,6 +29,8 @@ public class TopicsController {
     private TopticsService topticsService;
     @Context
     private SecurityContext securityContext;
+    @Autowired
+    private SessionWrapper sessionWrapper;
 
     @POST
     @Path("import")

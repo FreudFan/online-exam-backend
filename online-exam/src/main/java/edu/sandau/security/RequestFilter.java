@@ -31,7 +31,9 @@ public class RequestFilter implements ContainerRequestFilter {
                 int userId = user.getLogin_user_id();
                 //是登录用户
                 if (userId > -1) {
+                    session.setAttribute("key", token);
                     session.setAttribute("userId", userId);
+                    session.setAttribute("user", user);
                     sessionWrapper.refresh(token);
                     final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
                     requestContext.setSecurityContext(new SecurityContext() {

@@ -4,6 +4,7 @@ import edu.sandau.dao.LoginUserDao;
 import edu.sandau.dao.LoginUserSecurityDao;
 import edu.sandau.model.LoginUser;
 import edu.sandau.model.LoginUserSecurity;
+import edu.sandau.security.SessionWrapper;
 import edu.sandau.utils.MapUtil;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,15 +24,19 @@ public class UserService {
     private LoginUserDao loginUserDao;
     @Autowired
     private LoginUserSecurityDao loginUserSecurityDao;
+    @Autowired
+    private SessionWrapper sessionWrapper;
 
     public LoginUser addUser(Map<String,Object> loginMap) throws Exception {
         LoginUser loginUser = (LoginUser) MapUtil.mapToObject(loginMap, LoginUser.class);
         LoginUserSecurity usersSecurity = (LoginUserSecurity) MapUtil.mapToObject(loginMap, LoginUserSecurity.class);
         //添加用户主表
         if ( loginUser.getRole() == null ) {
-            loginUser.setRole(0);  //默认为注册用户
+            //默认为注册用户
+            loginUser.setRole(0);
         }
-        if ( check(loginMap) == null ) { //查重
+        if ( check(loginMap) == null ) {
+            //查重
             loginUser = loginUserDao.save(loginUser);
         } else {
             return null;
@@ -42,7 +47,8 @@ public class UserService {
             usersSecurity.setLogin_user_id(loginUser.getLogin_user_id());
             loginUserSecurityDao.save(usersSecurity);
         }
-
+        //注册session
+        sessionWrapper.addSessionToRedis(loginUser);
         return loginUser;
     }
 
