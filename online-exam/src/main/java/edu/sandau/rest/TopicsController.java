@@ -41,8 +41,8 @@ public class TopicsController {
         String fileName = new String(disposition.getFileName()
                 .getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 
-        int userId = Integer.parseInt(securityContext.getUserPrincipal().getName());
-        List data = topticsService.readTopicExcel(fileInputStream, fileName, userId);
+//        int userId = Integer.parseInt(securityContext.getUserPrincipal().getName());
+        List data = topticsService.readTopicExcel(fileInputStream, fileName);
         if ( data == null ) {
             return Response.ok("请上传xlsx格式文件").status(Response.Status.BAD_REQUEST).build();
         }

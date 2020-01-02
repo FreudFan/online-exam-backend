@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -26,11 +27,13 @@ public class TopticsService {
     @Autowired
     private FileUtil fileUtil;
     @Autowired
-    UploadFileDao uploadFileDao;
+    private UploadFileDao uploadFileDao;
+    @Autowired
+    private HttpSession httpSession;
 
     private final String excel_type = "xlsx";
 
-    public List readTopicExcel(InputStream fileInputStream, String fileName, Integer userId) throws Exception {
+    public List readTopicExcel(InputStream fileInputStream, String fileName) throws Exception {
         //截取文件名
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
         if ( !excel_type.equals(fileType) ) {
@@ -53,7 +56,8 @@ public class TopticsService {
         }
         //文件名要唯一
         fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtil.fileNow() + "." + fileType;
-        UploadFile uploadFile = fileUtil.saveFile(stream2, fileName, userId);//将文件保存至本地
+        //将文件保存至本地
+        UploadFile uploadFile = fileUtil.saveFile(stream2, fileName);
         stream2.close();
 
         if ( uploadFile == null ) {

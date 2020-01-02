@@ -92,7 +92,7 @@ public class LoginController {
     /***
      * 检查是否有存在指定用户，不允许有相同用户名，邮箱，手机号
      * @param map { username，email，telephone }
-     * @return 若存在，返回用户，不存在，返回null
+     * @return 若存在，返回exist，不存在，返回null
      * @throws Exception
      */
     @PUT
@@ -103,10 +103,10 @@ public class LoginController {
         if ( map.containsKey("username") || map.containsKey("email") || map.containsKey("telephone") ) {
             LoginUser user = userService.check(map);
             if (user != null) {
-                return Response.ok().build();
+                return Response.ok("exist").build();
             }
         }
-        return Response.accepted().status(500).build();
+        return Response.ok().build();
     }
 
     /***

@@ -4,7 +4,9 @@ import edu.sandau.model.LoginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
@@ -29,6 +31,7 @@ public class RequestFilter implements ContainerRequestFilter {
                 int userId = user.getLogin_user_id();
                 //是登录用户
                 if (userId > -1) {
+                    session.setAttribute("userId", userId);
                     sessionWrapper.refresh(token);
                     final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
                     requestContext.setSecurityContext(new SecurityContext() {
@@ -57,7 +60,8 @@ public class RequestFilter implements ContainerRequestFilter {
                     });
                     access = true;
                 }
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         //拦截
@@ -71,4 +75,6 @@ public class RequestFilter implements ContainerRequestFilter {
 
     @Autowired
     private SessionWrapper sessionWrapper;
+    @Autowired
+    private HttpSession session;
 }
