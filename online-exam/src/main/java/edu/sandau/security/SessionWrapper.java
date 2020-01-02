@@ -85,7 +85,7 @@ public class SessionWrapper{
         String key = this.getId();
         redisTemplate.opsForHash().put(key,name,value);
     }
-    public void setAttribute(SecurityContext securityContext, String name, Object value) {
+    public void setAttribute(String name, Object value, SecurityContext securityContext) {
         String key = securityContext.getAuthenticationScheme();
         redisTemplate.opsForHash().put(key,name,value);
     }
@@ -111,7 +111,7 @@ public class SessionWrapper{
         this.SESSION_TIMEOUT = interval;
         this.refresh();
     }
-    public void setMaxInactiveInterval(SecurityContext securityContext, int interval) {
+    public void setMaxInactiveInterval(int interval, SecurityContext securityContext) {
         this.SESSION_TIMEOUT = interval;
         this.refresh(this.getId(securityContext));
     }
@@ -133,7 +133,7 @@ public class SessionWrapper{
         String key = this.getId();
         return redisTemplate.opsForHash().get(key, name);
     }
-    public Object getAttribute(SecurityContext securityContext, String name) {
+    public Object getAttribute(String name, SecurityContext securityContext) {
         String key = securityContext.getAuthenticationScheme();
         return redisTemplate.opsForHash().get(key, name);
     }
@@ -146,7 +146,7 @@ public class SessionWrapper{
         String key = this.getId();
         redisTemplate.opsForHash().delete(key, name);
     }
-    public void removeAttribute(SecurityContext securityContext, String name) {
+    public void removeAttribute(String name, SecurityContext securityContext) {
         String key = securityContext.getAuthenticationScheme();
         redisTemplate.opsForHash().delete(key, name);
     }
