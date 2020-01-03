@@ -1,32 +1,4 @@
-apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
-    }
-}
-
-// Output to build/libs/shadow.jar
-shadowJar {
-    // 生成包的命名规则： baseName-version-classifier.jar
-    baseName = 'online-exam'
-    manifest {
-        attributes("Main-Class": "server.Tomcat8")
-    }
-    from("src/main/java") {
-        include 'META-INF/**'
-        include 'resources/**'
-        include 'build.gradle'
-    }
-    // 打包时排除指定的 jar 包
-    dependencies {
-    }
-}
-
 
 subprojects {
 
@@ -39,17 +11,6 @@ subprojects {
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
-
-    jar {
-        from {
-            //添加依懒到打包文件
-            //configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-            configurations.runtime.collect{zipTree(it)}
-        }
-        manifest {
-            attributes 'Main-Class': 'server.Tomcat8'
-        }
-    }
 
     def rxJava = "2.2.15"
     def jersey = "2.25.1"
