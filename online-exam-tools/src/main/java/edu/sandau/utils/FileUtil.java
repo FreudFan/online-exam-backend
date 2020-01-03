@@ -1,7 +1,7 @@
 package edu.sandau.utils;
 
 import edu.sandau.dao.UploadFileDao;
-import edu.sandau.model.UploadFile;
+import edu.sandau.entity.UploadFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,6 @@
 package edu.sandau.service;
 
-import edu.sandau.model.EmailMessage;
+import edu.sandau.entity.EmailMessage;
 import edu.sandau.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

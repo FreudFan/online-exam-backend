@@ -1,10 +1,9 @@
-package edu.sandau.rest;
+package edu.sandau.rest.resource;
 
-import com.alibaba.fastjson.JSON;
-import edu.sandau.model.LoginUser;
-import edu.sandau.security.Auth;
+import edu.sandau.entity.LoginUser;
+import edu.sandau.rest.model.TestParam;
 import edu.sandau.service.EmailService;
-import edu.sandau.model.EmailMessage;
+import edu.sandau.entity.EmailMessage;
 import edu.sandau.security.SessionWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import java.util.*;
 @Slf4j
 @Path("test")
 //@Auth
-public class TestController {
+public class TestResource {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -90,16 +89,9 @@ public class TestController {
     @Path("show")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public String topicShow() throws Exception {
-        String sql = "SELECT * FROM topics";
-//        JdbcTemplate jdbcTemplate = new JdbcTemplate(ConnectionManager.getDataSource());
-        List list = new ArrayList();
-        for ( int i = 0; i < 100000; i++ ) {
-            list = jdbcTemplate.queryForList(sql);
-        }
-        return JSON.toJSONString(list);
-//        topticsService.read();
-//        return null;
+    public Response topicShow(TestParam queryParams) throws Exception {
+        queryParams.getPass();
+        return Response.ok().build();
     }
 
     @POST

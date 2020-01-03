@@ -1,7 +1,7 @@
 package edu.sandau.service;
 
 import edu.sandau.dao.EmailMessageDao;
-import edu.sandau.model.EmailMessage;
+import edu.sandau.entity.EmailMessage;
 import edu.sandau.utils.FreemarkerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

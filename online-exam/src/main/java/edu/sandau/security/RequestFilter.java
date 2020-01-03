@@ -1,10 +1,9 @@
 package edu.sandau.security;
 
-import edu.sandau.model.LoginUser;
+import edu.sandau.entity.LoginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;

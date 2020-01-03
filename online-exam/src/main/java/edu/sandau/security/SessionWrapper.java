@@ -2,7 +2,7 @@ package edu.sandau.security;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import edu.sandau.model.LoginUser;
+import edu.sandau.entity.LoginUser;
 import edu.sandau.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

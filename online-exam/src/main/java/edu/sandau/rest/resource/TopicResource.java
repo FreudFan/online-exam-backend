@@ -1,6 +1,6 @@
-package edu.sandau.rest;
+package edu.sandau.rest.resource;
 
-import edu.sandau.model.UploadFile;
+import edu.sandau.entity.UploadFile;
 import edu.sandau.security.Auth;
 import edu.sandau.dao.TopticsDao;
 import edu.sandau.security.SessionWrapper;
@@ -21,7 +21,7 @@ import java.util.*;
  */
 @Path("topic")
 @Auth
-public class TopicsController {
+public class TopicResource {
 
     @Autowired
     private TopticsDao topticsDao;
@@ -43,7 +43,6 @@ public class TopicsController {
         }
         String fileName = new String(disposition.getFileName()
                 .getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-
 //        int userId = Integer.parseInt(securityContext.getUserPrincipal().getName());
         List data = topticsService.readTopicExcel(fileInputStream, fileName);
         if ( data == null ) {
@@ -120,7 +119,6 @@ public class TopicsController {
         return Response.accepted(showList).build();
     }
 
-
     @POST
     @Path("delete")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
@@ -151,4 +149,5 @@ public class TopicsController {
             return "fail";
         }
     }
+
 }

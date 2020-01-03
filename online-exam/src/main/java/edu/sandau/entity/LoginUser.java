@@ -1,4 +1,4 @@
-package edu.sandau.model;
+package edu.sandau.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;

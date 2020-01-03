@@ -1,6 +1,7 @@
-package edu.sandau.rest;
+package edu.sandau.rest.resource;
 
-import edu.sandau.model.LoginUser;
+import edu.sandau.entity.LoginUser;
+import edu.sandau.rest.model.User;
 import edu.sandau.service.MessageService;
 import edu.sandau.service.UserService;
 import edu.sandau.security.SessionWrapper;
@@ -21,7 +22,7 @@ import java.util.Map;
 
 @Slf4j
 @Path("user")
-public class LoginController {
+public class LoginResource {
 
     @Autowired
     private SessionWrapper sessionWrapper;
@@ -73,7 +74,7 @@ public class LoginController {
      * 注：用户名（username）不允许包含'@' 不允许全数字
      * 注：邮箱（email） 必须包含'@'
      * 注：手机号只允许中国大陆手机号，只允许全数字
-     * @param map
+     * @param user
      * @return 用户信息（脱敏）
      * @throws Exception
      */
@@ -81,17 +82,17 @@ public class LoginController {
     @Path("register")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response register(Map<String,Object> map) throws Exception {
-        LoginUser loginUser = userService.addUser(map);
-        if ( loginUser == null ) {
+    public Response register(User user) throws Exception {
+        user = userService.addUser(user);
+        if ( user == null ) {
             return Response.accepted("same value").status(Response.Status.BAD_REQUEST).build();
         }
-        return Response.accepted(loginUser).build();
+        return Response.accepted(user).build();
     }
 
     /***
      * 检查是否有存在指定用户，不允许有相同用户名，邮箱，手机号
-     * @param map { username，email，telephone }
+     * @param user { username，email，telephone }
      * @return 若存在，返回exist，不存在，返回null
      * @throws Exception
      */
@@ -99,12 +100,10 @@ public class LoginController {
     @Path("check")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response check(Map<String,Object> map) throws Exception {
-        if ( map.containsKey("username") || map.containsKey("email") || map.containsKey("telephone") ) {
-            LoginUser user = userService.check(map);
-            if (user != null) {
-                return Response.ok("exist").build();
-            }
+    public Response check(User user) throws Exception {
+        LoginUser loginUser = userService.check(user);
+        if (loginUser != null) {
+            return Response.ok("exist").build();
         }
         return Response.ok().build();
     }

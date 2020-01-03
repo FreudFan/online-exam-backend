@@ -1,6 +1,6 @@
 package edu.sandau.dao;
 
-import edu.sandau.model.UploadFile;
+import edu.sandau.entity.UploadFile;
 import edu.sandau.utils.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

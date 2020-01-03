@@ -2,7 +2,7 @@ package edu.sandau.service;
 
 import edu.sandau.dao.TopticsDao;
 import edu.sandau.dao.UploadFileDao;
-import edu.sandau.model.UploadFile;
+import edu.sandau.entity.UploadFile;
 import edu.sandau.utils.ExcelUtil;
 import edu.sandau.utils.FileUtil;
 import edu.sandau.utils.TimeUtil;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

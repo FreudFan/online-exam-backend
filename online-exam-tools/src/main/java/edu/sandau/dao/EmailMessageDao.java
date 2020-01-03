@@ -1,6 +1,6 @@
 package edu.sandau.dao;
 
-import edu.sandau.model.EmailMessage;
+import edu.sandau.entity.EmailMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

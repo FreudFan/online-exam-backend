@@ -3,7 +3,7 @@ package datasource;
 import com.alibaba.fastjson.JSONObject;
 import edu.sandau.datasource.DruidManager;
 import edu.sandau.utils.JDBCUtil;
-import edu.sandau.model.Topics;
+import edu.sandau.entity.Topics;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
