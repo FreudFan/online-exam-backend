@@ -14,6 +14,7 @@ import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 
 import edu.sandau.security.RequestFilter;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.slf4j.Logger;
@@ -31,15 +32,18 @@ public class RestConfig extends ResourceConfig {
     public void init()
     {
 		LOGGER.info("load restful services......");
-    	String packages="sd.order.rest";
-    	packages=this.loadPackages();
-		LOGGER.info("in packages="+packages);
+    	String packages = "sd.order.rest";
+    	packages = this.loadPackages();
+		LOGGER.info("in packages=" + packages);
     	this.packages(packages);
 		this.register(MultiPartFeature.class);
+		this.register(JacksonFeature.class);
 		this.register(TestReaderIntercetor.class);
+		this.register(io.swagger.jaxrs.listing.ApiListingResource.class);
+		this.register(io.swagger.jaxrs.listing.SwaggerSerializers.class);
 
 		this.register(RequestFilter.class);
-    }
+	}
     
     public String loadPackages()
     {

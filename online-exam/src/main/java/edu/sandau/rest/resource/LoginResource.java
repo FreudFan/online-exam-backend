@@ -5,6 +5,7 @@ import edu.sandau.rest.model.User;
 import edu.sandau.service.MessageService;
 import edu.sandau.service.UserService;
 import edu.sandau.security.SessionWrapper;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +23,7 @@ import java.util.Map;
 
 @Slf4j
 @Path("user")
+@Api(value = "登录接口")
 public class LoginResource {
 
     @Autowired

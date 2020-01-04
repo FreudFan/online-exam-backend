@@ -11,8 +11,8 @@
 
     <modules>
         <module>online-exam</module>
-        <module>client</module>
         <module>online-exam-tools</module>
+        <module>client</module>
     </modules>
 
     <name>在线考试系统app</name>
@@ -217,6 +217,13 @@
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
             <version>3.4.2</version>
+        </dependency>
+
+        <!-- swagger -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jersey2-jaxrs</artifactId>
+            <version>1.6.0</version>
         </dependency>
 
     </dependencies>

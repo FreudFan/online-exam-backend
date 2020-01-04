@@ -19,6 +19,7 @@
 <h2>
     欢迎访问在线考试系统服务!!<br>
     Welcome to the online exam system's server!! <br>
+    <a href="api-docs">api-docs</a>
     <div id="times"></div>
 </h2>
 </body>

@@ -5,6 +5,8 @@ import edu.sandau.security.Auth;
 import edu.sandau.dao.TopticsDao;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.TopticsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import java.util.*;
  * 题库
  */
 @Path("topic")
+@Api(value = "题库接口")
 @Auth
 public class TopicResource {
 
@@ -36,6 +39,7 @@ public class TopicResource {
     @Path("import")
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
     @Produces({ MediaType.APPLICATION_JSON })
+    @ApiOperation(value = "导入题库", response = Response.class)
     public Response topic(@FormDataParam("file") InputStream fileInputStream,
                           @FormDataParam("file") FormDataContentDisposition disposition) throws Exception {
         if ( fileInputStream == null || disposition == null ) {

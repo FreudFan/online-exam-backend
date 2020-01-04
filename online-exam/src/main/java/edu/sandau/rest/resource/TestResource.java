@@ -5,17 +5,22 @@ import edu.sandau.rest.model.TestParam;
 import edu.sandau.service.EmailService;
 import edu.sandau.entity.EmailMessage;
 import edu.sandau.security.SessionWrapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.*;
 
+@Component
+@Api(value = "测试接口")
 @Slf4j
 @Path("test")
 //@Auth
@@ -72,6 +77,7 @@ public class TestResource {
     }
 */
 
+    @ApiOperation(value = "根据姓名查询基本信息", response = String.class)
     @GET
     @Path("mail")
     @Consumes({ MediaType.APPLICATION_JSON })
@@ -85,7 +91,7 @@ public class TestResource {
         return null;
     }
 
-    @GET
+    @PUT
     @Path("show")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
