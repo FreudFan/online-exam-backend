@@ -2,7 +2,7 @@ package edu.sandau.security;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import edu.sandau.entity.LoginUser;
+import edu.sandau.rest.model.User;
 import edu.sandau.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,26 +31,47 @@ public class SessionWrapper{
     private HttpSession httpSession;
 
     /***
+     * redis里用于管理所有session的文件夹
+     */
+    private final String MODEL = "session";
+
+    /***
      * !!! 此方法只允许在用户登录时使用，并只允许使用一次 !!!
      * 使用场景：用户登录成功后需在redis里集中管理session，在此处生成唯一的 key
      * 唯一key生成策略：auth + 随机数
      * 会将用户对象信息存入redis，key会在下一次发送请求时保存在 SecurityContext 里
      * redis 保存成功后会将 key 发给前端，前端需在每次请求头中加上 "Authorization" : key
      * @return key 会话唯一标识
-     * @param loginUser
+     * @param user
      */
-    public String addSessionToRedis(LoginUser loginUser) {
+    public String addSessionToRedis(User user) {
         //确保redis的key唯一
-        String key = redisUtil.createKey();
+        String uuid = redisUtil.createKey(MODEL);
+        String key = MODEL + ":" + uuid;
         Map attribute = new HashMap(1);
-        attribute.put("user", JSON.toJSON(loginUser).toString());
+        attribute.put("user", JSON.toJSON(user).toString());
         redisTemplate.opsForHash().putAll(key, attribute);
         //设置超时时间10秒 第三个参数控制
         redisTemplate.expire(key, SESSION_TIMEOUT, TimeUnit.MINUTES);
         //当前信息添加进session
         httpSession.setAttribute("key", key);
-        httpSession.setAttribute("userId", loginUser.getLogin_user_id());
-        httpSession.setAttribute("user", loginUser);
+        httpSession.setAttribute("userId", user.getId());
+        httpSession.setAttribute("user", user);
+        return uuid;
+    }
+
+    /***
+     * 从session里拿redis的key
+     * @return
+     */
+    public String getId() {
+        String token = httpSession.getAttribute("key").toString();
+        String key = MODEL + ":" + token;
+        return key;
+    }
+    public String getId(SecurityContext securityContext) {
+        String token = securityContext.getAuthenticationScheme();
+        String key = MODEL + ":" + token;
         return key;
     }
 
@@ -58,21 +79,22 @@ public class SessionWrapper{
      * 获取当前用户
      * @return
      */
-    public LoginUser getCurrentUser() {
+    public User getCurrentUser() {
         String key = this.getId();
         String value =  redisTemplate.opsForHash().get(key, "user").toString();
-        LoginUser user = JSONObject.parseObject(value, LoginUser.class);
+        User user = JSONObject.parseObject(value, User.class);
         return user;
     }
-    public LoginUser getCurrentUser(SecurityContext securityContext) {
+    public User getCurrentUser(SecurityContext securityContext) {
         String key = securityContext.getAuthenticationScheme();
         String value =  redisTemplate.opsForHash().get(key, "user").toString();
-        LoginUser user = JSONObject.parseObject(value, LoginUser.class);
+        User user = JSONObject.parseObject(value, User.class);
         return user;
     }
-    public LoginUser getCurrentUser(String key) {
+    public User getCurrentUser(String key) {
+        key = MODEL + ":" + key;
         String value =  redisTemplate.opsForHash().get(key, "user").toString();
-        LoginUser user = JSONObject.parseObject(value, LoginUser.class);
+        User user = JSONObject.parseObject(value, User.class);
         return user;
     }
 
@@ -168,17 +190,6 @@ public class SessionWrapper{
     }
 
     /***
-     * 从session里拿redis的key
-     * @return
-     */
-    public String getId() {
-        return httpSession.getAttribute("key").toString();
-    }
-    public String getId(SecurityContext securityContext) {
-        return securityContext.getAuthenticationScheme();
-    }
-
-    /***
      * 获取当前用户 id
      * @return
      */
@@ -202,7 +213,7 @@ public class SessionWrapper{
         redisTemplate.expire(key, SESSION_TIMEOUT, TimeUnit.MINUTES);
     }
     public void refresh(SecurityContext securityContext) {
-        String key = getId(securityContext);
+        String key = this.getId(securityContext);
         redisTemplate.expire(key, SESSION_TIMEOUT, TimeUnit.MINUTES);
     }
 
@@ -210,11 +221,11 @@ public class SessionWrapper{
      * 使session失效，从redis里删除
      */
     public void invalidate() {
-        String key = httpSession.getAttribute("key").toString();
+        String key = this.getId();
         redisTemplate.delete(key);
     }
     public void invalidate(SecurityContext securityContext) {
-        String key = getId(securityContext);
+        String key = this.getId(securityContext);
         redisTemplate.delete(key);
     }
 

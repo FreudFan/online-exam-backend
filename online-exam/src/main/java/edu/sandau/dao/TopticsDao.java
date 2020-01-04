@@ -20,8 +20,8 @@ public class TopticsDao {
 
     public List selectTopicAll() throws Exception {
         List<Map<String,Object>> list = new ArrayList<>();
-        String sql = "select a.topics_id, description,correctkey,topicmark,analysis,b.option,b.value from topics  a " +
-                "left join options  b on a.topics_id = b.topics_id where flag = 1";
+        String sql = "select a.id, description,correctkey,topicmark,analysis,b.option,b.value from topics  a " +
+                "left join options  b on a.id = b.topics_id where flag = 1";
         list = JDBCUtil.queryForList(sql);
         return list;
     }

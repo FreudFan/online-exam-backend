@@ -9,7 +9,7 @@ import java.util.List;
 public class LoginUserSecurity {
     private final String TABLE_NAME = "login_user_security";
 
-    private Integer login_user_security_id;
+    private Integer id;
     private Integer login_user_id;
     private List<String> question;
     private List<String> answer;

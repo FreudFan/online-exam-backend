@@ -1,6 +1,6 @@
 package edu.sandau.rest.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.List;
@@ -10,7 +10,7 @@ public class User {
     private Integer id;
     private String token;
     private String username;
-    @JSONField(serialize = false)
+    @JsonIgnore
     private String password;
     private String realname;
     private Integer gender;
@@ -18,8 +18,8 @@ public class User {
     private String telephone;
     private String subject_id;
     private Integer role;
-    @JSONField(serialize = false)
+    @JsonIgnore
     private List<String> question;
-    @JSONField(serialize = false)
+    @JsonIgnore
     private List<String> answer;
 }

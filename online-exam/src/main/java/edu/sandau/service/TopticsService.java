@@ -15,7 +15,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -30,7 +32,7 @@ public class TopticsService {
 
     private final String excel_type = "xlsx";
 
-    public List readTopicExcel(InputStream fileInputStream, String fileName) throws Exception {
+    public Map<String, Object> readTopicExcel(InputStream fileInputStream, String fileName) throws Exception {
         //截取文件名
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
         if ( !excel_type.equals(fileType) ) {
@@ -60,8 +62,10 @@ public class TopticsService {
         if ( uploadFile == null ) {
             return null;
         }
-
-        return data;
+        Map<String, Object> topic = new HashMap<>(2);
+        topic.put("file", data);
+        topic.put("id", uploadFile.getId());
+        return topic;
     }
 
     public UploadFile getFileById(Integer id) throws Exception {

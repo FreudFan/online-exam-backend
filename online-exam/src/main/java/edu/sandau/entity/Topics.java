@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Topics implements Serializable {
     private final String TABLE_NAME = "topics";
 
-    private Integer topics_id;
+    private Integer id;
     private Integer type;
     private Integer difficult;
     private String description;

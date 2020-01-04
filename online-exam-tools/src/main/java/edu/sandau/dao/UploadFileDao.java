@@ -33,12 +33,12 @@ public class UploadFileDao {
         }, keyHolder);
 
         int keyId = keyHolder.getKey().intValue();
-        file.setUpload_file_id(keyId);
+        file.setId(keyId);
         return file;
     }
 
     public UploadFile getFileById(Integer id) throws Exception {
-        String SQL = " SELECT * FROM upload_file WHERE upload_file_id = ? ";
+        String SQL = " SELECT * FROM upload_file WHERE id = ? ";
         List<Map<String,Object>> mapList = jdbcTemplate.queryForList(SQL, id);
         if (mapList.size() == 0) {
             return null;

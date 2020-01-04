@@ -1,6 +1,7 @@
 package edu.sandau.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,27 +16,22 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class EmailMessage implements Serializable {
-    @JSONField(serialize = false)
+    @JsonIgnore
     @Getter private final String TABLE_NAME = "email_message";
 
-    @Getter @Setter
-    private Integer email_message_id;
+    private Integer id;
     // 收件人
-    @Getter @Setter
     private String email;
     // 发件人id
-    @Getter @Setter
     private Integer tosId;
     //邮件主题
-    @Getter @Setter
     private String subject;
     //邮件正文
-    @Getter @Setter
     private String content;
 
-    @Getter @JSONField(serialize = false)
+    @JsonIgnore
     private Date createtime;
-    @Getter @JSONField(serialize = false)
+    @JsonIgnore
     private Date updatetime;
 
     public EmailMessage(String email, String subject, Integer tosId) {

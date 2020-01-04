@@ -44,7 +44,7 @@ public class LoginUserDao {
         }, keyHolder);
 
         int keyId = keyHolder.getKey().intValue();
-        loginUser.setLogin_user_id(keyId);
+        loginUser.setId(keyId);
         return loginUser;
     }
 
@@ -95,7 +95,7 @@ public class LoginUserDao {
     }
 
     public boolean updateUserById(Integer id, String column, String value ) throws Exception {
-        String sql = "UPDATE login_user SET " + column + " = ? WHERE login_user_id = ? ";
+        String sql = "UPDATE login_user SET " + column + " = ? WHERE id = ? ";
         int num = jdbcTemplate.update(sql, new Object[]{value, id});
         return num > 0;
     }

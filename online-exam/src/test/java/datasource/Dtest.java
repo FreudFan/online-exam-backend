@@ -21,7 +21,7 @@ public class Dtest {
     private static void insertOrUpdate() throws NoSuchFieldException, IllegalAccessException, SQLException, InvocationTargetException, InstantiationException {
         Topics topics = new Topics();
         topics.setSubject_id(11165186);
-        topics.setTopics_id(12);
+        topics.setId(12);
 //        JDBCUtils.insertOrUpdate(topics);
         List<Topics> topicsList = JDBCUtil.get(Topics.class, 0 ,5);
         topicsList.size();

@@ -1,6 +1,5 @@
 package edu.sandau.rest.resource;
 
-import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.User;
 import edu.sandau.service.MessageService;
 import edu.sandau.service.UserService;
@@ -58,14 +57,15 @@ public class LoginResource {
         } else {
             loginValue = "username";
         }
-        LoginUser loginUser = userService.login(loginValue, name, password);
-        if ( loginUser == null ) {
+        User user = userService.login(loginValue, name, password);
+        if ( user == null ) {
             return Response.accepted().status(Response.Status.BAD_REQUEST).build();
         }
 
-        String token = sessionWrapper.addSessionToRedis(loginUser);
+        String token = sessionWrapper.addSessionToRedis(user);
+        user.setToken(token);
         Map<String, Object> param = new HashMap<>(2);
-        param.put("user", loginUser);
+        param.put("user", user);
         param.put("token", token);
 
         return Response.ok(param).build();
@@ -103,8 +103,8 @@ public class LoginResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response check(User user) throws Exception {
-        LoginUser loginUser = userService.check(user);
-        if (loginUser != null) {
+        user = userService.check(user);
+        if (user != null) {
             return Response.ok("exist").build();
         }
         return Response.ok().build();

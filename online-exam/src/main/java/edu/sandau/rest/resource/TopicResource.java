@@ -48,7 +48,7 @@ public class TopicResource {
         String fileName = new String(disposition.getFileName()
                 .getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 //        int userId = Integer.parseInt(securityContext.getUserPrincipal().getName());
-        List data = topticsService.readTopicExcel(fileInputStream, fileName);
+        Map<String, Object> data = topticsService.readTopicExcel(fileInputStream, fileName);
         if ( data == null ) {
             return Response.ok("请上传xlsx格式文件").status(Response.Status.BAD_REQUEST).build();
         }
@@ -101,7 +101,7 @@ public class TopicResource {
                 String option = tempMap.get("option").toString();
                 String value = tempMap.get("value").toString();
                 showMap = new LinkedHashMap<>();
-                showMap.put("topics_id", tempMap.get("topics_id"));
+                showMap.put("id", tempMap.get("id"));
                 showMap.put("description", tempMap.get("description"));
                 showMap.put("correctkey", tempMap.get("correctkey"));
                 showMap.put("topicmark", tempMap.get("topicmark"));
@@ -109,7 +109,7 @@ public class TopicResource {
                 showMap.put(option,value);
                 for (int j = i + 1; j < topicsList.size(); j++) {
 
-                    if(!topicsList.get(j).get("topics_id").toString().equals(topicsList.get(i).get("topics_id").toString()))
+                    if(!topicsList.get(j).get("id").toString().equals(topicsList.get(i).get("id").toString()))
                     {
                        break;
                     }
@@ -128,11 +128,11 @@ public class TopicResource {
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
     @Produces({ MediaType.APPLICATION_JSON })
     public String topicDelete(MultivaluedMap topicsMap) {
-//        String[] idArrays = topicsMap.get("topics_id").substring(1, topicsMap.get("topics_id").length() - 1).split(",");
-        List topicsList = (List)topicsMap.get("topics_id");
+//        String[] idArrays = topicsMap.get("id").substring(1, topicsMap.get("id").length() - 1).split(",");
+        List topicsList = (List)topicsMap.get("id");
         String id = (String)topicsList.get(0);
         String[] idArrays = id.split(",");
-        int count = topticsService.topicsDeleteService("topics_id",idArrays);
+        int count = topticsService.topicsDeleteService("id",idArrays);
         if(count > 0){
             return "success";
         }else{
@@ -145,8 +145,8 @@ public class TopicResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String topicDelete_JSON( Map<String,String> topicsMap)  {
-        String[] idArrays = topicsMap.get("topics_id").substring(1,topicsMap.get("topics_id").length()-1).split(",");
-        int count = topticsService.topicsDeleteService("topics_id",idArrays);
+        String[] idArrays = topicsMap.get("id").substring(1,topicsMap.get("id").length()-1).split(",");
+        int count = topticsService.topicsDeleteService("id",idArrays);
         if(count > 0){
             return "success";
         }else{

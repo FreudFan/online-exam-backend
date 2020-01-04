@@ -1,13 +1,12 @@
 package edu.sandau.service;
 
+import edu.sandau.enums.RoleTypeEnum;
 import edu.sandau.dao.LoginUserDao;
 import edu.sandau.dao.LoginUserSecurityDao;
 import edu.sandau.entity.LoginUser;
 import edu.sandau.entity.LoginUserSecurity;
 import edu.sandau.rest.model.User;
 import edu.sandau.security.SessionWrapper;
-import edu.sandau.utils.MapUtil;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -37,7 +34,7 @@ public class UserService {
         BeanUtils.copyProperties(user, userSecurity);
         if ( loginUser.getRole() == null ) {
             //默认为注册用户
-            loginUser.setRole(0);
+            loginUser.setRole(RoleTypeEnum.NORMAL_USER.getValue());
         }
         if ( this.check(user) == null ) {
             //添加用户主表
@@ -46,12 +43,12 @@ public class UserService {
             return null;
         }
         //添加用户密保表
-        userSecurity.setLogin_user_id(loginUser.getLogin_user_id());
+        userSecurity.setLogin_user_id(loginUser.getId());
         loginUserSecurityDao.save(userSecurity);
+        user.setId(loginUser.getId());
         //注册session
-        String token = sessionWrapper.addSessionToRedis(loginUser);
+        String token = sessionWrapper.addSessionToRedis(user);
         user.setToken(token);
-        user.setId(loginUser.getLogin_user_id());
         return user;
     }
 
@@ -61,7 +58,7 @@ public class UserService {
      * @return 若存在用户，返回用户
      * @throws Exception
      */
-    public LoginUser check(User user) throws Exception {
+    public User check(User user) throws Exception {
         List<String> keys = new ArrayList<>();
         List<String> values = new ArrayList<>();
 
@@ -80,7 +77,9 @@ public class UserService {
             keys.add("telephone");
             values.add(telephone);
         }
-        return loginUserDao.getUserByFields(keys, values);
+        LoginUser loginUser = loginUserDao.getUserByFields(keys, values);
+        BeanUtils.copyProperties(loginUser, user);
+        return user;
     }
 
     /***
@@ -91,8 +90,11 @@ public class UserService {
      * @return
      * @throws Exception
      */
-    public LoginUser login(String loginValue, String loginNmae, String password) throws  Exception {
-        return loginUserDao.login(loginValue,loginNmae,password);
+    public User login(String loginValue, String loginNmae, String password) throws  Exception {
+        LoginUser loginUser = loginUserDao.login(loginValue,loginNmae,password);
+        User user = new User();
+        BeanUtils.copyProperties(loginUser, user);
+        return user;
     }
 
     public boolean resetPassword(Integer id, String password) throws Exception {

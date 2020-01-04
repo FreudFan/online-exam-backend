@@ -31,7 +31,7 @@ public class EmailMessageDao {
         }, keyHolder);
 
         int keyId = keyHolder.getKey().intValue();
-        emailMessage.setEmail_message_id(keyId);
+        emailMessage.setId(keyId);
         return emailMessage;
     }
 

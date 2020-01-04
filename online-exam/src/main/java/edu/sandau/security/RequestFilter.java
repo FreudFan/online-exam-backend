@@ -1,6 +1,6 @@
 package edu.sandau.security;
 
-import edu.sandau.entity.LoginUser;
+import edu.sandau.rest.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +26,8 @@ public class RequestFilter implements ContainerRequestFilter {
         boolean access = false;
         if ( !StringUtils.isEmpty(token) ) {
             try {
-                LoginUser user = sessionWrapper.getCurrentUser(token);
-                int userId = user.getLogin_user_id();
+                User user = sessionWrapper.getCurrentUser(token);
+                int userId = user.getId();
                 //是登录用户
                 if (userId > -1) {
                     session.setAttribute("key", token);

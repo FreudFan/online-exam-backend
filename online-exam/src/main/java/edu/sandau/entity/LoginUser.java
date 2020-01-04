@@ -9,7 +9,7 @@ import java.util.Date;
 public class LoginUser implements Serializable {
     private final String TABLE_NAME = "login_user";
 
-    private Integer login_user_id;
+    private Integer id;
     private String username;
     private String password;
     private String realname;

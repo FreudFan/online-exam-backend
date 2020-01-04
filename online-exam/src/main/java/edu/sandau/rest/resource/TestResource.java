@@ -2,6 +2,7 @@ package edu.sandau.rest.resource;
 
 import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.TestParam;
+import edu.sandau.rest.model.User;
 import edu.sandau.service.EmailService;
 import edu.sandau.entity.EmailMessage;
 import edu.sandau.security.SessionWrapper;
@@ -162,7 +163,7 @@ public class TestResource {
 //        return sessionWrapper.getRedisKeyFromSession(httpSession);
 //        sessionWrapper.refresh(httpSession);
 //        sessionWrapper.invalidate(httpSession);
-        LoginUser users = sessionWrapper.getCurrentUser(securityContext);
+        User users = sessionWrapper.getCurrentUser(securityContext);
 //        sessionWrapper.setAttribute(httpSession, "23432", "fadsfjaidosfjaijfaidso");
 //        Map<String,Object> map = sessionWrapper.getAllAttribute(httpSession);
         return users;
