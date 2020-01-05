@@ -63,7 +63,7 @@
     <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
     <Loggers>
         <!--过滤掉spring的一些无用的DEBUG信息-->
-        <!--<logger name="org.springframework" level="INFO"></logger>-->
+        <logger name="org.springframework" level="INFO"/>
         <Root level="Debug">
             <AppenderRef ref="Console" />
             <AppenderRef ref="InfoFile" />
