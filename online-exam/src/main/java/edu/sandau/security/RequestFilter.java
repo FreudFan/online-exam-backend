@@ -27,9 +27,9 @@ public class RequestFilter implements ContainerRequestFilter {
         if ( !StringUtils.isEmpty(token) ) {
             try {
                 User user = sessionWrapper.getCurrentUser(token);
-                int userId = user.getId();
                 //是登录用户
-                if (userId > -1) {
+                if (user != null && user.getId() > -1) {
+                    int userId = user.getId();
                     session.setAttribute("key", token);
                     session.setAttribute("userId", userId);
                     session.setAttribute("user", user);
@@ -43,17 +43,14 @@ public class RequestFilter implements ContainerRequestFilter {
                         public Principal getUserPrincipal() {
                             return () -> String.valueOf(userId);
                         }
-
                         @Override
                         public boolean isUserInRole(String role) {
                             return true;
                         }
-
                         @Override
                         public boolean isSecure() {
                             return currentSecurityContext.isSecure();
                         }
-
                         @Override
                         public String getAuthenticationScheme() {
                             return token;

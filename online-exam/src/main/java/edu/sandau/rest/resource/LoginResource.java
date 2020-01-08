@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Path("user")
+@Path("auth")
 @Api(value = "登录接口")
 public class LoginResource {
 

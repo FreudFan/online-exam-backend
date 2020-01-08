@@ -16,22 +16,27 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class EmailMessage implements Serializable {
-    @JsonIgnore
-    @Getter private final String TABLE_NAME = "email_message";
+    private final String TABLE_NAME = "email_message";
 
     private Integer id;
-    // 收件人
+    /***
+     * 收件邮箱地址
+     */
     private String email;
-    // 发件人id
+    /***
+     * 发件人id
+     */
     private Integer tosId;
-    //邮件主题
+    /***
+     * 邮件主题
+     */
     private String subject;
-    //邮件正文
+    /***
+     * 邮件主题
+     */
     private String content;
 
-    @JsonIgnore
     private Date createtime;
-    @JsonIgnore
     private Date updatetime;
 
     public EmailMessage(String email, String subject, Integer tosId) {
