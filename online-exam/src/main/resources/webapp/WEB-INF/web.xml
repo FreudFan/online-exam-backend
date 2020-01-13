@@ -35,20 +35,20 @@
         <listener-class>edu.sandau.datasource.DruidManager</listener-class>
     </listener>
 
-    <servlet>
-        <servlet-name>Swagger</servlet-name>
-        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-        <init-param>
-            <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>
-                <!-- Swagger -->
-                io.swagger.jaxrs.listing,
-                <!-- 此处填写个人的包路径-->
-                edu.sandau
-            </param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+<!--    <servlet>-->
+<!--        <servlet-name>Swagger</servlet-name>-->
+<!--        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>-->
+<!--        <init-param>-->
+<!--            <param-name>jersey.config.server.provider.packages</param-name>-->
+<!--            <param-value>-->
+<!--                &lt;!&ndash; Swagger &ndash;&gt;-->
+<!--                io.swagger.jaxrs.listing,-->
+<!--                &lt;!&ndash; 此处填写个人的包路径&ndash;&gt;-->
+<!--                edu.sandau-->
+<!--            </param-value>-->
+<!--        </init-param>-->
+<!--        <load-on-startup>2</load-on-startup>-->
+<!--    </servlet>-->
 
     <!--配置durid监控-->
     <servlet>

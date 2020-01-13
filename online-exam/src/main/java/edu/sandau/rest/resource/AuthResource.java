@@ -1,6 +1,7 @@
 package edu.sandau.rest.resource;
 
 import edu.sandau.rest.model.User;
+import edu.sandau.rest.model.VerificationCode;
 import edu.sandau.service.MessageService;
 import edu.sandau.service.UserService;
 import edu.sandau.security.SessionWrapper;
@@ -10,6 +11,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -23,7 +25,7 @@ import java.util.Map;
 @Slf4j
 @Path("auth")
 @Api(value = "登录接口")
-public class LoginResource {
+public class AuthResource {
 
     @Autowired
     private SessionWrapper sessionWrapper;
@@ -33,6 +35,8 @@ public class LoginResource {
     private SecurityContext securityContext;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
 
     /***
      * 用户使用 用户名、手机号、邮箱 和 密码 登入
@@ -154,15 +158,15 @@ public class LoginResource {
      *  type 邮件：0， 短信：1
      * @return
      */
-    @PUT
-    @Path("verification-code")
+    @POST
+    @Path("code")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response getVerificationCode(Map<String,Object> map) throws Exception {
+    public Response getVerificationCode(VerificationCode code) throws Exception {
         //短信、邮件地址
-        String to = MapUtils.getString(map, "to", null);
+        String to = code.getTo();
         //邮件：0， 短信：1
-        Integer type = MapUtils.getInteger(map, "type", null);
+        Integer type = code.getType();
         String uuid = null;
         if ( !StringUtils.isEmpty(to) ) {
             switch (type){
@@ -180,6 +184,18 @@ public class LoginResource {
         }
         if ( uuid != null ) {
             return Response.accepted(uuid).build();
+        }
+        return Response.accepted(false).status(500).build();
+    }
+
+    @POST
+    @Path("check-code")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response checkVerificationCode(VerificationCode verificationCode) throws Exception {
+        String code = redisTemplate.opsForValue().get(verificationCode.getKey());
+        if ( code != null && code.equals(verificationCode.getCode())) {
+            return Response.accepted(true).build();
         }
         return Response.accepted(false).status(500).build();
     }

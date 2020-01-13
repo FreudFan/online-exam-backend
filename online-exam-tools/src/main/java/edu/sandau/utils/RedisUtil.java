@@ -10,15 +10,16 @@ import java.util.UUID;
 public class RedisUtil {
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String,String> redisTemplate;
 
     /**
      * 生成唯一的key
+     * 若已存在相同key，重新生成随机数
      * @return
      */
     public String createKey() {
         String uuid = UUID.randomUUID().toString();
-        while ( redisTemplate.hasKey(uuid) ) {   //若已存在相同key，重新生成随机数
+        while ( redisTemplate.hasKey(uuid) ) {
             uuid = UUID.randomUUID().toString();
         }
         return uuid;
@@ -32,7 +33,7 @@ public class RedisUtil {
     public String createKey(String model) {
         String uuid = UUID.randomUUID().toString();
         String key = model + ":" + uuid;
-        while ( redisTemplate.hasKey(key) ) {   //若已存在相同key，重新生成随机数
+        while ( redisTemplate.hasKey(key) ) {
             uuid = UUID.randomUUID().toString();
             key = model + ":" + uuid;
         }

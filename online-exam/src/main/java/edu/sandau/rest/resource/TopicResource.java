@@ -4,7 +4,7 @@ import edu.sandau.entity.UploadFile;
 import edu.sandau.security.Auth;
 import edu.sandau.dao.TopticsDao;
 import edu.sandau.security.SessionWrapper;
-import edu.sandau.service.TopticsService;
+import edu.sandau.service.TopticService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -29,7 +29,7 @@ public class TopicResource {
     @Autowired
     private TopticsDao topticsDao;
     @Autowired
-    private TopticsService topticsService;
+    private TopticService topticsService;
     @Context
     private SecurityContext securityContext;
     @Autowired
@@ -132,7 +132,7 @@ public class TopicResource {
         List topicsList = (List)topicsMap.get("id");
         String id = (String)topicsList.get(0);
         String[] idArrays = id.split(",");
-        int count = topticsService.topicsDeleteService("id",idArrays);
+        int count = topticsService.deleteTopics("id",idArrays);
         if(count > 0){
             return "success";
         }else{
@@ -146,7 +146,7 @@ public class TopicResource {
     @Produces({ MediaType.APPLICATION_JSON })
     public String topicDelete_JSON( Map<String,String> topicsMap)  {
         String[] idArrays = topicsMap.get("id").substring(1,topicsMap.get("id").length()-1).split(",");
-        int count = topticsService.topicsDeleteService("id",idArrays);
+        int count = topticsService.deleteTopics("id",idArrays);
         if(count > 0){
             return "success";
         }else{

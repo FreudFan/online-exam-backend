@@ -24,7 +24,7 @@ public class LoginUserDao {
      * @param loginUser
      * @return
      */
-    public LoginUser save(LoginUser loginUser) throws Exception {
+    public LoginUser save(LoginUser loginUser) {
         String sql = " INSERT INTO login_user " +
                 "( username, password, realname, gender, email, telephone, subject_id, role ) VALUES " +
                 "( ?, ?, ?, ?, ?, ?, ?, ? )";
@@ -48,7 +48,7 @@ public class LoginUserDao {
         return loginUser;
     }
 
-    public List<LoginUser> getUserByRealname(String realname ) throws Exception {
+    public List<LoginUser> getUserByRealname(String realname ) {
         String sql = " SELECT * FROM login_user WHERE realname = ? ";
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, realname);
         if (mapList.size() == 0) {
@@ -63,9 +63,8 @@ public class LoginUserDao {
      * @param keys 数据库列名
      * @param values 列对应的值
      * @return
-     * @throws Exception
      */
-    public LoginUser getUserByFields(List<String> keys, List<String> values) throws Exception {
+    public LoginUser getUserByFields(List<String> keys, List<String> values) {
         StringBuilder sql = new StringBuilder(" SELECT * FROM login_user WHERE 1=1 ");
         if ( keys.size() == values.size() && keys.size() > 0 ) {
             sql.append(" AND ");
@@ -94,7 +93,7 @@ public class LoginUserDao {
         }
     }
 
-    public boolean updateUserById(Integer id, String column, String value ) throws Exception {
+    public Boolean updateUserById(Integer id, String column, String value ) throws Exception {
         String sql = "UPDATE login_user SET " + column + " = ? WHERE id = ? ";
         int num = jdbcTemplate.update(sql, new Object[]{value, id});
         return num > 0;

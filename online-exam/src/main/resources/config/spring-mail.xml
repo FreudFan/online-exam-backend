@@ -32,11 +32,6 @@
 <!--        <property name="text" value="${email.default.text}"/>-->
     </bean>
 
-    <bean id="emailService" class="edu.sandau.service.EmailService">
-        <property name="javaMailSender" ref="JavaMailSender"/>
-        <property name="simpleMailMessage" ref="simpleMailMessage"/>
-    </bean>
-
     <!-- freemarker -->
     <bean id="configuration"
           class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">

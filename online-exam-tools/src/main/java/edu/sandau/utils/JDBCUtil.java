@@ -2,8 +2,6 @@ package edu.sandau.utils;
 
 import edu.sandau.datasource.DruidManager;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

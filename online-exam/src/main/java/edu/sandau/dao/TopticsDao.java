@@ -1,8 +1,8 @@
 package edu.sandau.dao;
 
 import edu.sandau.datasource.DruidManager;
+import edu.sandau.service.TopticService;
 import edu.sandau.utils.JDBCUtil;
-import edu.sandau.service.TopticsService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -16,7 +16,7 @@ import java.util.Map;
 public class TopticsDao {
 
     @Autowired
-    private TopticsService topticsService;
+    private TopticService topticsService;
 
     public List selectTopicAll() throws Exception {
         List<Map<String,Object>> list = new ArrayList<>();

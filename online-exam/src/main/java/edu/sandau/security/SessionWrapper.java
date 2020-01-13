@@ -35,10 +35,10 @@ public class SessionWrapper{
         SESSION_TIMEOUT = sessionTimeout;
     }
 
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final RedisUtil redisUtil;
     private final HttpSession httpSession;
-    public SessionWrapper(RedisTemplate redisTemplate, RedisUtil redisUtil, HttpSession httpSession) {
+    public SessionWrapper(RedisTemplate<String, Object> redisTemplate, RedisUtil redisUtil, HttpSession httpSession) {
         this.redisTemplate = redisTemplate;
         this.redisUtil = redisUtil;
         this.httpSession = httpSession;
@@ -47,11 +47,11 @@ public class SessionWrapper{
     /***
      * !!! 此方法只允许在用户登录时使用，并只允许使用一次 !!!
      * 使用场景：用户登录成功后需在redis里集中管理session，在此处生成唯一的 key
-     * 唯一key生成策略：auth + 随机数
-     * 会将用户对象信息存入redis，key会在下一次发送请求时保存在 SecurityContext 里
-     * redis 保存成功后会将 key 发给前端，前端需在每次请求头中加上 "Authorization" : key
+     * 唯一key生成策略：model + 随机数
+     * 会将用户对象信息存入redis，key会在下一次发送请求时保存在 SecurityContext 和 session 里
+     * redis 保存成功后会将 key 返回给前端，前端需在每次请求头中加上 "Authorization" : key
      * @return key 会话唯一标识
-     * @param user
+     * @param user 用户实体
      */
     public String addSessionToRedis(User user) {
         //确保redis的key唯一
@@ -197,16 +197,16 @@ public class SessionWrapper{
      * 获取当前用户所有属性
      * @return
      */
-    public Map<String, Object> getAllAttribute() throws Exception{
+    public Map<Object, Object> getAllAttribute() throws Exception{
         String key = this.getId();
-        return (Map<String ,Object>) redisTemplate.opsForHash().entries(key);
+        return redisTemplate.opsForHash().entries(key);
     }
-    public Map<String, Object> getAllAttribute(SecurityContext securityContext) throws Exception{
+    public Map<Object, Object> getAllAttribute(SecurityContext securityContext) throws Exception{
         String key = securityContext.getAuthenticationScheme();
         if ( key == null ) {
             return null;
         }
-        return (Map<String ,Object>) redisTemplate.opsForHash().entries(key);
+        return redisTemplate.opsForHash().entries(key);
     }
 
     /***

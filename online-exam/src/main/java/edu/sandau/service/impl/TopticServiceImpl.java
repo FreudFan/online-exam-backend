@@ -1,8 +1,9 @@
-package edu.sandau.service;
+package edu.sandau.service.impl;
 
 import edu.sandau.dao.TopticsDao;
 import edu.sandau.dao.UploadFileDao;
 import edu.sandau.entity.UploadFile;
+import edu.sandau.service.TopticService;
 import edu.sandau.utils.ExcelUtil;
 import edu.sandau.utils.FileUtil;
 import edu.sandau.utils.TimeUtil;
@@ -21,7 +22,7 @@ import java.util.Map;
 
 @Service
 @Transactional
-public class TopticsService {
+public class TopticServiceImpl implements TopticService {
 
     @Autowired
     private TopticsDao topticsDao;
@@ -69,16 +70,10 @@ public class TopticsService {
     }
 
     public UploadFile getFileById(Integer id) throws Exception {
-        UploadFile uploadFile = uploadFileDao.getFileById(id);
-        return uploadFile;
+        return uploadFileDao.getFileById(id);
     }
 
-    /***
-     * 解析excel文件内容并保存
-     * @param uploadFiles
-     * @throws Exception
-     */
-    public List saveTopicExcel(List<UploadFile> uploadFiles) throws Exception {
+    public List<List<List<Object>>> saveTopicExcel(List<UploadFile> uploadFiles) throws Exception {
         List<List<List<Object>>> topicList = new ArrayList<>();
         for ( UploadFile uploadFile : uploadFiles) {
             File file = uploadFile.getFile();
@@ -102,7 +97,7 @@ public class TopticsService {
         return title;
     }
 
-    public int topicsDeleteService(String idName,String[] idArrays){
+    public int deleteTopics(String idName, String[] idArrays){
         return topticsDao.deleteTopics(idName,idArrays);
     }
 }
