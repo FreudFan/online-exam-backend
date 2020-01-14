@@ -7,7 +7,6 @@ import java.util.List;
 
 @Data
 public class Topic implements Serializable {
-    private final String TABLE_NAME = "topic";
 
     private Integer id;
     private Integer file_id;

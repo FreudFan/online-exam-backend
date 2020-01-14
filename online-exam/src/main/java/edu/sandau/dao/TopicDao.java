@@ -1,22 +1,17 @@
 package edu.sandau.dao;
 
-import edu.sandau.datasource.DruidManager;
-import edu.sandau.entity.LoginUser;
 import edu.sandau.entity.Topic;
-import edu.sandau.enums.DifficultTypeEnum;
-import edu.sandau.rest.model.TopicData;
+import edu.sandau.rest.model.Page;
 import edu.sandau.service.TopicService;
 import edu.sandau.utils.JDBCUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.support.KeyHolder;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 @Repository
 public class TopicDao {
@@ -25,20 +20,23 @@ public class TopicDao {
     private TopicService topicService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    public List selectTopicAll() throws Exception {
-        List<Map<String,Object>> list = new ArrayList<>();
-        String sql = "select a.id, description,correctkey,topicmark,analysis,b.option,b.value from topic  a " +
-                "left join options  b on a.id = b.topic_id where flag = 1";
-        list = JDBCUtil.queryForList(sql);
-        return list;
+    @Autowired
+    private JDBCUtil jdbcUtil;
+
+    /***
+     * 删除题目方法
+     * @param idName
+     * @param idArrays
+     */
+    public void deleteTopics(String idName,List<Integer> idArrays){
+        jdbcUtil.deleteForRecord("topic","flag",idName,idArrays);
     }
 
-
-    public int deleteTopics(String idName,String[] idArrays){
-        int count = JDBCUtil.deleteForRecord("topic","flag",idName,idArrays);
-        return count;
-    }
-
+    /***
+     * 返回主表自增id
+     * @param topic
+     * @return keyID
+     */
     public int save(Topic topic) {
             String sql = " INSERT INTO topic " +
                     "( file_id,type,description,correctkey,topicmark,difficult,analysis,subject_id) VALUES " +
@@ -61,5 +59,26 @@ public class TopicDao {
             int keyId = Objects.requireNonNull(keyHolder.getKey()).intValue();
 
             return keyId;
+    }
+
+    /***
+     * 得到topic表的总题目数量
+     * @return 题目总数量
+     */
+    public int getCount() {
+        String sql ="select count(1) from topic";
+        return jdbcTemplate.queryForObject(sql,Integer.class);
+    }
+
+    /***
+     * 分页查询topic表
+     * @param page
+     * @return List<Topic>
+     */
+    public List<Topic> listTopicByPage(Page page) {
+        int start = (page.getPageNo() - 1) * page.getPageSize();
+        String sql = " SELECT * FROM topic limit ? , ? ";
+        List<Topic> list = jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(Topic.class),new Object[]{start,page.getPageSize()});
+        return list;
     }
 }

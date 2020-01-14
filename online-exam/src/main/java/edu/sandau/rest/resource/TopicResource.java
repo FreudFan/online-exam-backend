@@ -2,12 +2,15 @@ package edu.sandau.rest.resource;
 
 import edu.sandau.dao.TopicDao;
 import edu.sandau.entity.UploadFile;
+import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.TopicData;
 import edu.sandau.security.Auth;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.TopicService;
+import edu.sandau.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,44 +89,29 @@ public class TopicResource {
         }
     }
 
+    /**
+     *
+     * @param page 分页对象
+     * @return 分页数据
+     * @throws Exception
+     */
+    @ApiOperation(value = "分页查询题目", response = Map.class)
     @GET
     @Path("show")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response topicShow() throws Exception {
-        List<Map<String, Object>> topicList = topicDao.selectTopicAll();
-        List<Map<String, Object>> showList = new ArrayList<>();
-        Map<String, Object> showMap = null;
-        int count ;
-        if(!topicList.isEmpty()){
-            for (int i = 0; i < topicList.size(); i+=count) {
-                count = 1;
-                Map<String, Object> tempMap = topicList.get(i);
-                String option = tempMap.get("option").toString();
-                String value = tempMap.get("value").toString();
-                showMap = new LinkedHashMap<>();
-                showMap.put("id", tempMap.get("id"));
-                showMap.put("description", tempMap.get("description"));
-                showMap.put("correctkey", tempMap.get("correctkey"));
-                showMap.put("topicmark", tempMap.get("topicmark"));
-                showMap.put("analysis", tempMap.get("analysis"));
-                showMap.put(option,value);
-                for (int j = i + 1; j < topicList.size(); j++) {
-
-                    if(!topicList.get(j).get("id").toString().equals(topicList.get(i).get("id").toString()))
-                    {
-                       break;
-                    }
-                    showMap.put(topicList.get(j).get("option").toString(),topicList.get(j).get("value").toString());
-                    count ++ ;
-                }
-                showList.add(showMap);
-
-            }
-        }
-        return Response.accepted(showList).build();
+    public Response topicShow(Page page) throws Exception {
+        page = topicService.getTopicByPage(page);
+        return Response.ok(page).build();
     }
 
+
+    /***
+     *
+     * @param data
+     * @return 插入成功
+     * @throws Exception
+     */
     @POST
     @Path("save")
     @Consumes({ MediaType.APPLICATION_JSON })
@@ -136,35 +124,24 @@ public class TopicResource {
         return Response.accepted("ok").build();
     }
 
+
+    /***
+     * 传参格式:
+     * {
+     * 	"id":[2091,2092,2093]
+     * }
+     * @param topicMap
+     * @return删除成功
+     */
     @POST
     @Path("delete")
-    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public String topicDelete(MultivaluedMap topicMap) {
-//        String[] idArrays = topicsMap.get("id").substring(1, topicsMap.get("id").length() - 1).split(",");
-        List topicsList = (List)topicMap.get("id");
-        String id = (String)topicsList.get(0);
-        String[] idArrays = id.split(",");
-        int count = topicService.deleteTopics("id",idArrays);
-        if(count > 0){
-            return "success";
-        }else{
-            return "fail";
-        }
-    }
-
-    @POST
-    @Path("deleteJSON")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public String topicDelete_JSON( Map<String,String> topicMap)  {
-        String[] idArrays = topicMap.get("id").substring(1,topicMap.get("id").length()-1).split(",");
-        int count = topicService.deleteTopics("id",idArrays);
-        if(count > 0){
-            return "success";
-        }else{
-            return "fail";
-        }
+    public Response topicDelete_JSON( Map<String,List<Integer>> topicMap)  {
+        List<Integer> idArrays = topicMap.get("id");
+        topicService.deleteTopics("id",idArrays);
+
+        return Response.ok("ok").build();
     }
 
 }
