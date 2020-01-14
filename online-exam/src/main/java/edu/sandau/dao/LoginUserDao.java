@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Repository
 public class LoginUserDao {
@@ -26,8 +27,9 @@ public class LoginUserDao {
      */
     public LoginUser save(LoginUser loginUser) {
         String sql = " INSERT INTO login_user " +
-                "( username, password, realname, gender, email, telephone, subject_id, role ) VALUES " +
-                "( ?, ?, ?, ?, ?, ?, ?, ? )";
+                "( username, password, realname, gender, email, telephone, role, " +
+                " organization, major_id, class_id ) VALUES " +
+                "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
@@ -38,12 +40,14 @@ public class LoginUserDao {
             ps.setInt(4, loginUser.getGender());
             ps.setString(5, loginUser.getEmail());
             ps.setString(6, loginUser.getTelephone());
-            ps.setString(7, loginUser.getSubject_id());
-            ps.setInt(8, loginUser.getRole());
+            ps.setInt(7, loginUser.getRole());
+            ps.setString(8, loginUser.getOrganization());
+            ps.setString(9, loginUser.getMajor_id());
+            ps.setString(10, loginUser.getClass_id());
             return ps;
         }, keyHolder);
 
-        int keyId = keyHolder.getKey().intValue();
+        int keyId = Objects.requireNonNull(keyHolder.getKey()).intValue();
         loginUser.setId(keyId);
         return loginUser;
     }

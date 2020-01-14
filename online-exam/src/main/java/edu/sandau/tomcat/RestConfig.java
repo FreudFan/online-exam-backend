@@ -38,7 +38,6 @@ public class RestConfig extends ResourceConfig {
 		LOGGER.info("in packages=" + packages);
     	this.packages(packages);
 		this.register(MultiPartFeature.class);
-		this.register(JacksonFeature.class);
 		this.register(TestReaderIntercetor.class);
 		this.register(io.swagger.jaxrs.listing.ApiListingResource.class);
 		this.register(io.swagger.jaxrs.listing.SwaggerSerializers.class);

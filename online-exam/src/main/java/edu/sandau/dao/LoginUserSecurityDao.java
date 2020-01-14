@@ -35,7 +35,7 @@ public class LoginUserSecurityDao {
     }
 
     public List<String> getQuestionById( Integer id ) throws Exception {
-        String SQL = " SELECT question FROM online_exam.login_user_security WHERE login_users_id = ? ";
+        String SQL = " SELECT question FROM login_user_security WHERE login_user_id = ? ";
         List<Map<String,Object>> results = jdbcTemplate.queryForList(SQL, id);
         List questions = results.stream().map(value -> value.get("question") ).collect(Collectors.toList());
         return questions;

@@ -1,5 +1,6 @@
 package edu.sandau.rest.resource;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import edu.sandau.enums.LoginValueEnum;
 import edu.sandau.rest.model.User;
 import edu.sandau.rest.model.VerificationCode;
@@ -96,6 +97,10 @@ public class AuthResource {
      * @return 用户信息（脱敏）
      * @throws Exception
      */
+    @ApiOperation(value = "用户注册", response = String.class)
+    @ApiResponses({
+            @ApiResponse(code=400, message="用户已注册")
+    })
     @POST
     @Path("register")
     @Consumes({ MediaType.APPLICATION_JSON })
@@ -114,6 +119,8 @@ public class AuthResource {
      * @return 若存在，返回exist，不存在，返回null
      * @throws Exception
      */
+    @ApiOperation(value = "检查是否有存在指定用户", response = String.class,
+                    notes = "检查 username，email，telephone 是否唯一")
     @PUT
     @Path("check")
     @Consumes({ MediaType.APPLICATION_JSON })
@@ -133,6 +140,12 @@ public class AuthResource {
      * @return
      * @throws Exception
      */
+    @ApiOperation(value = "重置密码", response = Boolean.class,
+            notes = "检查 username，email，telephone 是否唯一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户id", dataType = "Integer", required = true ),
+            @ApiImplicitParam(name = "password", value = "新密码", dataType = "String", required = true )
+    })
     @POST
     @Path("reset-password")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
@@ -147,16 +160,23 @@ public class AuthResource {
 
     /***
      * 获取用户密保问题
-     * @param map 需有参数 id
-     * @return 问题list
+     * @param id  用户id
+     * @return 密保问题list
      * @throws Exception
      */
-    @PUT
+    @ApiOperation(value = "获取用户密保问题", response = List.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户id", dataType = "Integer", required = true )
+    })
+    @ApiResponses({
+            @ApiResponse(code=500, message="参数不合规"),
+            @ApiResponse(code=200, message="用户问题列表", response = List.class),
+    })
+    @GET
     @Path("security-question")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response getSecurityQuestion(Map<String,Object> map) throws Exception {
-        Integer id = MapUtils.getInteger(map,"id", null);
+    public Response getSecurityQuestion(@QueryParam("id") Integer id) throws Exception {
         if ( id != null ) {
             List<String> questions = userService.getSecurityQuestion(id);
             return Response.ok(questions).build();
@@ -170,6 +190,11 @@ public class AuthResource {
      *  type 邮件：0， 短信：1
      * @return
      */
+    @ApiOperation(value = "发邮件、短信验证", response = String.class)
+    @ApiResponses({
+            @ApiResponse(code=500, message="发送失败"),
+            @ApiResponse(code=200, message="验证码id，校验验证码时需传此id", response = String.class)
+    })
     @POST
     @Path("code")
     @Consumes({ MediaType.APPLICATION_JSON })
@@ -200,6 +225,7 @@ public class AuthResource {
         return Response.accepted(false).status(500).build();
     }
 
+    @ApiOperation(value = "验证码校验", response = Boolean.class)
     @POST
     @Path("check-code")
     @Consumes({ MediaType.APPLICATION_JSON })

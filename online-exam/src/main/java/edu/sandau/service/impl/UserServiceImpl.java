@@ -74,8 +74,11 @@ public class UserServiceImpl implements UserService {
             values.add(telephone);
         }
         LoginUser loginUser = loginUserDao.getUserByFields(keys, values);
-        BeanUtils.copyProperties(loginUser, user);
-        return user;
+        if ( loginUser != null ) {
+            BeanUtils.copyProperties(loginUser, user);
+            return user;
+        }
+        return null;
     }
 
     /***
