@@ -70,7 +70,7 @@ public class LoginUserDao {
      * @param values 列对应的值
      * @return
      */
-    public LoginUser getUserByFields(List<String> keys, List<String> values) {
+    public List<LoginUser> getUserByFields(List<String> keys, List<String> values) {
         StringBuilder sql = new StringBuilder(" SELECT * FROM login_user WHERE 1=1 ");
         if ( keys.size() == values.size() && keys.size() > 0 ) {
             sql.append(" AND ");
@@ -85,7 +85,7 @@ public class LoginUserDao {
         if (mapList.size() == 0) {
             return null;
         } else {
-            return (LoginUser) MapUtil.mapToObject(mapList.get(0), LoginUser.class);
+            return (List) MapUtil.mapToObject(mapList, LoginUser.class);
         }
     }
 
@@ -97,6 +97,41 @@ public class LoginUserDao {
         } else {
             return (LoginUser) MapUtil.mapToObject(mapList.get(0), LoginUser.class);
         }
+    }
+
+    public LoginUser getUserById(Integer id) throws Exception {
+        String sql = " SELECT * FROM login_user WHERE id = ? ";
+        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{id});
+        if (mapList.size() == 0) {
+            return null;
+        } else {
+            return (LoginUser) MapUtil.mapToObject(mapList.get(0), LoginUser.class);
+        }
+    }
+
+    /***
+     * 更新用户
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    public int update(LoginUser user) throws Exception {
+        String sql = " UPDATE login_user " +
+                " SET username = ?, realname = ?, gender = ?, email = ?, telephone = ?, organization = ?, " +
+                " major_id = ?, class_id = ?, role = ? " +
+                " WHERE id = ? ";
+        Object[] param = new Object[10];
+        param[0] = user.getUsername();
+        param[1] = user.getRealname();
+        param[2] = user.getGender();
+        param[3] = user.getEmail();
+        param[4] = user.getTelephone();
+        param[5] = user.getOrganization();
+        param[6] = user.getMajor_id();
+        param[7] = user.getClass_id();
+        param[8] = user.getRole();
+        param[9] = user.getId();
+        return jdbcTemplate.update(sql, param);
     }
 
     /***

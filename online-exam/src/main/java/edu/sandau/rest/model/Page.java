@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Map;
 
 @ApiModel(description = "分页查询参数")
 @Getter
@@ -17,6 +18,9 @@ public class Page {
 
     @ApiModelProperty(value = "查询总数")
     private Integer total;
+
+    @ApiModelProperty(value = "查询参数")
+    private Map<String, Object> option;
 
     @ApiModelProperty(value = "查询内容")
     private List<?> rows;
@@ -33,6 +37,10 @@ public class Page {
         if (pageSize > 0) {
             this.pageSize = pageSize;
         }
+    }
+
+    public void setOption(Map<String, Object> option) {
+        this.option = option;
     }
 
     public void setTotal(Integer total) {

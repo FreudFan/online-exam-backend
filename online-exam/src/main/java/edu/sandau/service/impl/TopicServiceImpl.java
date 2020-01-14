@@ -39,13 +39,13 @@ public class TopicServiceImpl implements TopicService {
     @Autowired
     private UploadFileDao uploadFileDao;
 
-    private final String excel_type = "xlsx";
+    private final String EXCEL_TYPE = "xlsx";
 
     @Override
     public TopicData readTopicExcel(InputStream fileInputStream, String fileName) throws Exception {
         //截取文件名
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
-        if ( !excel_type.equals(fileType) ) {
+        if ( !EXCEL_TYPE.equals(fileType) ) {
             return null;
         }
 

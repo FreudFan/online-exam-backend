@@ -58,6 +58,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User check(User user) throws Exception {
+        List<LoginUser> loginUsers = this.checkList(user);
+        if ( loginUsers != null ) {
+            LoginUser loginUser = loginUsers.get(0);
+            BeanUtils.copyProperties(loginUser, user);
+            return user;
+        }
+        return null;
+    }
+
+    @Override
+    public Integer checkNumber(User user) throws Exception {
+        List<LoginUser> loginUsers = this.checkList(user);
+        return loginUsers.size();
+    }
+
+    private List<LoginUser> checkList(User user) throws Exception {
         List<String> keys = new ArrayList<>();
         List<String> values = new ArrayList<>();
 
@@ -76,22 +92,9 @@ public class UserServiceImpl implements UserService {
             keys.add("telephone");
             values.add(telephone);
         }
-        LoginUser loginUser = loginUserDao.getUserByFields(keys, values);
-        if ( loginUser != null ) {
-            BeanUtils.copyProperties(loginUser, user);
-            return user;
-        }
-        return null;
+        return loginUserDao.getUserByFields(keys, values);
     }
 
-    /***
-     * 若登录失败，返回null
-     * @param loginValue
-     * @param loginNmae
-     * @param password
-     * @return
-     * @throws Exception
-     */
     @Override
     public User login(LoginValueEnum loginValue, String loginNmae, String password) throws  Exception {
         LoginUser loginUser = loginUserDao.login(loginValue.getName(),loginNmae,password);
@@ -120,6 +123,20 @@ public class UserServiceImpl implements UserService {
         page.setRows(users);
         page.setTotal(total);
         return page;
+    }
+
+    @Override
+    public User updateUser(User user) throws Exception {
+        LoginUser loginUser = new LoginUser();
+        BeanUtils.copyProperties(user, loginUser);
+        if (this.checkNumber(user) >= 2) {
+            return null;
+        } else {
+            loginUserDao.update(loginUser);
+            loginUser = loginUserDao.getUserById(user.getId());
+        }
+        BeanUtils.copyProperties(loginUser, user);
+        return user;
     }
 
 }
