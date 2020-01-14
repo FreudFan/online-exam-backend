@@ -28,7 +28,7 @@ public class SessionWrapper{
     /***
      * redis里用于管理所有session的文件夹
      */
-    private final String MODEL = "session";
+    public final static String MODEL = "session";
 
     @Value(value="${redis.session_timeout:30}")
     public void setSessionTimeout(Integer sessionTimeout) {

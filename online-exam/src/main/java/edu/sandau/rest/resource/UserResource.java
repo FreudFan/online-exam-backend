@@ -1,5 +1,6 @@
 package edu.sandau.rest.resource;
 
+import com.alibaba.fastjson.JSONObject;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.User;
 import edu.sandau.security.Auth;
@@ -7,11 +8,12 @@ import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.UserService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
+import java.util.*;
 
 @Path("user")
 @Api(value = "用户接口")
@@ -21,6 +23,8 @@ public class UserResource {
     private UserService userService;
     @Autowired
     private SessionWrapper sessionWrapper;
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
 
     @ApiOperation(value = "修改用户信息")
     @ApiResponses({
@@ -77,6 +81,25 @@ public class UserResource {
             return Response.ok(true).build();
         }
         return Response.accepted(false).status(500).build();
+    }
+
+    @ApiOperation(value = "获取所有在线用户", response = List.class)
+    @GET
+    @Path("online-user")
+    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response getAllOnlineUser() throws Exception {
+        String prefix = SessionWrapper.MODEL + "*";
+        // 获取所有的key
+        Set<String> keys = redisTemplate.keys(prefix);
+        List<User> users = new ArrayList<>();
+        // 批量获取数据
+        for (String key: keys) {
+            String value = Objects.requireNonNull(redisTemplate.opsForHash().get(key, "user")).toString();
+            User user = JSONObject.parseObject(value, User.class);
+            users.add(user);
+        }
+        return Response.ok(users).build();
     }
 
 }
