@@ -3,15 +3,14 @@ package edu.sandau.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-
 /**
  * 题目类型枚举
  */
 @Getter
 @AllArgsConstructor
 public enum TopicTypeEnum {
-    MULTIPLECHOOSE(0, "选择题"),
-    TRUEORFALSE(1, "判断题");
+    MULTIPLE_CHOOSE(0, "选择题"),
+    TRUE_OR_FALSE(1, "判断题");
 
     private final Integer key;
     private final String value;

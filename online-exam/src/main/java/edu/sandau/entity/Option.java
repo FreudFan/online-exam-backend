@@ -1,6 +1,5 @@
 package edu.sandau.entity;
 
-
 import lombok.Data;
 
 @Data

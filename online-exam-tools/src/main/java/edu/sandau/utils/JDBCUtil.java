@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Repository
 public class JDBCUtil {
-
-
     @Autowired
     private  JdbcTemplate jdbcTemplate;
+
     /***
      * 查询返回 ResultSet
      * @param sql

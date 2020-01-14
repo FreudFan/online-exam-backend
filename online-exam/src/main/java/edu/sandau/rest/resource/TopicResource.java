@@ -7,10 +7,8 @@ import edu.sandau.rest.model.TopicData;
 import edu.sandau.security.Auth;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.TopicService;
-import edu.sandau.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,7 +102,6 @@ public class TopicResource {
         page = topicService.getTopicByPage(page);
         return Response.ok(page).build();
     }
-
 
     /***
      *

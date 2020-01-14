@@ -6,12 +6,10 @@ import edu.sandau.rest.model.TopicData;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 public interface TopicService {
 
-     Page getTopicByPage(Page page);
-
+    Page getTopicByPage(Page page);
 
     TopicData readTopicExcel(InputStream fileInputStream, String fileName) throws Exception;
 
@@ -29,4 +27,5 @@ public interface TopicService {
     void deleteTopics(String idName, List<Integer> idArrays);
 
     int save(TopicData data);
+
 }

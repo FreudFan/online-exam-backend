@@ -1,4 +1,5 @@
 package edu.sandau.dao;
+
 import edu.sandau.entity.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -7,13 +8,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class OptionDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     public void insertOption(int keyId, List<Option> optionList){
       String  sql = " INSERT INTO options " +
                 "( topic_id,name,content) VALUES " +

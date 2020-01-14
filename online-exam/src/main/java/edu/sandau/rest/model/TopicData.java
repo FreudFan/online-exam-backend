@@ -1,9 +1,7 @@
 package edu.sandau.rest.model;
 
-
 import lombok.Data;
 
-import java.io.InputStream;
 import java.util.List;
 
 @Data
