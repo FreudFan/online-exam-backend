@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface TopicService {
 
-    Map<String, Object> readTopicExcel(InputStream fileInputStream, String fileName) throws Exception;
+    TopicData readTopicExcel(InputStream fileInputStream, String fileName) throws Exception;
 
     UploadFile getFileById(Integer id) throws Exception;
 

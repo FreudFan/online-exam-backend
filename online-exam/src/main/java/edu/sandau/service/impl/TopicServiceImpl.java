@@ -34,7 +34,7 @@ public class TopicServiceImpl implements TopicService {
 
     private final String excel_type = "xlsx";
 
-    public Map<String, Object> readTopicExcel(InputStream fileInputStream, String fileName) throws Exception {
+    public TopicData readTopicExcel(InputStream fileInputStream, String fileName) throws Exception {
         //截取文件名
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
         if ( !excel_type.equals(fileType) ) {
@@ -64,9 +64,9 @@ public class TopicServiceImpl implements TopicService {
         if ( uploadFile == null ) {
             return null;
         }
-        Map<String, Object> topic = new HashMap<>(2);
-        topic.put("file", data);
-        topic.put("id", uploadFile.getId());
+        TopicData topic = new TopicData();
+        topic.setFile(data);
+        topic.setId(uploadFile.getId());
         return topic;
     }
 

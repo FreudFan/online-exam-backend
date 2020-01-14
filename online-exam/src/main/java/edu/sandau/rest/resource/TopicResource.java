@@ -49,7 +49,7 @@ public class TopicResource {
         String fileName = new String(disposition.getFileName()
                 .getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 //        int userId = Integer.parseInt(securityContext.getUserPrincipal().getName());
-        Map<String, Object> data = topicService.readTopicExcel(fileInputStream, fileName);
+        TopicData data = topicService.readTopicExcel(fileInputStream, fileName);
         if ( data == null ) {
             return Response.ok("请上传xlsx格式文件").status(Response.Status.BAD_REQUEST).build();
         }

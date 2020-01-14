@@ -10,5 +10,5 @@ public class TopicData {
     int id;
     int subject_id;
     int type;
-    List<List<String>> file;
+    List<List<Object>> file;
 }
