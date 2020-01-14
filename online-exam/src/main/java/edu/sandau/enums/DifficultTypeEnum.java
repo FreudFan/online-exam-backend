@@ -14,6 +14,20 @@ public enum DifficultTypeEnum {
     SIMPLE(0,"易"),
     NORMAL(1,"中"),
     HARD(2,"难");
-    private final Integer value;
-    private final String name;
-}
+    private final Integer key;
+    private final String value;
+
+
+    public  static Integer findKey(String value) {
+        DifficultTypeEnum[] difficultTypeEnum = values();
+        for (DifficultTypeEnum difficultEnum : difficultTypeEnum) {
+            if (difficultEnum.getValue().equals(value)) {
+                return difficultEnum.getKey();
+            }
+        }
+        return null;
+    }
+
+    }
+
+

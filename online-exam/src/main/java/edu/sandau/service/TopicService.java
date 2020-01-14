@@ -20,13 +20,6 @@ public interface TopicService {
 
     UploadFile getFileById(Integer id) throws Exception;
 
-    /***
-     * 解析excel文件内容并保存
-     * @param uploadFiles
-     * @throws Exception
-     */
-    List<List<List<Object>>> saveTopicExcel(List<UploadFile> uploadFiles) throws Exception;
-
     int getChooseCount( List<Object> titleList);
 
     int deleteTopics(String idName, String[] idArrays);

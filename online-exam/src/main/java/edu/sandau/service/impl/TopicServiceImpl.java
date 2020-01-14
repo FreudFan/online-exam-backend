@@ -1,8 +1,13 @@
 package edu.sandau.service.impl;
 
+import edu.sandau.dao.OptionDao;
 import edu.sandau.dao.TopicDao;
 import edu.sandau.dao.UploadFileDao;
+import edu.sandau.entity.Option;
+import edu.sandau.entity.Topic;
 import edu.sandau.entity.UploadFile;
+import edu.sandau.enums.DifficultTypeEnum;
+import edu.sandau.enums.TopicTypeEnum;
 import edu.sandau.rest.model.TopicData;
 import edu.sandau.service.TopicService;
 import edu.sandau.utils.ExcelUtil;
@@ -15,10 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +32,8 @@ public class TopicServiceImpl implements TopicService {
 
     @Autowired
     private TopicDao topicDao;
+    @Autowired
+    private OptionDao optionDao;
     @Autowired
     private FileUtil fileUtil;
     @Autowired
@@ -113,23 +119,40 @@ public class TopicServiceImpl implements TopicService {
         return uploadFileDao.getFileById(id);
     }
 
-    @Override
-    public List<List<List<Object>>> saveTopicExcel(List<UploadFile> uploadFiles) throws Exception {
-        List<List<List<Object>>> topicList = new ArrayList<>();
-        for ( UploadFile uploadFile : uploadFiles) {
-            File file = uploadFile.getFile();
-            List<List<Object>> listList = ExcelUtil.readExcel(file);
-            if ( topicDao.insetForExcel(listList) ) {
-                topicList.add(listList);
-            }
-        }
-        return topicList;
-    }
 
-    @Override
-    public int save(TopicData data){
-       int count = topicDao.saveTopics(data);
-       return count;
+    public int save(TopicData data) {
+        int id = data.getId();
+        int subject_id = data.getSubject_id();
+        List<List<Object>> topicList = data.getFile();
+        int options = getChooseCount(topicList.get(0));
+        for (int i = 1; i < topicList.size(); i++) {
+            List<Object> topic = topicList.get(i);
+            Topic topicObject = new Topic();
+            List<Option> optionArgs = new ArrayList<>();
+            topicObject.setFile_id(id);
+            topicObject.setSubject_id(subject_id);
+            topicObject.setDescription(topic.get(0).toString());
+            for (int j = 1; j < options; j++) {
+                String value =  topic.get(j).toString();
+                if (value != null && !"".equals(value)) {
+                    Option optionObject = new Option();
+                    optionObject.setName(String.valueOf((char) ('A' + j - 1)));
+                    optionObject.setContent(value);
+                    optionArgs.add(optionObject);
+                }
+            }
+            topicObject.setOptionsList(optionArgs);
+            int size = topic.size();
+            topicObject.setType(TopicTypeEnum.findKey(topic.get(size - 1).toString()));
+            topicObject.setAnalysis(topic.get(size - 2).toString());
+            String difficult =  topic.get( size - 3).toString();
+            topicObject.setDifficult(DifficultTypeEnum.findKey(difficult));
+            topicObject.setTopicmark(((BigDecimal) topic.get(size - 4)).doubleValue());
+            topicObject.setCorrectkey(topic.get(size-5).toString());
+            int keyId = topicDao.save(topicObject);
+            optionDao.insertOption(keyId,optionArgs);
+        }
+        return 0;
     }
 
     @Override

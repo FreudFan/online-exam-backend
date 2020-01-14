@@ -3,12 +3,13 @@ package edu.sandau.rest.model;
 
 import lombok.Data;
 
+import java.io.InputStream;
 import java.util.List;
 
 @Data
 public class TopicData {
-    int id;
-    int subject_id;
-    int type;
+    private Integer id;
+    private Integer subject_id;
+    private Integer type;
     List<List<Object>> file;
 }

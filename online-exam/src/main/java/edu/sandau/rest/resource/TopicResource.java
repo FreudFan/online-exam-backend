@@ -129,7 +129,7 @@ public class TopicResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response topicSave(TopicData data ) throws Exception {
-        System.out.println(data);
+        topicService.save(data);
 
 
 
