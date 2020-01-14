@@ -1,11 +1,12 @@
 package edu.sandau.rest.resource;
 
+import edu.sandau.enums.LoginValueEnum;
 import edu.sandau.rest.model.User;
 import edu.sandau.rest.model.VerificationCode;
 import edu.sandau.service.MessageService;
 import edu.sandau.service.UserService;
 import edu.sandau.security.SessionWrapper;
-import io.swagger.annotations.Api;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,6 @@ import java.util.Map;
 @Path("auth")
 @Api(value = "登录接口")
 public class AuthResource {
-
     @Autowired
     private SessionWrapper sessionWrapper;
     @Autowired
@@ -46,20 +46,32 @@ public class AuthResource {
      * @return 用户信息
      * @throws Exception
      */
+    @ApiOperation(value = "用户登录", response = Map.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "用户名、手机号、邮箱", dataType = "String", required = true ),
+            @ApiImplicitParam(name = "password", value = "密码", dataType = "String", required = true )
+    })
+    @ApiResponses({
+            @ApiResponse(code=400, message="用户名或密码错误"),
+            @ApiResponse(code=200,
+                    message="token: 6a41255e-a2ba-4122-a945-d61ebc81747b\n" +
+                            "会拿到一个User类和token字符串，用户登录后所有传参需在请求头加入 Authorization ,否则请求会被阻止",
+                    response = User.class),
+    })
     @POST
     @Path("login")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response login(@FormParam("name") String name, @FormParam("password") String password) throws Exception {
-        String loginValue;
+        LoginValueEnum loginValue;
         if ( name.contains("@") ) {
             //识别是否是邮箱
-            loginValue = "email";
+            loginValue = LoginValueEnum.EMAIL;
         } else if ( name.length() == 11 && NumberUtils.isDigits(name) ) {
             //识别是手机号
-            loginValue = "telephone";
+            loginValue = LoginValueEnum.TELEPHONE;
         } else {
-            loginValue = "username";
+            loginValue = LoginValueEnum.USERNAME;
         }
         User user = userService.login(loginValue, name, password);
         if ( user == null ) {

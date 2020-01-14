@@ -1,5 +1,6 @@
 package edu.sandau.service;
 
+import edu.sandau.enums.LoginValueEnum;
 import edu.sandau.rest.model.User;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public interface UserService {
      * @return
      * @throws Exception
      */
-    User login(String loginValue, String loginNmae, String password) throws  Exception;
+    User login(LoginValueEnum loginValue, String loginNmae, String password) throws  Exception;
 
     Boolean resetPassword(Integer id, String password) throws Exception;
 

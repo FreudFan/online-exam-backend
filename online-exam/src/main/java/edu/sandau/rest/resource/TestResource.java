@@ -7,6 +7,8 @@ import edu.sandau.service.EmailService;
 import edu.sandau.entity.EmailMessage;
 import edu.sandau.security.SessionWrapper;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +94,14 @@ public class TestResource {
         return null;
     }
 
+    @ApiOperation(value = "topicShow", response = Map.class)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "length",value = "参数1", required = true, paramType = "path"),
+            @ApiImplicitParam(name = "size",value = "参数2", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "page",value = "参数3", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "total",value = "参数4", required = true, paramType = "form"),
+            @ApiImplicitParam(name = "start",value = "参数5",dataType = "string", paramType = "body")
+    })
     @PUT
     @Path("show")
     @Consumes({ MediaType.APPLICATION_JSON })

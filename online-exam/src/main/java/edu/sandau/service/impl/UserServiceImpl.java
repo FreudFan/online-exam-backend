@@ -1,6 +1,7 @@
 package edu.sandau.service.impl;
 
 import edu.sandau.dao.LoginUserDao;
+import edu.sandau.enums.LoginValueEnum;
 import edu.sandau.enums.RoleTypeEnum;
 import edu.sandau.dao.LoginUserSecurityDao;
 import edu.sandau.entity.LoginUser;
@@ -85,8 +86,8 @@ public class UserServiceImpl implements UserService {
      * @return
      * @throws Exception
      */
-    public User login(String loginValue, String loginNmae, String password) throws  Exception {
-        LoginUser loginUser = loginUserDao.login(loginValue,loginNmae,password);
+    public User login(LoginValueEnum loginValue, String loginNmae, String password) throws  Exception {
+        LoginUser loginUser = loginUserDao.login(loginValue.getName(),loginNmae,password);
         User user = new User();
         BeanUtils.copyProperties(loginUser, user);
         return user;
