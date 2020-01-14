@@ -91,6 +91,9 @@ public class UserServiceImpl implements UserService {
      */
     public User login(LoginValueEnum loginValue, String loginNmae, String password) throws  Exception {
         LoginUser loginUser = loginUserDao.login(loginValue.getName(),loginNmae,password);
+        if ( loginUser == null ) {
+            return null;
+        }
         User user = new User();
         BeanUtils.copyProperties(loginUser, user);
         return user;
