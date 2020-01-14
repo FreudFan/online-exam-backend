@@ -1,6 +1,8 @@
 package edu.sandau.dao;
 
 import edu.sandau.entity.LoginUser;
+import edu.sandau.rest.model.Page;
+import edu.sandau.rest.model.User;
 import edu.sandau.utils.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -97,10 +99,41 @@ public class LoginUserDao {
         }
     }
 
+    /***
+     * 更新用户指定属性
+     * @param id
+     * @param column
+     * @param value
+     * @return
+     * @throws Exception
+     */
     public Boolean updateUserById(Integer id, String column, String value ) throws Exception {
         String sql = "UPDATE login_user SET " + column + " = ? WHERE id = ? ";
         int num = jdbcTemplate.update(sql, new Object[]{value, id});
         return num > 0;
+    }
+
+    /***
+     * 分页查询所有用户
+     * @param page
+     * @return
+     * @throws Exception
+     */
+    public List<User> listUserByPage(Page page) throws Exception {
+        int start = (page.getPageNo() - 1) * page.getPageSize();
+        String sql = " SELECT * FROM login_user ORDER by id ASC limit ? , ? ";
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{start, page.getPageSize()});
+        return (List) MapUtil.mapToObject(mapList, User.class);
+    }
+
+    /***
+     * 查询总数
+     * @return
+     * @throws Exception
+     */
+    public Integer getCount() throws Exception {
+        String sql = " SELECT COUNT(1) FROM login_user ";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
 }

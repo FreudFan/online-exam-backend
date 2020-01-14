@@ -6,6 +6,7 @@ import edu.sandau.enums.RoleTypeEnum;
 import edu.sandau.dao.LoginUserSecurityDao;
 import edu.sandau.entity.LoginUser;
 import edu.sandau.entity.LoginUserSecurity;
+import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.User;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.UserService;
@@ -29,6 +30,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private SessionWrapper sessionWrapper;
 
+    @Override
     public User addUser(User user) throws Exception {
         LoginUser loginUser = new LoginUser();
         BeanUtils.copyProperties(user, loginUser);
@@ -54,6 +56,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
     public User check(User user) throws Exception {
         List<String> keys = new ArrayList<>();
         List<String> values = new ArrayList<>();
@@ -89,6 +92,7 @@ public class UserServiceImpl implements UserService {
      * @return
      * @throws Exception
      */
+    @Override
     public User login(LoginValueEnum loginValue, String loginNmae, String password) throws  Exception {
         LoginUser loginUser = loginUserDao.login(loginValue.getName(),loginNmae,password);
         if ( loginUser == null ) {
@@ -99,12 +103,23 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
     public Boolean resetPassword(Integer id, String password) throws Exception {
         return loginUserDao.updateUserById(id, "password", password);
     }
 
+    @Override
     public List<String> getSecurityQuestion(Integer id) throws Exception {
         return loginUserSecurityDao.getQuestionById(id);
+    }
+
+    @Override
+    public Page getUsersByPage(Page page) throws Exception {
+        List<User> users = loginUserDao.listUserByPage(page);
+        int total = loginUserDao.getCount();
+        page.setRows(users);
+        page.setTotal(total);
+        return page;
     }
 
 }

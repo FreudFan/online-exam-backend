@@ -1,6 +1,5 @@
 package edu.sandau.rest.resource;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import edu.sandau.enums.LoginValueEnum;
 import edu.sandau.rest.model.User;
 import edu.sandau.rest.model.VerificationCode;
@@ -9,7 +8,6 @@ import edu.sandau.service.UserService;
 import edu.sandau.security.SessionWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,31 +129,6 @@ public class AuthResource {
             return Response.ok("exist").build();
         }
         return Response.ok().build();
-    }
-
-    /***
-     * 重置密码
-     * @param id 用户id
-     * @param password 用户新密码
-     * @return
-     * @throws Exception
-     */
-    @ApiOperation(value = "重置密码", response = Boolean.class,
-            notes = "检查 username，email，telephone 是否唯一")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "用户id", dataType = "Integer", required = true ),
-            @ApiImplicitParam(name = "password", value = "新密码", dataType = "String", required = true )
-    })
-    @POST
-    @Path("reset-password")
-    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public Response resetPassword(@FormParam("id") Integer id, @FormParam("password") String password) throws Exception {
-        boolean ok = userService.resetPassword(id, password);
-        if ( ok ) {
-            return Response.ok(true).build();
-        }
-        return Response.accepted(false).status(500).build();
     }
 
     /***

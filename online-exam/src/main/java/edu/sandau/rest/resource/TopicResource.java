@@ -36,11 +36,11 @@ public class TopicResource {
     @Autowired
     private SessionWrapper sessionWrapper;
 
+    @ApiOperation(value = "导入题库", response = Map.class)
     @POST
     @Path("import")
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
     @Produces({ MediaType.APPLICATION_JSON })
-    @ApiOperation(value = "导入题库", response = Response.class)
     public Response topic(@FormDataParam("file") InputStream fileInputStream,
                           @FormDataParam("file") FormDataContentDisposition disposition) throws Exception {
         if ( fileInputStream == null || disposition == null ) {
@@ -48,7 +48,6 @@ public class TopicResource {
         }
         String fileName = new String(disposition.getFileName()
                 .getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-//        int userId = Integer.parseInt(securityContext.getUserPrincipal().getName());
         TopicData data = topicService.readTopicExcel(fileInputStream, fileName);
         if ( data == null ) {
             return Response.ok("请上传xlsx格式文件").status(Response.Status.BAD_REQUEST).build();
@@ -63,6 +62,7 @@ public class TopicResource {
      * @return
      * @throws Exception
      */
+    @ApiOperation(value = "下载用户上传的文件", response = InputStream.class)
     @GET
     @Path("download")
     @Consumes({ MediaType.APPLICATION_JSON })

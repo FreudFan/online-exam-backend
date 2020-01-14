@@ -1,6 +1,7 @@
 package edu.sandau.service;
 
 import edu.sandau.enums.LoginValueEnum;
+import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.User;
 
 import java.util.List;
@@ -31,4 +32,12 @@ public interface UserService {
 
     List<String> getSecurityQuestion(Integer id) throws Exception;
 
-    }
+    /***
+     * 分页查询所有用户
+     * @param page
+     * @return
+     * @throws Exception
+     */
+    Page getUsersByPage(Page page) throws Exception;
+
+}
