@@ -1,15 +1,16 @@
 package edu.sandau.dao;
 import edu.sandau.entity.Option;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class OptionDao {
-
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -28,5 +29,9 @@ public class OptionDao {
         jdbcTemplate.batchUpdate(sql,params);
     }
 
-
+    public List<Option> findOptionById(int id){
+        String sql = "select * from options where topic_id = ?";
+        List<Option> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Option.class),id);
+        return list;
+    }
 }

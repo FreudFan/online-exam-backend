@@ -8,6 +8,7 @@ import edu.sandau.entity.Topic;
 import edu.sandau.entity.UploadFile;
 import edu.sandau.enums.DifficultTypeEnum;
 import edu.sandau.enums.TopicTypeEnum;
+import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.TopicData;
 import edu.sandau.service.TopicService;
 import edu.sandau.utils.ExcelUtil;
@@ -40,6 +41,27 @@ public class TopicServiceImpl implements TopicService {
     private UploadFileDao uploadFileDao;
 
     private final String EXCEL_TYPE = "xlsx";
+
+    /***
+     *分页查询方法
+     * @param page
+     * @return page
+     */
+    @Override
+    public Page getTopicByPage(Page page) {
+        //分页查询主表数据
+        List<Topic> topics = topicDao.listTopicByPage(page);
+        int total = topicDao.getCount();
+        page.setRows(topics);
+        page.setTotal(total);
+        //遍历主表数据集合,查找对应的选项数据
+        topics.stream().forEach((topic)->{
+            Integer id = topic.getId();
+            List<Option> optionList = optionDao.findOptionById(id);
+            topic.setOptionsList(optionList);
+        });
+        return page;
+    }
 
     @Override
     public TopicData readTopicExcel(InputStream fileInputStream, String fileName) throws Exception {
@@ -119,11 +141,16 @@ public class TopicServiceImpl implements TopicService {
         return uploadFileDao.getFileById(id);
     }
 
-
+    /***
+     * 插入题目
+     * @param data
+     * @return
+     */
     public int save(TopicData data) {
         int id = data.getId();
         int subject_id = data.getSubject_id();
         List<List<Object>> topicList = data.getFile();
+        //获得最大选项列的索引
         int options = getChooseCount(topicList.get(0));
         for (int i = 1; i < topicList.size(); i++) {
             List<Object> topic = topicList.get(i);
@@ -132,6 +159,7 @@ public class TopicServiceImpl implements TopicService {
             topicObject.setFile_id(id);
             topicObject.setSubject_id(subject_id);
             topicObject.setDescription(topic.get(0).toString());
+            //将每行的选项单独放入一个集合
             for (int j = 1; j < options; j++) {
                 String value =  topic.get(j).toString();
                 if (value != null && !"".equals(value)) {
@@ -155,6 +183,11 @@ public class TopicServiceImpl implements TopicService {
         return 0;
     }
 
+    /***
+     * 判断Excel中最多有几个选项
+     * @param titleList
+     * @return
+     */
     @Override
     public int getChooseCount( List<Object> titleList)  {
         int title = 0;
@@ -168,7 +201,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public int deleteTopics(String idName, String[] idArrays){
-        return topicDao.deleteTopics(idName,idArrays);
+    public void deleteTopics(String idName, List<Integer> idArrays){
+       topicDao.deleteTopics(idName,idArrays);
     }
 }

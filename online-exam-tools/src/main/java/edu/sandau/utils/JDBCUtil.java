@@ -2,6 +2,9 @@ package edu.sandau.utils;
 
 import edu.sandau.datasource.DruidManager;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,9 +13,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Repository
 public class JDBCUtil {
 
+
+    @Autowired
+    private  JdbcTemplate jdbcTemplate;
     /***
      * 查询返回 ResultSet
      * @param sql
@@ -152,21 +158,14 @@ public class JDBCUtil {
      * @param tableName,flag,idList
      * @return count.length
      */
-    public static int deleteForRecord(String tableName, String flag,String idName,String[] idArrays){
-        try {
-            Connection connection = DruidManager.getConnection();
-            PreparedStatement statement = connection.prepareStatement("update " + tableName + " set " + flag + " = 0 where " + idName+ " = ?");
+    public  void deleteForRecord(String tableName, String flag,String idName,List<Integer> idArrays){
 
-            for (String id : idArrays) {
-                statement.setInt(1,Integer.parseInt(id));
-                statement.addBatch();
+            String sql = "update " + tableName + " set " + flag + " = 0 where " + idName+ " = ?";
+            List<Object[]> params = new ArrayList<>();
+            for (Integer id : idArrays) {
+                params.add(new Object[]{id});
             }
-           int[] count = statement.executeBatch();
-            return count.length;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
-        }
+            jdbcTemplate.batchUpdate(sql,params);
     }
 
     /***
