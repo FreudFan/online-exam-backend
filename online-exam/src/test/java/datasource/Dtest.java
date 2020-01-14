@@ -3,7 +3,7 @@ package datasource;
 import com.alibaba.fastjson.JSONObject;
 import edu.sandau.datasource.DruidManager;
 import edu.sandau.utils.JDBCUtil;
-import edu.sandau.entity.Topics;
+import edu.sandau.entity.Topic;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -19,11 +19,11 @@ public class Dtest {
     }
 
     private static void insertOrUpdate() throws NoSuchFieldException, IllegalAccessException, SQLException, InvocationTargetException, InstantiationException {
-        Topics topics = new Topics();
+        Topic topics = new Topic();
         topics.setSubject_id(11165186);
         topics.setId(12);
 //        JDBCUtils.insertOrUpdate(topics);
-        List<Topics> topicsList = JDBCUtil.get(Topics.class, 0 ,5);
+        List<Topic> topicsList = JDBCUtil.get(Topic.class, 0 ,5);
         topicsList.size();
     }
 

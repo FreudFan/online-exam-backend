@@ -1,9 +1,10 @@
 package edu.sandau.service.impl;
 
-import edu.sandau.dao.TopticsDao;
+import edu.sandau.dao.TopicDao;
 import edu.sandau.dao.UploadFileDao;
 import edu.sandau.entity.UploadFile;
-import edu.sandau.service.TopticService;
+import edu.sandau.rest.model.TopicData;
+import edu.sandau.service.TopicService;
 import edu.sandau.utils.ExcelUtil;
 import edu.sandau.utils.FileUtil;
 import edu.sandau.utils.TimeUtil;
@@ -22,10 +23,10 @@ import java.util.Map;
 
 @Service
 @Transactional
-public class TopticServiceImpl implements TopticService {
+public class TopicServiceImpl implements TopicService {
 
     @Autowired
-    private TopticsDao topticsDao;
+    private TopicDao topicDao;
     @Autowired
     private FileUtil fileUtil;
     @Autowired
@@ -78,11 +79,16 @@ public class TopticServiceImpl implements TopticService {
         for ( UploadFile uploadFile : uploadFiles) {
             File file = uploadFile.getFile();
             List<List<Object>> listList = ExcelUtil.readExcel(file);
-            if ( topticsDao.insetForExcel(listList) ) {
+            if ( topicDao.insetForExcel(listList) ) {
                 topicList.add(listList);
             }
         }
         return topicList;
+    }
+
+    public int save(TopicData data){
+       int count = topicDao.saveTopics(data);
+       return count;
     }
 
 
@@ -98,6 +104,6 @@ public class TopticServiceImpl implements TopticService {
     }
 
     public int deleteTopics(String idName, String[] idArrays){
-        return topticsDao.deleteTopics(idName,idArrays);
+        return topicDao.deleteTopics(idName,idArrays);
     }
 }

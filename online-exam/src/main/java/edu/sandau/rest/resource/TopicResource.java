@@ -1,10 +1,11 @@
 package edu.sandau.rest.resource;
 
+import edu.sandau.dao.TopicDao;
 import edu.sandau.entity.UploadFile;
+import edu.sandau.rest.model.TopicData;
 import edu.sandau.security.Auth;
-import edu.sandau.dao.TopticsDao;
 import edu.sandau.security.SessionWrapper;
-import edu.sandau.service.TopticService;
+import edu.sandau.service.TopicService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -27,9 +28,9 @@ import java.util.*;
 public class TopicResource {
 
     @Autowired
-    private TopticsDao topticsDao;
+    private TopicDao topicDao;
     @Autowired
-    private TopticService topticsService;
+    private TopicService topicService;
     @Context
     private SecurityContext securityContext;
     @Autowired
@@ -48,7 +49,7 @@ public class TopicResource {
         String fileName = new String(disposition.getFileName()
                 .getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
 //        int userId = Integer.parseInt(securityContext.getUserPrincipal().getName());
-        Map<String, Object> data = topticsService.readTopicExcel(fileInputStream, fileName);
+        Map<String, Object> data = topicService.readTopicExcel(fileInputStream, fileName);
         if ( data == null ) {
             return Response.ok("请上传xlsx格式文件").status(Response.Status.BAD_REQUEST).build();
         }
@@ -67,7 +68,7 @@ public class TopicResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response download(@QueryParam("fid") Integer fid, @Context HttpHeaders httpHeaders) throws Exception {
-        UploadFile uploadFile = topticsService.getFileById(fid);
+        UploadFile uploadFile = topicService.getFileById(fid);
         File f = new File(uploadFile.getFilePath());
         String fileName = uploadFile.getFileName();
         if (!f.exists()) {
@@ -90,14 +91,14 @@ public class TopicResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response topicShow() throws Exception {
-        List<Map<String, Object>> topicsList = topticsDao.selectTopicAll();
+        List<Map<String, Object>> topicList = topicDao.selectTopicAll();
         List<Map<String, Object>> showList = new ArrayList<>();
         Map<String, Object> showMap = null;
         int count ;
-        if(!topicsList.isEmpty()){
-            for (int i = 0; i < topicsList.size(); i+=count) {
+        if(!topicList.isEmpty()){
+            for (int i = 0; i < topicList.size(); i+=count) {
                 count = 1;
-                Map<String, Object> tempMap = topicsList.get(i);
+                Map<String, Object> tempMap = topicList.get(i);
                 String option = tempMap.get("option").toString();
                 String value = tempMap.get("value").toString();
                 showMap = new LinkedHashMap<>();
@@ -107,13 +108,13 @@ public class TopicResource {
                 showMap.put("topicmark", tempMap.get("topicmark"));
                 showMap.put("analysis", tempMap.get("analysis"));
                 showMap.put(option,value);
-                for (int j = i + 1; j < topicsList.size(); j++) {
+                for (int j = i + 1; j < topicList.size(); j++) {
 
-                    if(!topicsList.get(j).get("id").toString().equals(topicsList.get(i).get("id").toString()))
+                    if(!topicList.get(j).get("id").toString().equals(topicList.get(i).get("id").toString()))
                     {
                        break;
                     }
-                    showMap.put(topicsList.get(j).get("option").toString(),topicsList.get(j).get("value").toString());
+                    showMap.put(topicList.get(j).get("option").toString(),topicList.get(j).get("value").toString());
                     count ++ ;
                 }
                 showList.add(showMap);
@@ -124,15 +125,27 @@ public class TopicResource {
     }
 
     @POST
+    @Path("save")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response topicSave(TopicData data ) throws Exception {
+        System.out.println(data);
+
+
+
+        return Response.accepted("ok").build();
+    }
+
+    @POST
     @Path("delete")
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
     @Produces({ MediaType.APPLICATION_JSON })
-    public String topicDelete(MultivaluedMap topicsMap) {
+    public String topicDelete(MultivaluedMap topicMap) {
 //        String[] idArrays = topicsMap.get("id").substring(1, topicsMap.get("id").length() - 1).split(",");
-        List topicsList = (List)topicsMap.get("id");
+        List topicsList = (List)topicMap.get("id");
         String id = (String)topicsList.get(0);
         String[] idArrays = id.split(",");
-        int count = topticsService.deleteTopics("id",idArrays);
+        int count = topicService.deleteTopics("id",idArrays);
         if(count > 0){
             return "success";
         }else{
@@ -144,9 +157,9 @@ public class TopicResource {
     @Path("deleteJSON")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public String topicDelete_JSON( Map<String,String> topicsMap)  {
-        String[] idArrays = topicsMap.get("id").substring(1,topicsMap.get("id").length()-1).split(",");
-        int count = topticsService.deleteTopics("id",idArrays);
+    public String topicDelete_JSON( Map<String,String> topicMap)  {
+        String[] idArrays = topicMap.get("id").substring(1,topicMap.get("id").length()-1).split(",");
+        int count = topicService.deleteTopics("id",idArrays);
         if(count > 0){
             return "success";
         }else{

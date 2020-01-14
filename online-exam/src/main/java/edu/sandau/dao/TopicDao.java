@@ -1,10 +1,12 @@
 package edu.sandau.dao;
 
 import edu.sandau.datasource.DruidManager;
-import edu.sandau.service.TopticService;
+import edu.sandau.rest.model.TopicData;
+import edu.sandau.service.TopicService;
 import edu.sandau.utils.JDBCUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -13,15 +15,16 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class TopticsDao {
+public class TopicDao {
 
     @Autowired
-    private TopticService topticsService;
-
+    private TopicService topicService;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     public List selectTopicAll() throws Exception {
         List<Map<String,Object>> list = new ArrayList<>();
-        String sql = "select a.id, description,correctkey,topicmark,analysis,b.option,b.value from topics  a " +
-                "left join options  b on a.id = b.topics_id where flag = 1";
+        String sql = "select a.id, description,correctkey,topicmark,analysis,b.option,b.value from topic  a " +
+                "left join options  b on a.id = b.topic_id where flag = 1";
         list = JDBCUtil.queryForList(sql);
         return list;
     }
@@ -35,14 +38,14 @@ public class TopticsDao {
         boolean flag = true;
         StringBuffer sb = new StringBuffer();
         StringBuffer sbForOptions = new StringBuffer();
-        sb.append("INSERT INTO topics(description,correctkey,topicmark,analysis)VALUES(?,?,?,?);" );
-        sbForOptions.append("INSERT INTO options(topics_id,options.option,options.value)VALUES(?,?,?);" );
+        sb.append("INSERT INTO topic(description,correctkey,topicmark,analysis)VALUES(?,?,?,?);" );
+        sbForOptions.append("INSERT INTO options(topic_id,options.option,options.value)VALUES(?,?,?);" );
         try {
             Connection connection = DruidManager.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sbForOptions.toString());
             ResultSet rs ;
             PreparedStatement ps = connection.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
-            int chooseCount = topticsService.getChooseCount(excelList.get(0));
+            int chooseCount = topicService.getChooseCount(excelList.get(0));
             for (int i = 1; i < excelList.size(); i++) {
                 String description = String.valueOf(excelList.get(i).get(0));
                 String correctKey = String.valueOf(excelList.get(i).get(chooseCount + 1));
@@ -83,8 +86,20 @@ public class TopticsDao {
 
 
     public int deleteTopics(String idName,String[] idArrays){
-        int count = JDBCUtil.deleteForRecord("topics","flag",idName,idArrays);
+        int count = JDBCUtil.deleteForRecord("topic","flag",idName,idArrays);
         return count;
     }
 
+    public int saveTopics(TopicData data) {
+        String sql = " INSERT INTO topic " +
+                "( file_id,type,difficult,description,correctkey,topicmark,analysis,subject_id) VALUES " +
+                "( ?, ?, ?, ?, ?, ?, ?, ? )";
+        int id = data.getId();
+        int subject_id = data.getSubject_id();
+        int type = data.getType();
+        List<List<String>> topicList = data.getFile();
+        List<Object[]> batchArgs = new ArrayList<>();
+//        jdbcTemplate.update(sql,)
+        return 0;
+    }
 }

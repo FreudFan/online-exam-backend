@@ -1,12 +1,13 @@
 package edu.sandau.service;
 
 import edu.sandau.entity.UploadFile;
+import edu.sandau.rest.model.TopicData;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-public interface TopticService {
+public interface TopicService {
 
     Map<String, Object> readTopicExcel(InputStream fileInputStream, String fileName) throws Exception;
 
@@ -23,4 +24,5 @@ public interface TopticService {
 
     int deleteTopics(String idName, String[] idArrays);
 
+    int save(TopicData data);
 }
