@@ -11,6 +11,13 @@ public interface TopicService {
 
     TopicData readTopicExcel(InputStream fileInputStream, String fileName) throws Exception;
 
+    /***
+     * 判断导入的题目的类型
+     * @param data
+     * @return
+     */
+    List<List<Object>> checkTopicType(List<List<Object>> data);
+
     UploadFile getFileById(Integer id) throws Exception;
 
     /***
