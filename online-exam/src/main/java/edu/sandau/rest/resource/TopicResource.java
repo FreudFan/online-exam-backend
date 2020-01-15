@@ -1,6 +1,7 @@
 package edu.sandau.rest.resource;
 
 import edu.sandau.dao.TopicDao;
+import edu.sandau.entity.Topic;
 import edu.sandau.entity.UploadFile;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.TopicData;
@@ -99,6 +100,9 @@ public class TopicResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response topicShow(Page page) throws Exception {
+        if(page == null){
+            page = new Page();
+        }
         page = topicService.getTopicByPage(page);
         return Response.ok(page).build();
     }
@@ -141,4 +145,69 @@ public class TopicResource {
         return Response.ok("ok").build();
     }
 
+    /***
+     * json格式
+     *      	[
+     *           {
+     * 			"type":1,
+     * 			"difficult":1,
+     * 			"description":"test",
+     * 			"correctkey":"B",
+     * 			"topicmark":20.0,
+     * 			"analysis":"test",
+     * 			"subject_id":2,
+     * 			"optionsList":[
+     *            {"name":"A","content":"test"},
+     *            {"name":"B","content":"test2"},
+     *            {"name":"C","content":"test3"},
+     *            {"name":"D","content":"test4"}
+     * 			]
+     *        }
+     *     	]
+     *批量插入题目
+     * @param topicList
+     * @return插入成功
+     */
+    @POST
+    @Path("insert")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response topicInsert(List<Topic> topicList)  {
+        topicService.insertTopics(topicList);
+        return Response.ok("ok").build();
+    }
+
+    /***
+     * 传参方式
+     * {
+     * 	"id":1000,
+     * 	 "topics":"test1",
+     * 	 "type":1,
+     * 	 "difficult":1,
+     * 	 "description":"测试更新",
+     * 	 "correctkey":"B",
+     * 	 "topicmark":20.5,
+     * 	 "analysis":"测试更新",
+     * 	 "subject_id":3,
+     * 	 "optionsList":[
+     *         {"name":"A","content":"test"},
+     *        {"name":"B","content":"testB"},
+     *        {"name":"C","content":"testC"},
+     *        {"name":"D","content":"testD"}
+     * 	 	]
+     *
+     * }
+     * 更新试题
+     * @param topic
+     * @return
+     */
+
+    @POST
+    @Path("update")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response topicUpdate(Topic topic)  {
+       topicService.updateTopics(topic);
+        return Response.ok("ok").build();
+    }
 }

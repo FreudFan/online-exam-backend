@@ -29,7 +29,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class TopicServiceImpl implements TopicService {
+        public class TopicServiceImpl implements TopicService {
 
     @Autowired
     private TopicDao topicDao;
@@ -160,7 +160,7 @@ public class TopicServiceImpl implements TopicService {
             topicObject.setSubject_id(subject_id);
             topicObject.setDescription(topic.get(0).toString());
             //将每行的选项单独放入一个集合
-            for (int j = 1; j < options; j++) {
+            for (int j = 1; j <= options; j++) {
                 String value =  topic.get(j).toString();
                 if (value != null && !"".equals(value)) {
                     Option optionObject = new Option();
@@ -181,6 +181,25 @@ public class TopicServiceImpl implements TopicService {
             optionDao.insertOption(keyId,optionArgs);
         }
         return 0;
+    }
+
+    /***
+     * 批量插入题目
+     * @param topicList
+     */
+    @Override
+    public void insertTopics(List<Topic> topicList) {
+            topicList.stream().forEach((topic)->{
+                int keyId = topicDao.save(topic);
+                optionDao.insertOption(keyId,topic.getOptionsList());
+            });
+    }
+
+    @Override
+    public void updateTopics(Topic topic) {
+        int keyId = topicDao.save(topic);
+        optionDao.insertOption(keyId,topic.getOptionsList());
+        topicDao.deleteTopics(topic.getId());
     }
 
     /***
