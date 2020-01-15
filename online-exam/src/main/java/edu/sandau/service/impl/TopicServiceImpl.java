@@ -29,7 +29,7 @@ import java.util.List;
 
 @Service
 @Transactional
-        public class TopicServiceImpl implements TopicService {
+public class TopicServiceImpl implements TopicService {
 
     @Autowired
     private TopicDao topicDao;

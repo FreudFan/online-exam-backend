@@ -201,7 +201,6 @@ public class TopicResource {
      * @param topic
      * @return
      */
-
     @POST
     @Path("update")
     @Consumes({ MediaType.APPLICATION_JSON })

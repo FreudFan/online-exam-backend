@@ -62,6 +62,9 @@ public class UserResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response list(Page page) throws Exception {
+        if (page == null) {
+            return Response.ok().status(Response.Status.BAD_REQUEST).build();
+        }
         page = userService.getUsersByPage(page);
         return Response.ok(page).build();
     }
