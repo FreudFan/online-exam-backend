@@ -3,7 +3,6 @@ package edu.sandau.dao;
 import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.Page;
 import edu.sandau.security.SessionWrapper;
-import edu.sandau.service.TopicService;
 import edu.sandau.utils.JDBCUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -19,20 +18,17 @@ import java.util.Objects;
 public class TopicDao {
 
     @Autowired
-    private TopicService topicService;
-    @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private JDBCUtil jdbcUtil;
-    @Autowired
     private SessionWrapper sessionWrapper;
+
     /***
      * 批量删除题目方法
      * @param idName
      * @param idArrays
      */
     public void deleteTopics(String idName,List<Integer> idArrays){
-        jdbcUtil.deleteForRecord("topic","flag",idName,idArrays);
+        JDBCUtil.deleteForRecord("topic","flag",idName,idArrays);
     }
 
     /***
@@ -59,8 +55,7 @@ public class TopicDao {
                 PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 if(topic.getFile_id() != null) {
                     ps.setInt(1, topic.getFile_id());
-                }
-                else{
+                } else {
                     ps.setString(1, null);
                 }
                 ps.setInt(2, topic.getType());
@@ -73,9 +68,7 @@ public class TopicDao {
                 ps.setInt(9, sessionWrapper.getUserId());
                 return ps;
             }, keyHolder);
-
             int keyId = Objects.requireNonNull(keyHolder.getKey()).intValue();
-
             return keyId;
     }
 

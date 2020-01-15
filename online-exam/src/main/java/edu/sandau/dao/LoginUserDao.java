@@ -101,12 +101,8 @@ public class LoginUserDao {
 
     public LoginUser getUserById(Integer id) throws Exception {
         String sql = " SELECT * FROM login_user WHERE id = ? ";
-        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{id});
-        if (mapList.size() == 0) {
-            return null;
-        } else {
-            return (LoginUser) MapUtil.mapToObject(mapList.get(0), LoginUser.class);
-        }
+        Map<String,Object> map = jdbcTemplate.queryForMap(sql, new Object[]{id});
+        return (LoginUser) MapUtil.mapToObject(map, LoginUser.class);
     }
 
     /***

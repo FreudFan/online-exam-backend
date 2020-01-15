@@ -1,5 +1,6 @@
 package edu.sandau.rest.resource;
 
+import edu.sandau.dao.SysEnumDao;
 import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.TestParam;
 import edu.sandau.rest.model.User;
@@ -183,6 +184,21 @@ public class TestResource {
     @Path("res")
     public Response get() {
         return Response.ok("fafadsdf").status(HttpStatus.BAD_REQUEST.value()).build();
+    }
+
+    @Autowired
+    SysEnumDao sysEnumDao;
+
+    @GET
+    @Path("enum")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response enums() {
+        sysEnumDao.getEnumValue("COMMON", "GENDER", "男");
+        List<Map<String, Object>> parameters = sysEnumDao.getEnumMap("COMMON", "GENDER");
+        return Response.ok(
+                parameters
+        ).build();
     }
 
 }

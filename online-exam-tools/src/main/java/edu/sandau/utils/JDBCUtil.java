@@ -2,9 +2,8 @@ package edu.sandau.utils;
 
 import edu.sandau.datasource.DruidManager;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -14,10 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+@Component
 public class JDBCUtil {
-    @Autowired
-    private  JdbcTemplate jdbcTemplate;
+    private static JdbcTemplate jdbcTemplate;
+
+    public JDBCUtil(JdbcTemplate jdbcTemplate) {
+        JDBCUtil.jdbcTemplate = jdbcTemplate;
+    }
 
     /***
      * 查询返回 ResultSet
@@ -29,7 +31,7 @@ public class JDBCUtil {
         if ( !StringUtils.isEmpty(sql) ) {
             try(
                     Connection connection = DruidManager.getConnection();
-                    PreparedStatement statement = connection.prepareStatement(sql);
+                    PreparedStatement statement = connection.prepareStatement(sql)
             ) {
                 return statement.executeQuery();
             } catch ( Exception e ) {
@@ -52,8 +54,8 @@ public class JDBCUtil {
             try(
                     Connection connection = DruidManager.getConnection();
                     PreparedStatement statement = connection.prepareStatement(sql);
-                    ResultSet resultSet = statement.executeQuery();
-                ) {
+                    ResultSet resultSet = statement.executeQuery()
+            ) {
                 ResultSetMetaData metaData = resultSet.getMetaData();   // 取得数据库的列名
                 int numberOfColumns = metaData.getColumnCount();
 
@@ -93,7 +95,7 @@ public class JDBCUtil {
         List<Object> objects = new ArrayList<Object>();
         try(
                 Connection connection = DruidManager.getConnection();
-                PreparedStatement statement = connection.prepareStatement(SQL);
+                PreparedStatement statement = connection.prepareStatement(SQL)
         ) {
             statement.setString(1, clazzName+"_id");    //order by key
             if ( flag ) {
@@ -158,9 +160,8 @@ public class JDBCUtil {
      * @param tableName,flag,idList
      * @return count.length
      */
-    public  void deleteForRecord(String tableName, String flag,String idName,List<Integer> idArrays){
-
-            String sql = "update " + tableName + " set " + flag + " = 0 where " + idName+ " = ?";
+    public static void deleteForRecord(String tableName, String flag,String idName,List<Integer> idArrays){
+            String sql = " update " + tableName + " set " + flag + " = 0 where " + idName+ " = ?";
             List<Object[]> params = new ArrayList<>();
             for (Integer id : idArrays) {
                 params.add(new Object[]{id});
