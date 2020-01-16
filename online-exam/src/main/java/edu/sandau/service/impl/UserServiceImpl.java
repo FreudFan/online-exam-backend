@@ -9,6 +9,7 @@ import edu.sandau.entity.LoginUserSecurity;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.User;
 import edu.sandau.security.SessionWrapper;
+import edu.sandau.service.SysEnumService;
 import edu.sandau.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -29,18 +30,28 @@ public class UserServiceImpl implements UserService {
     private LoginUserSecurityDao loginUserSecurityDao;
     @Autowired
     private SessionWrapper sessionWrapper;
+    @Autowired
+    private SysEnumService enumService;
+
+    public User refactorEntity(LoginUser loginUser) {
+        User user = new User();
+        BeanUtils.copyProperties(loginUser, user);
+        int gender_id = loginUser.getGender();
+        String gender = enumService.getEnumName("COMMON", "GENDER", gender_id);
+        user.setGender(gender);
+        return user;
+    }
 
     @Override
-    public User addUser(User user) throws Exception {
-        LoginUser loginUser = new LoginUser();
-        BeanUtils.copyProperties(user, loginUser);
+    public User addUser(LoginUser loginUser) throws Exception {
         LoginUserSecurity userSecurity = new LoginUserSecurity();
-        BeanUtils.copyProperties(user, userSecurity);
+        userSecurity.setQuestion(loginUser.getQuestion());
+        userSecurity.setAnswer(loginUser.getAnswer());
         if ( loginUser.getRole() == null ) {
             //默认为注册用户
             loginUser.setRole(RoleTypeEnum.NORMAL_USER.getValue());
         }
-        if ( this.check(user) == null ) {
+        if ( this.check(loginUser) == null ) {
             //添加用户主表
             loginUser = loginUserDao.save(loginUser);
         } else {
@@ -49,7 +60,8 @@ public class UserServiceImpl implements UserService {
         //添加用户密保表
         userSecurity.setLogin_user_id(loginUser.getId());
         loginUserSecurityDao.save(userSecurity);
-        user.setId(loginUser.getId());
+        loginUser.setId(loginUser.getId());
+        User user = this.refactorEntity(loginUser);
         //注册session
         String token = sessionWrapper.addSessionToRedis(user);
         user.setToken(token);
@@ -57,23 +69,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User check(User user) throws Exception {
-        List<LoginUser> loginUsers = this.checkList(user);
+    public LoginUser check(LoginUser loginUser) throws Exception {
+        List<LoginUser> loginUsers = this.checkList(loginUser);
         if ( loginUsers != null ) {
-            LoginUser loginUser = loginUsers.get(0);
-            BeanUtils.copyProperties(loginUser, user);
-            return user;
+            loginUser = loginUsers.get(0);
+            return loginUser;
         }
         return null;
     }
 
     @Override
-    public Integer checkNumber(User user) throws Exception {
+    public Integer checkNumber(LoginUser user) throws Exception {
         List<LoginUser> loginUsers = this.checkList(user);
         return loginUsers.size();
     }
 
-    private List<LoginUser> checkList(User user) throws Exception {
+    /***
+     * 检测 用户名、邮件、电话 相同用户列表
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    private List<LoginUser> checkList(LoginUser user) throws Exception {
         List<String> keys = new ArrayList<>();
         List<String> values = new ArrayList<>();
 
@@ -101,8 +118,7 @@ public class UserServiceImpl implements UserService {
         if ( loginUser == null ) {
             return null;
         }
-        User user = new User();
-        BeanUtils.copyProperties(loginUser, user);
+        User user = this.refactorEntity(loginUser);
         return user;
     }
 
@@ -118,25 +134,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page getUsersByPage(Page page) throws Exception {
-        List<User> users = loginUserDao.listUserByPage(page);
+        List<LoginUser> loginUsers = loginUserDao.listUserByPage(page);
         int total = loginUserDao.getCount();
+        List<User> users = new ArrayList<>();
+        for (LoginUser loginUser: loginUsers) {
+            User user = this.refactorEntity(loginUser);
+            users.add(user);
+        }
         page.setRows(users);
         page.setTotal(total);
         return page;
     }
 
     @Override
-    public User updateUser(User user) throws Exception {
-        LoginUser loginUser = new LoginUser();
-        BeanUtils.copyProperties(user, loginUser);
-        if (this.checkNumber(user) >= 2) {
+    public User updateUser(LoginUser loginUser) throws Exception {
+        if (this.checkNumber(loginUser) >= 2) {
             return null;
         } else {
             loginUserDao.update(loginUser);
-            loginUser = loginUserDao.getUserById(user.getId());
+            loginUser = loginUserDao.getUserById(loginUser.getId());
         }
-        BeanUtils.copyProperties(loginUser, user);
-        return user;
+        return this.refactorEntity(loginUser);
     }
 
 }

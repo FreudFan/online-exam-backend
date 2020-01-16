@@ -1,6 +1,7 @@
 package edu.sandau.rest.resource;
 
 import com.alibaba.fastjson.JSONObject;
+import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.User;
 import edu.sandau.security.Auth;
@@ -35,11 +36,11 @@ public class UserResource {
     @Path("update")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response changeUser(User user) throws Exception {
-        if (user.getId() == null) {
+    public Response changeUser(LoginUser loginUser) throws Exception {
+        if (loginUser.getId() == null) {
             return Response.ok().status(Response.Status.BAD_REQUEST).build();
         }
-        user = userService.updateUser(user);
+        User user = userService.updateUser(loginUser);
         if (user == null) {
             return Response.ok().status(Response.Status.BAD_REQUEST).build();
         }
@@ -98,11 +99,10 @@ public class UserResource {
         List<User> users = new ArrayList<>();
         // 批量获取数据
         for (String key: keys) {
-            String value = Objects.requireNonNull(redisTemplate.opsForHash().get(key, "user")).toString();
+            String value = Objects.requireNonNull(redisTemplate.opsForHash().get(key, "loginUser")).toString();
             User user = JSONObject.parseObject(value, User.class);
             users.add(user);
         }
         return Response.ok(users).build();
     }
-
 }

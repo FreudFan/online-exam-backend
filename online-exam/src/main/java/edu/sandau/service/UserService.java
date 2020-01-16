@@ -1,5 +1,6 @@
 package edu.sandau.service;
 
+import edu.sandau.entity.LoginUser;
 import edu.sandau.enums.LoginValueEnum;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.User;
@@ -9,20 +10,27 @@ import java.util.List;
 public interface UserService {
 
     /***
+     * LoginUser 转成 User
+     * @param loginUser
+     * @return
+     */
+    User refactorEntity(LoginUser loginUser);
+
+    /***
      * 添加用户
-     * @param user
+     * @param loginUser
      * @return
      * @throws Exception
      */
-    User addUser(User user) throws Exception;
+    User addUser(LoginUser loginUser) throws Exception;
 
     /***
      * 查询是否存在指定用户
-     * @param user { username，email，telephone }
+     * @param loginUser { username，email，telephone }
      * @return 若存在用户，返回用户
      * @throws Exception
      */
-    User check(User user) throws Exception;
+    LoginUser check(LoginUser loginUser) throws Exception;
 
     /***
      * 查询是否存在相同用户个数
@@ -30,7 +38,7 @@ public interface UserService {
      * @return
      * @throws Exception
      */
-    Integer checkNumber(User user) throws Exception;
+    Integer checkNumber(LoginUser user) throws Exception;
 
     /***
      * 若登录失败，返回null
@@ -73,6 +81,6 @@ public interface UserService {
      * @return
      * @throws Exception
      */
-    User updateUser(User user) throws Exception;
+    User updateUser(LoginUser user) throws Exception;
 
 }

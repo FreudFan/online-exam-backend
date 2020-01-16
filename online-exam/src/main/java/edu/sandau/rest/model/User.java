@@ -1,11 +1,8 @@
 package edu.sandau.rest.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.util.List;
 
 @ApiModel(description = "用户")
 @Data
@@ -18,14 +15,11 @@ public class User {
     @ApiModelProperty(value = "用户名 唯一")
     private String username;
 
-    @JSONField(serialize = false)
-    private String password;
-
     @ApiModelProperty(value = "用户真实姓名")
     private String realname;
 
-    @ApiModelProperty(value = "性别整型值")
-    private Integer gender;
+    @ApiModelProperty(value = "性别")
+    private String gender;
 
     @ApiModelProperty(value = "性别")
     private String genderName;
@@ -48,11 +42,4 @@ public class User {
     @ApiModelProperty(value = "用户角色枚举{0:普通用户,1:试题管理员,2:系统管理员}, 前端需赋值, 未赋值则默认为0")
     private Integer role;
 
-    @JSONField(serialize = false)
-    @ApiModelProperty(value = "密保问题list")
-    private List<String> question;
-
-    @JSONField(serialize = false)
-    @ApiModelProperty(value = "密保答案list")
-    private List<String> answer;
 }

@@ -2,7 +2,6 @@ package edu.sandau.dao;
 
 import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.Page;
-import edu.sandau.rest.model.User;
 import edu.sandau.utils.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -150,11 +149,11 @@ public class LoginUserDao {
      * @return
      * @throws Exception
      */
-    public List<User> listUserByPage(Page page) throws Exception {
+    public List<LoginUser> listUserByPage(Page page) throws Exception {
         int start = (page.getPageNo() - 1) * page.getPageSize();
         String sql = " SELECT * FROM login_user ORDER by id ASC limit ? , ? ";
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{start, page.getPageSize()});
-        return (List) MapUtil.mapToObject(mapList, User.class);
+        return (List) MapUtil.mapToObject(mapList, LoginUser.class);
     }
 
     /***

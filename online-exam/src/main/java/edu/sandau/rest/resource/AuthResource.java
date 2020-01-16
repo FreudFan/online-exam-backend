@@ -1,5 +1,6 @@
 package edu.sandau.rest.resource;
 
+import edu.sandau.entity.LoginUser;
 import edu.sandau.enums.LoginValueEnum;
 import edu.sandau.rest.model.User;
 import edu.sandau.rest.model.VerificationCode;
@@ -91,7 +92,7 @@ public class AuthResource {
      * 注：用户名（username）不允许包含'@' 不允许全数字
      * 注：邮箱（email） 必须包含'@'
      * 注：手机号只允许中国大陆手机号，只允许全数字
-     * @param user
+     * @param loginUser
      * @return 用户信息（脱敏）
      * @throws Exception
      */
@@ -103,8 +104,8 @@ public class AuthResource {
     @Path("register")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response register(User user) throws Exception {
-        user = userService.addUser(user);
+    public Response register(LoginUser loginUser) throws Exception {
+        User user = userService.addUser(loginUser);
         if ( user == null ) {
             return Response.accepted("same value").status(Response.Status.BAD_REQUEST).build();
         }
@@ -113,7 +114,7 @@ public class AuthResource {
 
     /***
      * 检查是否有存在指定用户，不允许有相同用户名，邮箱，手机号
-     * @param user { username，email，telephone }
+     * @param loginUser { username，email，telephone }
      * @return 若存在，返回exist，不存在，返回null
      * @throws Exception
      */
@@ -123,9 +124,9 @@ public class AuthResource {
     @Path("check")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response check(User user) throws Exception {
-        user = userService.check(user);
-        if (user != null) {
+    public Response check(LoginUser loginUser) throws Exception {
+        loginUser = userService.check(loginUser);
+        if (loginUser != null) {
             return Response.ok("exist").build();
         }
         return Response.ok().build();

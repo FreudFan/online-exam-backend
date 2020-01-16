@@ -4,12 +4,14 @@ import edu.sandau.dao.SysEnumDao;
 import edu.sandau.entity.SysEnum;
 import edu.sandau.service.SysEnumService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
 @Transactional
+@Service
 public class SysEnumServiceImpl implements SysEnumService {
     @Autowired
     private SysEnumDao enumDao;
