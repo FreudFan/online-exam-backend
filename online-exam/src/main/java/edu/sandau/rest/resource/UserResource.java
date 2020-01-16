@@ -8,6 +8,7 @@ import edu.sandau.security.Auth;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.UserService;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -80,7 +81,23 @@ public class UserResource {
     @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response resetPassword(@FormParam("id") Integer id, @FormParam("password") String password) throws Exception {
+        if (StringUtils.isEmpty(password)) {
+            return Response.accepted(false).status(500).build();
+        }
         boolean ok = userService.resetPassword(id, password);
+        if ( ok ) {
+            return Response.ok(true).build();
+        }
+        return Response.accepted(false).status(500).build();
+    }
+
+    @ApiOperation(value = "设置默认密码", response = List.class)
+    @POST
+    @Path("default-password")
+    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public Response resetPassword(@FormParam("id") Integer id) throws Exception {
+        boolean ok = userService.resetPassword(id);
         if ( ok ) {
             return Response.ok(true).build();
         }
@@ -99,7 +116,7 @@ public class UserResource {
         List<User> users = new ArrayList<>();
         // 批量获取数据
         for (String key: keys) {
-            String value = Objects.requireNonNull(redisTemplate.opsForHash().get(key, "loginUser")).toString();
+            String value = Objects.requireNonNull(redisTemplate.opsForHash().get(key, "user")).toString();
             User user = JSONObject.parseObject(value, User.class);
             users.add(user);
         }

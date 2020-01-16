@@ -2,6 +2,7 @@ package edu.sandau.service.impl;
 
 import edu.sandau.dao.SysEnumDao;
 import edu.sandau.entity.SysEnum;
+import edu.sandau.rest.model.Page;
 import edu.sandau.service.SysEnumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,18 +48,27 @@ public class SysEnumServiceImpl implements SysEnumService {
     }
 
     @Override
-    public SysEnum changeEnum(SysEnum sysEnum) throws Exception {
+    public SysEnum changeEnum(SysEnum sysEnum) {
         enumDao.updateEnum(sysEnum);
         return enumDao.getEnumById(sysEnum.getId());
     }
 
     @Override
-    public Integer deleteEnum(SysEnum sysEnum) throws Exception {
+    public Integer deleteEnum(SysEnum sysEnum) {
         return enumDao.deleteEnum(sysEnum);
     }
 
     @Override
-    public Integer deleteEnumById(Integer id) throws Exception {
+    public Integer deleteEnumById(Integer id) {
         return enumDao.deleteEnumById(id);
+    }
+
+    @Override
+    public Page getEnumsByPage(Page page) {
+        List<SysEnum> enums = enumDao.listEnumByPage(page);
+        int count = enumDao.getCount();
+        page.setTotal(count);
+        page.setRows(enums);
+        return page;
     }
 }

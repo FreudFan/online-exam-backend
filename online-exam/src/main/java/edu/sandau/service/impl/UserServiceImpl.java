@@ -118,13 +118,18 @@ public class UserServiceImpl implements UserService {
         if ( loginUser == null ) {
             return null;
         }
-        User user = this.refactorEntity(loginUser);
-        return user;
+        return this.refactorEntity(loginUser);
     }
 
     @Override
     public Boolean resetPassword(Integer id, String password) throws Exception {
         return loginUserDao.updateUserById(id, "password", password);
+    }
+
+    @Override
+    public Boolean resetPassword(Integer id) throws Exception {
+        String defalutPassword = enumService.getEnumName("COMMON", "DEFAULT_PASSWORD", 1);
+        return loginUserDao.updateUserById(id, "password", defalutPassword);
     }
 
     @Override

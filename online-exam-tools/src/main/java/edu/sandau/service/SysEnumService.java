@@ -1,6 +1,7 @@
 package edu.sandau.service;
 
 import edu.sandau.entity.SysEnum;
+import edu.sandau.rest.model.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,7 @@ public interface SysEnumService {
      * @return
      * @throws Exception
      */
-    SysEnum changeEnum(SysEnum sysEnum) throws Exception;
+    SysEnum changeEnum(SysEnum sysEnum);
 
     /***
      * 删除枚举
@@ -71,7 +72,7 @@ public interface SysEnumService {
      * @return
      * @throws Exception
      */
-    Integer deleteEnum(SysEnum sysEnum) throws Exception;
+    Integer deleteEnum(SysEnum sysEnum);
 
     /***
      * 通过id删除枚举
@@ -79,5 +80,12 @@ public interface SysEnumService {
      * @return
      * @throws Exception
      */
-    Integer deleteEnumById(Integer id) throws Exception;
+    Integer deleteEnumById(Integer id);
+
+    /***
+     * 分页查询所有枚举
+     * @param page
+     * @return
+     */
+    Page getEnumsByPage(Page page);
 }

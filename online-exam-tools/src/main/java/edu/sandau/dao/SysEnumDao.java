@@ -1,6 +1,7 @@
 package edu.sandau.dao;
 
 import edu.sandau.entity.SysEnum;
+import edu.sandau.rest.model.Page;
 import edu.sandau.utils.MapUtil;
 import org.apache.commons.collections.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class SysEnumDao {
      * @return
      */
     public List<Map<String, Object>> getEnumMap(String catalog, String type) {
-        String sql = " SELECT catalog, type FROM sys_enum WHERE catalog = ? AND type = ? ";
+        String sql = " SELECT name, value FROM sys_enum WHERE catalog = ? AND type = ? ";
         return jdbcTemplate.queryForList(sql, new Object[]{catalog, type});
     }
 
@@ -112,6 +113,18 @@ public class SysEnumDao {
     public Integer deleteEnumById(Integer id) {
         String sql = " DELETE FROM sys_enum WHERE id = ? ";
         return jdbcTemplate.update(sql, new Object[]{id});
+    }
+
+    public List<SysEnum> listEnumByPage(Page page) {
+        int start = (page.getPageNo() - 1) * page.getPageSize();
+        String sql = " SELECT * FROM sys_enum ORDER by id ASC limit ? , ? ";
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{start, page.getPageSize()});
+        return (List) MapUtil.mapToObject(mapList, SysEnum.class);
+    }
+
+    public Integer getCount() {
+        String sql = " SELECT COUNT(1) FROM sys_enum ";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
 }

@@ -7,7 +7,6 @@ import java.util.Date;
 
 @Data
 public class SysEnum {
-    @JSONField(serialize = false)
     private Integer id;
     /***
      * 模块名

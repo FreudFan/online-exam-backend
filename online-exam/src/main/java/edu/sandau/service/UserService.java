@@ -60,6 +60,14 @@ public interface UserService {
     Boolean resetPassword(Integer id, String password) throws Exception;
 
     /***
+     * 设置默认密码
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    Boolean resetPassword(Integer id) throws Exception;
+
+    /***
      * 获取密保问题
      * @param id
      * @return
