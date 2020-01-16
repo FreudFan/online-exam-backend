@@ -24,8 +24,11 @@ public class User {
     @ApiModelProperty(value = "用户真实姓名")
     private String realname;
 
-    @ApiModelProperty(value = "性别：{0:男,1:女}")
+    @ApiModelProperty(value = "性别整型值")
     private Integer gender;
+
+    @ApiModelProperty(value = "性别")
+    private String genderName;
 
     @ApiModelProperty(value = "邮件 唯一")
     private String email;

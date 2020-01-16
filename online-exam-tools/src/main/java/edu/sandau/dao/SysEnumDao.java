@@ -80,4 +80,38 @@ public class SysEnumDao {
         return MapUtils.getString(param, "name");
     }
 
+    public SysEnum getEnumById(Integer id) {
+        String sql = " SELECT * FROM sys_enum WHERE id = ? ";
+        Map<String, Object> param = jdbcTemplate.queryForMap(sql, new Object[]{id});
+        return (SysEnum) MapUtil.mapToObject(param, SysEnum.class);
+    }
+
+    public Integer updateEnum(SysEnum sysEnum) {
+        String sql = " UPDATE sys_enum " +
+                " SET catalog = ?, name = ?, type = ?, value = ?, description = ? " +
+                " WHERE id = ? ";
+        Object[] param = new Object[5];
+        param[0] = sysEnum.getCatalog();
+        param[1] = sysEnum.getName();
+        param[2] = sysEnum.getType();
+        param[3] = sysEnum.getValue();
+        param[4] = sysEnum.getDescription();
+        return jdbcTemplate.update(sql, param);
+    }
+
+    public Integer deleteEnum(SysEnum sysEnum) {
+        String sql = " DELETE FROM sys_enum WHERE catalog = ? AND name = ? AND type = ? AND value = ? ";
+        Object[] objects = new Object[4];
+        objects[0] = sysEnum.getCatalog();
+        objects[1] = sysEnum.getName();
+        objects[2] = sysEnum.getType();
+        objects[3] = sysEnum.getValue();
+        return jdbcTemplate.update(sql, objects);
+    }
+
+    public Integer deleteEnumById(Integer id) {
+        String sql = " DELETE FROM sys_enum WHERE id = ? ";
+        return jdbcTemplate.update(sql, new Object[]{id});
+    }
+
 }

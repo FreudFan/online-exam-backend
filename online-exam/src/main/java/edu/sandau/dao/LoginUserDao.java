@@ -111,7 +111,7 @@ public class LoginUserDao {
      * @return
      * @throws Exception
      */
-    public int update(LoginUser user) throws Exception {
+    public Integer update(LoginUser user) throws Exception {
         String sql = " UPDATE login_user " +
                 " SET username = ?, realname = ?, gender = ?, email = ?, telephone = ?, organization = ?, " +
                 " major_id = ?, class_id = ?, role = ? " +
