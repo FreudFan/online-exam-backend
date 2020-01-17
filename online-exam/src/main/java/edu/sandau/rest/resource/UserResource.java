@@ -78,11 +78,13 @@ public class UserResource {
     })
     @POST
     @Path("reset-password")
-    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+    @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response resetPassword(@FormParam("id") Integer id, @FormParam("password") String password) throws Exception {
-        if (StringUtils.isEmpty(password)) {
-            return Response.accepted(false).status(500).build();
+    public Response resetPassword(User user) throws Exception {
+        Integer id = user.getId();
+        String password = user.getPassword();
+        if (StringUtils.isEmpty(password) || id==null) {
+            return Response.accepted(false).status(400).build();
         }
         boolean ok = userService.resetPassword(id, password);
         if ( ok ) {
@@ -94,9 +96,13 @@ public class UserResource {
     @ApiOperation(value = "设置默认密码", response = List.class)
     @POST
     @Path("default-password")
-    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+    @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response resetPassword(@FormParam("id") Integer id) throws Exception {
+    public Response defaultPassword(User user) throws Exception {
+        Integer id = user.getId();
+        if (id==null) {
+            return Response.accepted(false).status(400).build();
+        }
         boolean ok = userService.resetPassword(id);
         if ( ok ) {
             return Response.ok(true).build();
@@ -107,7 +113,7 @@ public class UserResource {
     @ApiOperation(value = "获取所有在线用户", response = List.class)
     @GET
     @Path("online-user")
-    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+    @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response getAllOnlineUser() throws Exception {
         String prefix = SessionWrapper.MODEL + "*";

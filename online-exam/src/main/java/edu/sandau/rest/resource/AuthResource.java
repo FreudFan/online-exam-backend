@@ -9,6 +9,7 @@ import edu.sandau.service.UserService;
 import edu.sandau.security.SessionWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,7 @@ public class AuthResource {
     /***
      * 用户使用 用户名、手机号、邮箱 和 密码 登入
      * 判断 手机号：全数字 邮箱：包含'@'
-     * @param name
-     * @param password
+     * @param user
      * @return 用户信息
      * @throws Exception
      */
@@ -60,9 +60,14 @@ public class AuthResource {
     })
     @POST
     @Path("login")
-    @Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public Response login(@FormParam("name") String name, @FormParam("password") String password) throws Exception {
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response login(User user) throws Exception {
+        String name = user.getName();
+        String password = user.getPassword();
+        if (StringUtils.isEmpty(name) || StringUtils.isEmpty(password)) {
+            return Response.accepted().status(Response.Status.BAD_REQUEST).build();
+        }
         LoginValueEnum loginValue;
         if ( name.contains("@") ) {
             //识别是否是邮箱
@@ -73,7 +78,7 @@ public class AuthResource {
         } else {
             loginValue = LoginValueEnum.USERNAME;
         }
-        User user = userService.login(loginValue, name, password);
+        user = userService.login(loginValue, name, password);
         if ( user == null ) {
             return Response.accepted().status(Response.Status.BAD_REQUEST).build();
         }
@@ -102,8 +107,8 @@ public class AuthResource {
     })
     @POST
     @Path("register")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response register(LoginUser loginUser) throws Exception {
         User user = userService.addUser(loginUser);
         if ( user == null ) {
@@ -122,8 +127,8 @@ public class AuthResource {
                     notes = "检查 username，email，telephone 是否唯一")
     @PUT
     @Path("check")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response check(LoginUser loginUser) throws Exception {
         loginUser = userService.check(loginUser);
         if (loginUser != null) {
@@ -148,14 +153,18 @@ public class AuthResource {
     })
     @GET
     @Path("security-question")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response getSecurityQuestion(@QueryParam("id") Integer id) throws Exception {
         if ( id != null ) {
             List<String> questions = userService.getSecurityQuestion(id);
             return Response.ok(questions).build();
         }
         return Response.accepted(false).status(500).build();
+    }
+
+    public Response checkSecurityQestion(Map<String,String> map) throws Exception {
+        return Response.accepted(false).status(Response.Status.BAD_REQUEST).build();
     }
 
     /***
@@ -171,8 +180,8 @@ public class AuthResource {
     })
     @POST
     @Path("code")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response getVerificationCode(VerificationCode code) throws Exception {
         //短信、邮件地址
         String to = code.getTo();
@@ -202,8 +211,8 @@ public class AuthResource {
     @ApiOperation(value = "验证码校验", response = Boolean.class)
     @POST
     @Path("check-code")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response checkVerificationCode(VerificationCode verificationCode) throws Exception {
         String code = redisTemplate.opsForValue().get(verificationCode.getKey());
         if ( code != null && code.equals(verificationCode.getCode())) {

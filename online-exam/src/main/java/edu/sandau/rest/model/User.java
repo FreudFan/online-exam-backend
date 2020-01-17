@@ -1,5 +1,6 @@
 package edu.sandau.rest.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -42,4 +43,8 @@ public class User {
     @ApiModelProperty(value = "用户角色枚举{0:普通用户,1:试题管理员,2:系统管理员}, 前端需赋值, 未赋值则默认为0")
     private Integer role;
 
+    @JSONField(serialize = false)
+    private String name;
+    @JSONField(serialize = false)
+    private String password;
 }
