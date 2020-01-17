@@ -34,11 +34,14 @@ public class LoginUserSecurityDao {
         return userSecurity;
     }
 
-    public List<String> getQuestionById( Integer id ) throws Exception {
-        String SQL = " SELECT question FROM login_user_security WHERE login_user_id = ? ";
-        List<Map<String,Object>> results = jdbcTemplate.queryForList(SQL, id);
-        List questions = results.stream().map(value -> value.get("question") ).collect(Collectors.toList());
-        return questions;
+    public List<Map<String,Object>> getQuestionById( Integer id ) throws Exception {
+        String SQL = " SELECT id, question FROM login_user_security WHERE login_user_id = ? ";
+        return jdbcTemplate.queryForList(SQL, id);
+    }
+
+    public Integer checkAnswerById(Integer id, String answer) throws Exception {
+        String sql = " SELECT COUNT(1) FROM login_user_security WHERE id = ? AND answer = ? ";
+        return jdbcTemplate.queryForObject(sql, Integer.class, new Object[]{id, answer});
     }
 
 }

@@ -3,13 +3,13 @@ package edu.sandau.rest.resource;
 import edu.sandau.entity.LoginUser;
 import edu.sandau.enums.LoginValueEnum;
 import edu.sandau.rest.model.User;
+import edu.sandau.rest.model.UserSecurity;
 import edu.sandau.rest.model.VerificationCode;
 import edu.sandau.service.MessageService;
 import edu.sandau.service.UserService;
 import edu.sandau.security.SessionWrapper;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,14 +157,20 @@ public class AuthResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response getSecurityQuestion(@QueryParam("id") Integer id) throws Exception {
         if ( id != null ) {
-            List<String> questions = userService.getSecurityQuestion(id);
+            List<Map<String,Object>> questions = userService.getSecurityQuestion(id);
             return Response.ok(questions).build();
         }
         return Response.accepted(false).status(500).build();
     }
 
-    public Response checkSecurityQestion(Map<String,String> map) throws Exception {
-        return Response.accepted(false).status(Response.Status.BAD_REQUEST).build();
+    @ApiOperation(value = "核对密保答案", response = Boolean.class)
+    @POST
+    @Path("check-question")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response checkSecurityQuestion(UserSecurity userSecurity) throws Exception {
+        boolean ok = userService.checkSecurityQuestion(userSecurity.getId(), userSecurity.getAnswer());
+        return Response.accepted(ok).build();
     }
 
     /***

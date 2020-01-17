@@ -6,6 +6,7 @@ import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -73,7 +74,16 @@ public interface UserService {
      * @return
      * @throws Exception
      */
-    List<String> getSecurityQuestion(Integer id) throws Exception;
+    List<Map<String,Object>> getSecurityQuestion(Integer id) throws Exception;
+
+    /***
+     * 检查密保答案
+     * @param id
+     * @param answer
+     * @return
+     * @throws Exception
+     */
+    Boolean checkSecurityQuestion(Integer id, String answer) throws Exception;
 
     /***
      * 分页查询所有用户

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -133,8 +134,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> getSecurityQuestion(Integer id) throws Exception {
+    public List<Map<String,Object>> getSecurityQuestion(Integer id) throws Exception {
         return loginUserSecurityDao.getQuestionById(id);
+    }
+
+    @Override
+    public Boolean checkSecurityQuestion(Integer id, String answer) throws Exception {
+        int count = loginUserSecurityDao.checkAnswerById(id, answer);
+        return count != 0;
     }
 
     @Override
