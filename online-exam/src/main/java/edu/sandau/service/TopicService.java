@@ -4,13 +4,19 @@ import edu.sandau.entity.Topic;
 import edu.sandau.entity.UploadFile;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.TopicData;
+import edu.sandau.rest.model.TopicModel;
 
 import java.io.InputStream;
 import java.util.List;
 
 public interface TopicService {
 
-    Page getTopicByPage(Page page);
+    /***
+     *
+     * @param page
+     * @return
+     */
+    Page getTopicByPage(Page page,int flag);
 
     TopicData readTopicExcel(InputStream fileInputStream, String fileName) throws Exception;
 
@@ -23,13 +29,44 @@ public interface TopicService {
 
     UploadFile getFileById(Integer id) throws Exception;
 
+    /***
+     * 得到上传文件的最大选项列索引
+     * @param titleList
+     * @return
+     */
     int getChooseCount( List<Object> titleList);
 
+    /***
+     * 批量禁用题目
+     * @param idName
+     * @param idArrays
+     */
     void deleteTopics(String idName, List<Integer> idArrays);
 
+    /***
+     * 将上传文件的数据存入数据库
+     * @param data
+     * @return
+     */
     int save(TopicData data);
 
+    /***
+     * 将用户自定义的题目插入数据库
+     * @param topicList
+     */
     void insertTopics(List<Topic> topicList);
 
+    /***
+     * 更新题目
+     * @param topic
+     */
     void updateTopics(Topic topic);
+
+    /***
+     * 进行字典替换操作
+     * @param topics
+     * @return
+     */
+    public List<TopicModel> refactorEntity(List<Topic> topics);
+
 }

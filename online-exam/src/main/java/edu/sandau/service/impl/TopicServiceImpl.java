@@ -10,6 +10,8 @@ import edu.sandau.enums.DifficultTypeEnum;
 import edu.sandau.enums.TopicTypeEnum;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.TopicData;
+import edu.sandau.rest.model.TopicModel;
+import edu.sandau.service.SysEnumService;
 import edu.sandau.service.TopicService;
 import edu.sandau.utils.ExcelUtil;
 import edu.sandau.utils.FileUtil;
@@ -18,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.BeanUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -39,27 +42,29 @@ public class TopicServiceImpl implements TopicService {
     private FileUtil fileUtil;
     @Autowired
     private UploadFileDao uploadFileDao;
+    @Autowired
+    private SysEnumService enumService;
 
     private final String EXCEL_TYPE = "xlsx";
 
     /***
-     *分页查询方法
+     *分页查询题目方法
      * @param page
      * @return page
      */
     @Override
-    public Page getTopicByPage(Page page) {
+    public Page getTopicByPage(Page page, int flag) {
         //分页查询主表数据
-        List<Topic> topics = topicDao.listTopicByPage(page);
-        int total = topicDao.getCount();
-        page.setRows(topics);
+        List<Topic> topics = topicDao.listTopicByPage(page, flag);
+        int total = topicDao.getCount(flag);
         page.setTotal(total);
         //遍历主表数据集合,查找对应的选项数据
-        topics.stream().forEach((topic)->{
+        topics.stream().forEach((topic) -> {
             Integer id = topic.getId();
             List<Option> optionList = optionDao.findOptionById(id);
             topic.setOptionsList(optionList);
         });
+        page.setRows(this.refactorEntity(topics));
         return page;
     }
 
@@ -67,7 +72,7 @@ public class TopicServiceImpl implements TopicService {
     public TopicData readTopicExcel(InputStream fileInputStream, String fileName) throws Exception {
         //截取文件名
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
-        if ( !EXCEL_TYPE.equals(fileType) ) {
+        if (!EXCEL_TYPE.equals(fileType)) {
             return null;
         }
 
@@ -82,16 +87,16 @@ public class TopicServiceImpl implements TopicService {
 
         List<List<Object>> data = ExcelUtil.readExcel(stream1);
         stream1.close();
-        if ( data == null || data.size() == 0 ) {
+        if (data == null || data.size() == 0) {
             return null;
         }
         //文件名要唯一
-        fileName = fileName.substring(0,fileName.lastIndexOf(".")) + " " + TimeUtil.fileNow() + "." + fileType;
+        fileName = fileName.substring(0, fileName.lastIndexOf(".")) + " " + TimeUtil.fileNow() + "." + fileType;
         //将文件保存至本地
         UploadFile uploadFile = fileUtil.saveFile(stream2, fileName);
         stream2.close();
 
-        if ( uploadFile == null ) {
+        if (uploadFile == null) {
             return null;
         }
         data = this.checkTopicType(data);
@@ -108,7 +113,7 @@ public class TopicServiceImpl implements TopicService {
         title.add("题目类型");
         topics.add(title);
         int count = this.getChooseCount(title);
-        for (List<Object> topic: data) {
+        for (List<Object> topic : data) {
             String index0 = topic.get(0).toString();
             if (index0.equals("题目描述(必填)")) {
                 //跳过第一行
@@ -116,7 +121,7 @@ public class TopicServiceImpl implements TopicService {
             }
             String index1 = topic.get(1).toString();
             String index2 = topic.get(2).toString();
-            if( index1.equals("对") && index2.equals("错") ) {
+            if (index1.equals("对") && index2.equals("错")) {
                 boolean empty = true;
                 for (int i = 3; i <= count; i++) {
                     if (!StringUtils.isEmpty(topic.get(i).toString())) {
@@ -161,7 +166,7 @@ public class TopicServiceImpl implements TopicService {
             topicObject.setDescription(topic.get(0).toString());
             //将每行的选项单独放入一个集合
             for (int j = 1; j <= options; j++) {
-                String value =  topic.get(j).toString();
+                String value = topic.get(j).toString();
                 if (value != null && !"".equals(value)) {
                     Option optionObject = new Option();
                     optionObject.setName(String.valueOf((char) ('A' + j - 1)));
@@ -171,14 +176,15 @@ public class TopicServiceImpl implements TopicService {
             }
             topicObject.setOptionsList(optionArgs);
             int size = topic.size();
-            topicObject.setType(TopicTypeEnum.findKey(topic.get(size - 1).toString()));
+            Integer type = enumService.getEnumValue("TOPIC", "TYPE", topic.get(size - 1).toString());
+            topicObject.setType(type);
+            Integer difficult = enumService.getEnumValue("TOPIC", "DIFFICULT", topic.get(size - 3).toString());
+            topicObject.setDifficult(difficult);
             topicObject.setAnalysis(topic.get(size - 2).toString());
-            String difficult =  topic.get( size - 3).toString();
-            topicObject.setDifficult(DifficultTypeEnum.findKey(difficult));
             topicObject.setTopicmark(((BigDecimal) topic.get(size - 4)).doubleValue());
-            topicObject.setCorrectkey(topic.get(size-5).toString());
+            topicObject.setCorrectkey(topic.get(size - 5).toString());
             int keyId = topicDao.save(topicObject);
-            optionDao.insertOption(keyId,optionArgs);
+            optionDao.insertOption(keyId, optionArgs);
         }
         return 0;
     }
@@ -189,16 +195,16 @@ public class TopicServiceImpl implements TopicService {
      */
     @Override
     public void insertTopics(List<Topic> topicList) {
-            topicList.stream().forEach((topic)->{
-                int keyId = topicDao.save(topic);
-                optionDao.insertOption(keyId,topic.getOptionsList());
-            });
+        topicList.stream().forEach((topic) -> {
+            int keyId = topicDao.save(topic);
+            optionDao.insertOption(keyId, topic.getOptionsList());
+        });
     }
 
     @Override
     public void updateTopics(Topic topic) {
         int keyId = topicDao.save(topic);
-        optionDao.insertOption(keyId,topic.getOptionsList());
+        optionDao.insertOption(keyId, topic.getOptionsList());
         topicDao.deleteTopics(topic.getId());
     }
 
@@ -208,11 +214,11 @@ public class TopicServiceImpl implements TopicService {
      * @return
      */
     @Override
-    public int getChooseCount( List<Object> titleList)  {
+    public int getChooseCount(List<Object> titleList) {
         int title = 0;
         for (int i = 1; i < titleList.size(); i++) {
-            if(!titleList.get(i).toString().contains("选项")){
-                title = i-1;
+            if (!titleList.get(i).toString().contains("选项")) {
+                title = i - 1;
                 break;
             }
         }
@@ -220,7 +226,26 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public void deleteTopics(String idName, List<Integer> idArrays){
-       topicDao.deleteTopics(idName,idArrays);
+    public void deleteTopics(String idName, List<Integer> idArrays) {
+        topicDao.deleteTopics(idName, idArrays);
     }
+
+
+    public List<TopicModel> refactorEntity(List<Topic> topics) {
+        List<TopicModel> topicModelList = new ArrayList<TopicModel>();
+        topics.stream().forEach((t) -> {
+                    TopicModel topicModel = new TopicModel();
+                    BeanUtils.copyProperties(t, topicModel);
+                    String typeName = enumService.getEnumName("TOPIC", "TYPE", t.getType());
+                    String difficultName = enumService.getEnumName("TOPIC", "DIFFICULT", t.getDifficult());
+                    String subjectName = enumService.getEnumName("TOPIC", "SUBJECT", t.getSubject_id());
+                    topicModel.setTypeName(typeName);
+                    topicModel.setDifficultName(difficultName);
+                    topicModel.setSubjectName(subjectName);
+                    topicModelList.add(topicModel);
+                }
+        );
+        return topicModelList;
+    }
+
 }

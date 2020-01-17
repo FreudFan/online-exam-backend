@@ -5,6 +5,7 @@ import edu.sandau.entity.Topic;
 import edu.sandau.entity.UploadFile;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.TopicData;
+import edu.sandau.rest.model.TopicModel;
 import edu.sandau.security.Auth;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.TopicService;
@@ -41,17 +42,17 @@ public class TopicResource {
     @ApiOperation(value = "导入题库", response = Map.class)
     @POST
     @Path("import")
-    @Consumes({ MediaType.MULTIPART_FORM_DATA })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response topic(@FormDataParam("file") InputStream fileInputStream,
                           @FormDataParam("file") FormDataContentDisposition disposition) throws Exception {
-        if ( fileInputStream == null || disposition == null ) {
+        if (fileInputStream == null || disposition == null) {
             return Response.accepted("请上传xlsx格式文件").status(Response.Status.BAD_REQUEST).build();
         }
         String fileName = new String(disposition.getFileName()
                 .getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
         TopicData data = topicService.readTopicExcel(fileInputStream, fileName);
-        if ( data == null ) {
+        if (data == null) {
             return Response.ok("请上传xlsx格式文件").status(Response.Status.BAD_REQUEST).build();
         }
         return Response.ok(data).build();
@@ -67,7 +68,7 @@ public class TopicResource {
     @ApiOperation(value = "下载用户上传的文件", response = InputStream.class)
     @GET
     @Path("download")
-    @Consumes({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response download(@QueryParam("fid") Integer fid, @Context HttpHeaders httpHeaders) throws Exception {
         UploadFile uploadFile = topicService.getFileById(fid);
@@ -78,7 +79,7 @@ public class TopicResource {
         } else {
             String agent = httpHeaders.getHeaderString("USER-AGENT");
             //需要对文件名进行编码，否则会乱码 火狐浏览器下载文件需单独处理文件编码
-            if( agent != null && agent.toLowerCase().indexOf("firefox") > 0 ) {
+            if (agent != null && agent.toLowerCase().indexOf("firefox") > 0) {
                 fileName = "=?UTF-8?B?" + Base64.getEncoder().encodeToString(fileName.getBytes(StandardCharsets.UTF_8)) + "?=";
             } else {
                 fileName = URLEncoder.encode(fileName, "UTF-8");
@@ -89,7 +90,6 @@ public class TopicResource {
     }
 
     /**
-     *
      * @param page 分页对象
      * @return 分页数据
      * @throws Exception
@@ -97,13 +97,13 @@ public class TopicResource {
     @ApiOperation(value = "分页查询题目", response = Map.class)
     @GET
     @Path("show")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response topicShow(Page page) throws Exception {
-        if(page == null){
+        if (page == null) {
             page = new Page();
         }
-        page = topicService.getTopicByPage(page);
+        page = topicService.getTopicByPage(page, 1);
         return Response.ok(page).build();
     }
 
@@ -113,14 +113,13 @@ public class TopicResource {
      * @return 插入成功
      * @throws Exception
      */
+    @ApiOperation(value = "保存上传的文件")
     @POST
     @Path("save")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public Response topicSave(TopicData data ) throws Exception {
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response topicSave(TopicData data) throws Exception {
         topicService.save(data);
-
-
 
         return Response.accepted("ok").build();
     }
@@ -134,13 +133,14 @@ public class TopicResource {
      * @param topicMap
      * @return删除成功
      */
+    @ApiOperation(value = "禁用题目功能")
     @POST
     @Path("delete")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public Response topicDelete_JSON( Map<String,List<Integer>> topicMap)  {
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response topicDelete_JSON(Map<String, List<Integer>> topicMap) {
         List<Integer> idArrays = topicMap.get("id");
-        topicService.deleteTopics("id",idArrays);
+        topicService.deleteTopics("id", idArrays);
 
         return Response.ok("ok").build();
     }
@@ -168,11 +168,12 @@ public class TopicResource {
      * @param topicList
      * @return插入成功
      */
+    @ApiOperation(value = "插入用户自定义题目")
     @POST
     @Path("insert")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public Response topicInsert(List<Topic> topicList)  {
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response topicInsert(List<Topic> topicList) {
         topicService.insertTopics(topicList);
         return Response.ok("ok").build();
     }
@@ -201,12 +202,27 @@ public class TopicResource {
      * @param topic
      * @return
      */
+    @ApiOperation(value = "更新题目")
     @POST
     @Path("update")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public Response topicUpdate(Topic topic)  {
-       topicService.updateTopics(topic);
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response topicUpdate(Topic topic) {
+        topicService.updateTopics(topic);
         return Response.ok("ok").build();
+    }
+
+
+    @ApiOperation(value = "查询已禁用的题目")
+    @GET
+    @Path("showDelete")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response deleteTopicShow(Page page) {
+        if (page == null) {
+            page = new Page();
+        }
+        page = topicService.getTopicByPage(page, 0);
+        return Response.ok(page).build();
     }
 }
