@@ -88,4 +88,10 @@ public interface SysEnumService {
      * @return
      */
     Page getEnumsByPage(Page page);
+
+    /***
+     * 查询所有枚举
+     * @return
+     */
+    List<SysEnum> getAllEnums();
 }

@@ -115,6 +115,12 @@ public class SysEnumDao {
         return jdbcTemplate.update(sql, new Object[]{id});
     }
 
+    public List<SysEnum> listAllEnum() {
+        String sql = " SELECT * FROM sys_enum ORDER by id ASC ";
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
+        return (List) MapUtil.mapToObject(mapList, SysEnum.class);
+    }
+
     public List<SysEnum> listEnumByPage(Page page) {
         int start = (page.getPageNo() - 1) * page.getPageSize();
         String sql = " SELECT * FROM sys_enum ORDER by id ASC limit ? , ? ";

@@ -71,4 +71,9 @@ public class SysEnumServiceImpl implements SysEnumService {
         page.setRows(enums);
         return page;
     }
+
+    @Override
+    public List<SysEnum> getAllEnums() {
+        return enumDao.listAllEnum();
+    }
 }
