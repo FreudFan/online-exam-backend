@@ -17,10 +17,6 @@ import java.util.Map;
 @Component
 public class FreemarkerUtil {
 
-    @Value("${resources.dir}")
-    private String dir;
-    private String PROJECT_PATH = System.getProperty("user.dir");// 工程物理的绝对路径
-
     /***
      * 读取freemarker模板转成字符串
      * @param fileName
