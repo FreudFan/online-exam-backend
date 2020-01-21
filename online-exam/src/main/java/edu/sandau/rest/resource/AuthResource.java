@@ -85,11 +85,8 @@ public class AuthResource {
 
         String token = sessionWrapper.addSessionToRedis(user);
         user.setToken(token);
-        Map<String, Object> param = new HashMap<>(2);
-        param.put("user", user);
-        param.put("token", token);
 
-        return Response.ok(param).build();
+        return Response.ok(user).build();
     }
 
     /***
