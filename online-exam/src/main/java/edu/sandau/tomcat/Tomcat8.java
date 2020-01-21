@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Properties;
@@ -22,6 +23,7 @@ import org.apache.catalina.webresources.StandardRoot;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 
 public class Tomcat8 implements Runnable {
 	private final static Logger LOGGER = LoggerFactory.getLogger(Tomcat8.class);
@@ -38,10 +40,6 @@ public class Tomcat8 implements Runnable {
 			}
 			String port = p.getProperty("sever.port","8080");
 			this.port = NumberUtils.toInt(port);
-			String dir = p.getProperty("resources.dir");
-			// 工程物理的绝对路径
-			String projectPath = System.getProperty("user.dir");
-			this.webAppPath = projectPath + File.separatorChar + dir + File.separatorChar + "webapp";
 		}
 	}
 
@@ -49,7 +47,6 @@ public class Tomcat8 implements Runnable {
 	 * 服务端口号
 	 */
 	private Integer port;
-	private String webAppPath;
 
 	private void init() throws Exception {
 		File tmpdir=Files.createTempDirectory("tomcat-temp").toFile();
@@ -71,38 +68,26 @@ public class Tomcat8 implements Runnable {
 		connector.setAllowTrace(false);
 		connector.setURIEncoding(String.valueOf(StandardCharsets.UTF_8));
 
-		//connector.setAttribute(name, value);
-
-//	        File appdir=new File("webapp");//一定要绝对路径，不然无法启动
-//	        String context_path="/";
 		/***
 		 * 服务url根路径 /demo
 		 */
 		String contextPath = "";
-		Context context =tomcat.addWebapp(contextPath, webAppPath);
+		// webapp 目录
+		ClassPathResource resource = new ClassPathResource("webapp");
+		String webAppPath = URLDecoder.decode(resource.getURL().toString().substring(6), "UTF-8");
 
+		Context context = tomcat.addWebapp(contextPath, webAppPath);
 		StandardContext ctx=(StandardContext )context;
 		WebResourceRoot resources = new StandardRoot(ctx);
 
-//	        WebResourceSet resourceSet;
-//	        File webdir=appdir;
-//	        resourceSet = new DirResourceSet(resources,
-//	        		"/WEB-INF",
-//	        		webdir.getAbsolutePath(), "/");
-//	        System.out.println("loading WEB-INF resources from as '" + webdir.getAbsolutePath() + "'");
-//
-//	        resources.addPreResources(resourceSet);
 		ctx.setResources(resources);
-
 
 		Valve log=loadAccessLog();
 		service.getContainer().getPipeline().addValve(log);
 
-//	        Valve[] vs=service.getContainer().getPipeline().getValves();
-//	        System.out.println(vs);
 		server.start();
 
-		LOGGER.info("started tomcat at port="+connector.getPort()+" , for webapp ["+context.getName()+"]");
+		LOGGER.info("started tomcat at port=" + connector.getPort() + " , for webapp [" + context.getName() + "]");
 
 		LOGGER.info("tomcat workdir="+tmpdir.toString());
 		LOGGER.info("tomcat workurl= " + "http://localhost:" + port + contextPath);
