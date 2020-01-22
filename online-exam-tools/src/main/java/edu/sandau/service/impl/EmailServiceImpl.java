@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +30,17 @@ public class EmailServiceImpl implements EmailService {
     public EmailServiceImpl(JavaMailSender javaMailSender, SimpleMailMessage simpleMailMessage) {
         this.javaMailSender = javaMailSender;
         this.simpleMailMessage = simpleMailMessage;
+        USERNAME = ((JavaMailSenderImpl) javaMailSender).getUsername();
     }
+
+    /***
+     * 发送邮箱地址 FROM
+     */
+    private static String USERNAME;
 
     public void sendSimpleMail(EmailMessage emailMessage) throws Exception {
         try {
+            simpleMailMessage.setFrom(USERNAME);
             //用于接收邮件的邮箱
             simpleMailMessage.setTo(emailMessage.getEmail());
             //邮件的主题
@@ -58,6 +66,7 @@ public class EmailServiceImpl implements EmailService {
 
         String text = freemarkerUtil.getTemplate(templateFileName, model);
         messageHelper.setText(text, true);  //设置邮件主题内容
+        messageHelper.setFrom(USERNAME);
         javaMailSender.send(mimeMessage);
     }
 

@@ -18,8 +18,6 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
     @Autowired
-    private RedisUtil redisUtil;
-    @Autowired
     private EmailService emailService;
     /** 邮件验证码缓存时间 */
     @Value("${mail.timeout}")
@@ -31,14 +29,14 @@ public class MessageServiceImpl implements MessageService {
     public String sendEmailVerification(String email) {
         //随机6位数
         int code = (int) ((Math.random()*9+1) * 100000);
-        String uuid = redisUtil.createKey();
+        String uuid = RedisUtil.createKey();
         EmailMessage message = new EmailMessage(email, "验证码", null);
         Map<String, Object> model = new HashMap<>(1);
         model.put("code", code);
         try {
+            emailService.sendHTMLMail(message, model, "email_code.ftl");
             redisTemplate.opsForValue().set(uuid, String.valueOf(code));
             redisTemplate.expire(uuid, MAIL_TIME_OUT, TimeUnit.MINUTES);
-            emailService.sendHTMLMail(message, model, "email_code.ftl");
         } catch (Exception e) {
             e.printStackTrace();
             return null;
