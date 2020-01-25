@@ -31,8 +31,11 @@ public class User {
     @ApiModelProperty(value = "手机号 唯一")
     private String telephone;
 
+    @ApiModelProperty(value = "学校")
+    private String school;
+
     @ApiModelProperty(value = "组织")
-    private String organization;
+    private String college;
 
     @ApiModelProperty(value = "专业id")
     private String major_id;
@@ -43,6 +46,7 @@ public class User {
     @ApiModelProperty(value = "用户角色枚举{0:普通用户,1:试题管理员,2:系统管理员}, 前端需赋值, 未赋值则默认为0")
     private Integer role;
 
+    //用于登录时使用
     @JSONField(serialize = false)
     private String name;
     @JSONField(serialize = false)

@@ -29,8 +29,8 @@ public class LoginUserDao {
     public LoginUser save(LoginUser loginUser) {
         String sql = " INSERT INTO login_user " +
                 "( username, password, realname, gender, email, telephone, role, " +
-                " organization, major_id, class_id ) VALUES " +
-                "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+                " school_id, college_id, major_id, class_id ) VALUES " +
+                "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
@@ -42,9 +42,10 @@ public class LoginUserDao {
             ps.setString(5, loginUser.getEmail());
             ps.setString(6, loginUser.getTelephone());
             ps.setInt(7, loginUser.getRole());
-            ps.setString(8, loginUser.getOrganization());
-            ps.setString(9, loginUser.getMajor_id());
-            ps.setString(10, loginUser.getClass_id());
+            ps.setInt(8, loginUser.getSchool_id());
+            ps.setInt(9, loginUser.getCollege_id());
+            ps.setInt(10, loginUser.getMajor_id());
+            ps.setString(11, loginUser.getClass_id());
             return ps;
         }, keyHolder);
 
@@ -112,20 +113,22 @@ public class LoginUserDao {
      */
     public Integer update(LoginUser user) throws Exception {
         String sql = " UPDATE login_user " +
-                " SET username = ?, realname = ?, gender = ?, email = ?, telephone = ?, organization = ?, " +
-                " major_id = ?, class_id = ?, role = ? " +
+                " SET username = ?, realname = ?, gender = ?, email = ?, telephone = ?, " +
+                " school_id = ? ,college_id = ?, major_id = ?, class_id = ?, " +
+                " role = ? " +
                 " WHERE id = ? ";
-        Object[] param = new Object[10];
+        Object[] param = new Object[11];
         param[0] = user.getUsername();
         param[1] = user.getRealname();
         param[2] = user.getGender();
         param[3] = user.getEmail();
         param[4] = user.getTelephone();
-        param[5] = user.getOrganization();
-        param[6] = user.getMajor_id();
-        param[7] = user.getClass_id();
-        param[8] = user.getRole();
-        param[9] = user.getId();
+        param[5] = user.getSchool_id();
+        param[6] = user.getCollege_id();
+        param[7] = user.getMajor_id();
+        param[8] = user.getClass_id();
+        param[9] = user.getRole();
+        param[10] = user.getId();
         return jdbcTemplate.update(sql, param);
     }
 
@@ -151,7 +154,7 @@ public class LoginUserDao {
      */
     public List<LoginUser> listUserByPage(Page page) throws Exception {
         int start = (page.getPageNo() - 1) * page.getPageSize();
-        String sql = " SELECT * FROM login_user ORDER by id ASC limit ? , ? ";
+        String sql = " SELECT * FROM login_user ORDER BY id ASC limit ? , ? ";
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{start, page.getPageSize()});
         return (List) MapUtil.mapToObject(mapList, LoginUser.class);
     }

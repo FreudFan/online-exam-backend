@@ -21,13 +21,17 @@ public class LoginUser implements Serializable {
     private String email;
     private String telephone;
     /***
-     * 组织
+     * 学校
      */
-    private String organization;
+    private Integer school_id;
+    /***
+     * 学院
+     */
+    private Integer college_id;
     /***
      * 专业id
      */
-    private String major_id;
+    private Integer major_id;
     /***
      * 班级id
      */
