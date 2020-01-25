@@ -2,19 +2,14 @@ package edu.sandau.utils;
 
 import freemarker.template.*;
 import org.apache.commons.io.output.StringBuilderWriter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URLDecoder;
-import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class FreemarkerUtil {
 
     /***
@@ -25,7 +20,7 @@ public class FreemarkerUtil {
      * @throws IOException
      * @throws TemplateException
      */
-    public String getTemplate(String fileName, Map<String,Object> model) throws IOException, TemplateException {
+    public static String getTemplate(String fileName, Map<String,Object> model) throws IOException, TemplateException {
         ClassPathResource resource = new ClassPathResource("template");
         String templatePath = URLDecoder.decode(resource.getURL().toString().substring(6), "UTF-8");
         //2.创建一个Configuration对象

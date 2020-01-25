@@ -3,6 +3,7 @@ package edu.sandau.security;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import edu.sandau.rest.model.User;
+import edu.sandau.utils.RedisConstants;
 import edu.sandau.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,10 +26,6 @@ public class SessionWrapper{
      * redis-session的生存时间
      */
     private static Integer SESSION_TIMEOUT;
-    /***
-     * redis里用于管理所有session的文件夹
-     */
-    public final static String MODEL = "session";
 
     @Value(value="${redis.session_timeout:30}")
     public void setSessionTimeout(Integer sessionTimeout) {
@@ -55,7 +52,7 @@ public class SessionWrapper{
      */
     public String addSessionToRedis(User user) {
         //确保redis的key唯一
-        String uuid = redisUtil.createKey(MODEL);
+        String uuid = redisUtil.createKey(RedisConstants.SESSION_ID);
         String key = this.getId(uuid);
         Map<String,String> attribute = new HashMap<>(1);
         attribute.put("user", JSON.toJSON(user).toString());
@@ -75,14 +72,14 @@ public class SessionWrapper{
      */
     public String getId() {
         String token = httpSession.getAttribute("key").toString();
-        return MODEL + ":" + token;
+        return RedisConstants.SESSION_ID + ":" + token;
     }
     public String getId(String token) {
-        return MODEL + ":" + token;
+        return RedisConstants.SESSION_ID + ":" + token;
     }
     public String getId(SecurityContext securityContext) {
         String token = securityContext.getAuthenticationScheme();
-        return MODEL + ":" + token;
+        return RedisConstants.SESSION_ID + ":" + token;
     }
 
     /***

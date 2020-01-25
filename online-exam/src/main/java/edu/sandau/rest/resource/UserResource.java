@@ -7,6 +7,7 @@ import edu.sandau.rest.model.User;
 import edu.sandau.security.Auth;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.UserService;
+import edu.sandau.utils.RedisConstants;
 import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +117,7 @@ public class UserResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response getAllOnlineUser() throws Exception {
-        String prefix = SessionWrapper.MODEL + "*";
+        String prefix = RedisConstants.SESSION_ID + "*";
         // 获取所有的key
         Set<String> keys = redisTemplate.keys(prefix);
         List<User> users = new ArrayList<>();

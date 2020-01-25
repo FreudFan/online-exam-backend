@@ -24,8 +24,6 @@ public class EmailServiceImpl implements EmailService {
     private SimpleMailMessage simpleMailMessage;
     @Autowired
     private EmailMessageDao emailMessageDao;
-    @Autowired
-    private FreemarkerUtil freemarkerUtil;
 
     public EmailServiceImpl(JavaMailSender javaMailSender, SimpleMailMessage simpleMailMessage) {
         this.javaMailSender = javaMailSender;
@@ -64,7 +62,7 @@ public class EmailServiceImpl implements EmailService {
 //        messageHelper.setText(emailMessage.getContent());   //设置邮件主题内容
         messageHelper.setTo(emailMessage.getEmail());   //设定收件人Email
 
-        String text = freemarkerUtil.getTemplate(templateFileName, model);
+        String text = FreemarkerUtil.getTemplate(templateFileName, model);
         messageHelper.setText(text, true);  //设置邮件主题内容
         messageHelper.setFrom(USERNAME);
         javaMailSender.send(mimeMessage);
