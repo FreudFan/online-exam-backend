@@ -10,6 +10,8 @@ public interface OrganizationService {
 
     List<Organization> getALLSchool() throws Exception ;
 
+    Organization getOrgById(Integer id) throws Exception;
+
     Organization update(Organization organization) throws Exception;
 
     /***

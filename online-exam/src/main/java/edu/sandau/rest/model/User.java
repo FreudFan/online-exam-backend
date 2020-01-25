@@ -38,7 +38,7 @@ public class User {
     private String college;
 
     @ApiModelProperty(value = "专业id")
-    private String major_id;
+    private String major;
 
     @ApiModelProperty(value = "班级id")
     private String class_id;

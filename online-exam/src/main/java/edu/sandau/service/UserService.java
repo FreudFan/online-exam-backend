@@ -15,7 +15,7 @@ public interface UserService {
      * @param loginUser
      * @return
      */
-    User refactorEntity(LoginUser loginUser);
+    User refactorEntity(LoginUser loginUser) throws Exception ;
 
     /***
      * 添加用户

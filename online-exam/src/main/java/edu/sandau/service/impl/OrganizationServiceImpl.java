@@ -27,6 +27,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    public Organization getOrgById(Integer id) throws Exception {
+        return organizationDao.getOrganizationById(id);
+    }
+
+    @Override
     public Organization update(Organization organization) throws Exception {
         int id = organization.getId();
         organizationDao.update(organization);

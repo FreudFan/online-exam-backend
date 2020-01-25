@@ -9,6 +9,7 @@ import edu.sandau.entity.LoginUserSecurity;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.User;
 import edu.sandau.security.SessionWrapper;
+import edu.sandau.service.OrganizationService;
 import edu.sandau.service.SysEnumService;
 import edu.sandau.service.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +25,6 @@ import java.util.Map;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
-
     @Autowired
     private LoginUserDao loginUserDao;
     @Autowired
@@ -33,13 +33,21 @@ public class UserServiceImpl implements UserService {
     private SessionWrapper sessionWrapper;
     @Autowired
     private SysEnumService enumService;
+    @Autowired
+    private OrganizationService organizationService;
 
-    public User refactorEntity(LoginUser loginUser) {
+    public User refactorEntity(LoginUser loginUser) throws Exception {
         User user = new User();
         BeanUtils.copyProperties(loginUser, user);
         int gender_id = loginUser.getGender();
         String gender = enumService.getEnumName("COMMON", "GENDER", gender_id);
         user.setGender(gender);
+        String school = organizationService.getOrgById(loginUser.getSchool_id()).getName();
+        user.setSchool(school);
+        String college = organizationService.getOrgById(loginUser.getCollege_id()).getName();
+        user.setCollege(college);
+        String major = organizationService.getOrgById(loginUser.getMajor_id()).getName();
+        user.setMajor(major);
         return user;
     }
 
