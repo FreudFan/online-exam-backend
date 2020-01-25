@@ -10,8 +10,17 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum DifficultTypeEnum {
+    /***
+     * 容易
+     */
     SIMPLE(0,"易"),
+    /***
+     * 中等 难度
+     */
     NORMAL(1,"中"),
+    /***
+     * 困难 难度
+     */
     HARD(2,"难");
 
     private final Integer key;

@@ -115,13 +115,13 @@ public class TopicServiceImpl implements TopicService {
         int count = this.getChooseCount(title);
         for (List<Object> topic : data) {
             String index0 = topic.get(0).toString();
-            if (index0.equals("题目描述(必填)")) {
+            if ("题目描述(必填)".equals(index0)) {
                 //跳过第一行
                 continue;
             }
             String index1 = topic.get(1).toString();
             String index2 = topic.get(2).toString();
-            if (index1.equals("对") && index2.equals("错")) {
+            if ("对".equals(index1) && "错".equals(index2)) {
                 boolean empty = true;
                 for (int i = 3; i <= count; i++) {
                     if (!StringUtils.isEmpty(topic.get(i).toString())) {
@@ -151,6 +151,7 @@ public class TopicServiceImpl implements TopicService {
      * @param data
      * @return
      */
+    @Override
     public int save(TopicData data) {
         int id = data.getId();
         int subject_id = data.getSubject_id();
@@ -230,7 +231,7 @@ public class TopicServiceImpl implements TopicService {
         topicDao.deleteTopics(idName, idArrays);
     }
 
-
+    @Override
     public List<TopicModel> refactorEntity(List<Topic> topics) {
         List<TopicModel> topicModelList = new ArrayList<TopicModel>();
         topics.stream().forEach((t) -> {

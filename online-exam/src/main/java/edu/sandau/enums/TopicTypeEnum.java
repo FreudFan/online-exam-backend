@@ -9,7 +9,13 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TopicTypeEnum {
+    /***
+     * 选择题
+     */
     MULTIPLE_CHOOSE(0, "选择题"),
+    /***
+     * 判断题
+     */
     TRUE_OR_FALSE(1, "判断题");
 
     private final Integer key;

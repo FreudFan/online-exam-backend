@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private OrganizationService organizationService;
 
+    @Override
     public User refactorEntity(LoginUser loginUser) throws Exception {
         User user = new User();
         BeanUtils.copyProperties(loginUser, user);

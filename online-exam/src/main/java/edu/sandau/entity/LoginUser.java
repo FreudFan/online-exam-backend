@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+/***
+ * 用户信息
+ */
 @Data
 public class LoginUser implements Serializable {
     @JSONField(serialize = false)

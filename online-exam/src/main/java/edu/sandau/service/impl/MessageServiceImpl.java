@@ -26,6 +26,7 @@ public class MessageServiceImpl implements MessageService {
     @Value("${sms.timeout}")
     private Integer SMS_TIME_OUT;
 
+    @Override
     public String sendEmailVerification(String email) {
         //随机6位数
         int code = (int) ((Math.random()*9+1) * 100000);

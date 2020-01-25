@@ -9,8 +9,17 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RoleTypeEnum {
+    /***
+     * 普通用户
+     */
     NORMAL_USER(0, "普通用户"),
+    /***
+     * 试题管理员
+     */
     TOPIC_MANAGER(1, "试题管理员"),
+    /***
+     * 系统管理员
+     */
     SYSTEM_MANAGER(2,"系统管理员");
 
     private final Integer value;

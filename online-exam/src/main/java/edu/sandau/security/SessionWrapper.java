@@ -33,11 +33,9 @@ public class SessionWrapper{
     }
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private final RedisUtil redisUtil;
     private final HttpSession httpSession;
-    public SessionWrapper(RedisTemplate<String, Object> redisTemplate, RedisUtil redisUtil, HttpSession httpSession) {
+    public SessionWrapper(RedisTemplate<String, Object> redisTemplate, HttpSession httpSession) {
         this.redisTemplate = redisTemplate;
-        this.redisUtil = redisUtil;
         this.httpSession = httpSession;
     }
 
@@ -52,7 +50,7 @@ public class SessionWrapper{
      */
     public String addSessionToRedis(User user) {
         //确保redis的key唯一
-        String uuid = redisUtil.createKey(RedisConstants.SESSION_ID);
+        String uuid = RedisUtil.createKey(RedisConstants.SESSION_ID);
         String key = this.getId(uuid);
         Map<String,String> attribute = new HashMap<>(1);
         attribute.put("user", JSON.toJSON(user).toString());
