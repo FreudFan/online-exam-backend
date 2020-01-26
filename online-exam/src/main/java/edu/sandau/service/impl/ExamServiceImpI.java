@@ -3,6 +3,7 @@ package edu.sandau.service.impl;
 import edu.sandau.dao.ExamDao;
 import edu.sandau.dao.TopicDao;
 import edu.sandau.entity.Exam;
+import edu.sandau.entity.ExamDetail;
 import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.exam.ExamClazz;
 import edu.sandau.rest.model.exam.ExamModel;
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -51,8 +53,21 @@ public class ExamServiceImpI implements ExamService {
 
     @Override
     public List<Topic> getExamDetail(Integer id,Integer role) {
-        List<Integer> idList = examDao.listExamDetail(id);
-        List<Topic> topics = topicService.getTopicByIds(idList,role);
+        List<ExamDetail> examDetails = examDao.listExamDetail(id);
+        List<Integer> ids = new ArrayList<Integer>();
+        examDetails.stream().forEach((examDetail)->{
+            ids.add(examDetail.getTopic_id());
+        });
+        List<Topic> topics = topicService.getTopicById(ids,role);
+        int i = 0;
+        topics.stream().forEach((topic)->{
+            for (ExamDetail ed : examDetails)  {
+                if(ed.getTopic_id().intValue() == topic.getId().intValue()){
+                    topic.setTopicmark(ed.getTopicmark());
+                    break;
+                }
+            }
+        });
         return topics;
     }
 

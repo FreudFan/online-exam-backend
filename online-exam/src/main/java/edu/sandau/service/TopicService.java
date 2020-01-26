@@ -1,5 +1,6 @@
 package edu.sandau.service;
 
+import edu.sandau.entity.ExamDetail;
 import edu.sandau.entity.Topic;
 import edu.sandau.entity.UploadFile;
 import edu.sandau.rest.model.Page;
@@ -67,7 +68,7 @@ public interface TopicService {
      * @param topics
      * @return
      */
-    List<TopicModel> refactorEntity(List<Topic> topics);
+    public List<TopicModel> refactorEntity(List<Topic> topics);
 
     /***
      * 根据题目id集合查询对应的题目
@@ -75,7 +76,7 @@ public interface TopicService {
      * @param role
      * @return
      */
-    List<Topic> getTopicByIds(List<Integer> ids, Integer role);
+    List<Topic> getTopicById(List<Integer> ids, Integer role);
 
     /***
      * 查询题目详细信息

@@ -32,7 +32,12 @@ public class ExamResource {
      * 	"flag":1,
      * 	"subject_id":2,
      * 	"description":"test试卷",
-     * 	"topicsId":[2225,2226,2227,2228,2230,2234]
+     * 	"topics":[
+     *                {
+     * 		"id":2040,
+     * 		"topicmark":20
+     *        }
+     * 	]
      * }
      * @param exam
      * @return

@@ -1,6 +1,8 @@
 package edu.sandau.dao;
 
 import edu.sandau.entity.Exam;
+import edu.sandau.entity.ExamDetail;
+import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.Page;
 import edu.sandau.security.SessionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +49,12 @@ public class ExamDao {
     }
 
     public void saveDetail(Exam exam){
-        String sql = "INSERT INTO exam_detail(exam_id,topic_id) VALUES(?,?)";
-        List<Integer> topicsId = exam.getTopicsId();
+        String sql = "INSERT INTO exam_detail(exam_id,topic_id,topicmark) VALUES(?,?,?)";
+        List<Topic> topics = exam.getTopics();
         int keyId = exam.getId();
         List<Object[]> params = new ArrayList<Object[]>();
-        topicsId.stream().forEach((id)->{
-            Object[] obj = new Object[]{keyId,id};
+        topics.stream().forEach((topic)->{
+            Object[] obj = new Object[]{keyId,topic.getId(),topic.getTopicmark()};
             params.add(obj);
         });
         jdbcTemplate.batchUpdate(sql,params);
@@ -72,9 +74,9 @@ public class ExamDao {
         return count;
     }
 
-    public List<Integer> listExamDetail(Integer id) {
-        String sql = "select topic_id from exam_detail where exam_id = ?";
-        List<Integer> idList = jdbcTemplate.queryForList(sql, Integer.class, id);
+    public List<ExamDetail> listExamDetail(Integer id) {
+        String sql = "select topic_id,topicmark from exam_detail where exam_id = ?";
+        List<ExamDetail> idList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamDetail.class), id);
         return idList;
     }
 

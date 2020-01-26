@@ -27,7 +27,7 @@ public class Exam implements Serializable {
     private Date updatetime;
 
     /***
-     * 题目id
+     * 题目
      */
-    private List<Integer> topicsId;
+    private List<Topic> topics;
 }
