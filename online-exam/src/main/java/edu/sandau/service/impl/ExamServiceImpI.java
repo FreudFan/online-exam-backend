@@ -1,22 +1,37 @@
 package edu.sandau.service.impl;
 
 import edu.sandau.dao.ExamDao;
+import edu.sandau.dao.TopicDao;
 import edu.sandau.entity.Exam;
 import edu.sandau.entity.Topic;
+import edu.sandau.rest.model.exam.ExamClazz;
+import edu.sandau.rest.model.exam.ExamModel;
 import edu.sandau.rest.model.Page;
 import edu.sandau.service.ExamService;
+import edu.sandau.service.SysEnumService;
 import edu.sandau.service.TopicService;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
+@Transactional
 public class ExamServiceImpI implements ExamService {
 
     @Autowired
     private ExamDao examDao;
+    @Autowired
+    private TopicDao topicDao;
+    @Autowired
+    private SysEnumService sysEnumService;
+
     @Autowired
     private TopicService topicService;
     @Override
@@ -37,7 +52,7 @@ public class ExamServiceImpI implements ExamService {
     @Override
     public List<Topic> getExamDetail(Integer id,Integer role) {
         List<Integer> idList = examDao.listExamDetail(id);
-        List<Topic> topics = topicService.getTopicById(idList,role);
+        List<Topic> topics = topicService.getTopicByIds(idList,role);
         return topics;
     }
 
@@ -45,4 +60,50 @@ public class ExamServiceImpI implements ExamService {
     public void deleteExam(Integer id) {
         examDao.deleteExam(id);
     }
+
+    @Override
+    public Object autoGenerate(ExamModel examModel) {
+        List<Topic> topicList = new ArrayList<>();
+        int subjectId = examModel.getSubjectId();
+        List<ExamClazz> clazzList = examModel.getClazz();
+        for ( ExamClazz clazz: clazzList ) {
+            int type = clazz.getType();
+            int difficult = clazz.getDifficult();
+            List<Topic> topics = topicDao.getTopicByTypeAndDifficult(subjectId, type, difficult);
+            if (topics.size() < clazz.getNum()) {
+                String difficultName = sysEnumService.getEnumName("TOPIC", "DIFFICULT", difficult);
+                String typeName = sysEnumService.getEnumName("TOPIC", "TYPE", type);
+                return "题库中难度 “" + difficultName + "” 的 “" + typeName + "” 数量不足，请新增题目。";
+            }
+            topics = randomTopic(topics, clazz.getNum(), clazz.getScore());
+            topics = topicService.getTopicsDetail(topics);
+            topicList.addAll(topics);
+        }
+        return topicList;
+    }
+
+    /***
+     * 随意抽取题目，通过随机生成下标，从list里随机拿数据
+     * @param topicList
+     * @param num 随机生成题目总数
+     * @param totalScore 当前题目总分
+     * @return
+     */
+    private List<Topic> randomTopic(List<Topic> topicList, Integer num, Double totalScore) {
+        BigDecimal bg = new BigDecimal(totalScore/num);
+        Double score = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        Set<Integer> topicIds = new HashSet<>(num);
+        while(topicIds.size() != num) {
+            int index = RandomUtils.nextInt(0, topicList.size());
+            topicIds.add(index);
+        }
+        List<Topic> topics = new ArrayList<>(num);
+        for(Integer index: topicIds) {
+            Topic topic = topicList.get(index);
+            topic.setTopicmark(score);
+            topics.add(topic);
+        }
+        return topics;
+    }
+
 }

@@ -4,7 +4,7 @@ import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.Page;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.utils.JDBCUtil;
-import org.apache.tomcat.util.buf.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -102,7 +102,7 @@ public class TopicDao {
      * @param role
      * @return
      */
-    public List<Topic> listTopicByids(List<Integer> ids,Integer role){
+    public List<Topic> listTopicByids(List<Integer> ids, Integer role){
         //0为学生，1为管理员，管理员返回全部内容
         StringBuilder sb;
         if(role == 0) {
@@ -117,4 +117,17 @@ public class TopicDao {
         List<Topic> topics = jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<>(Topic.class));
         return topics;
     }
+
+    /***
+     * 根据题目类型、难度、科目查询可用题目
+     * @param subjectId
+     * @param type
+     * @param difficult
+     * @return
+     */
+    public List<Topic> getTopicByTypeAndDifficult(Integer subjectId, Integer type, Integer difficult) {
+        String sql = " SELECT * FROM topic WHERE flag = 1 AND type = ? AND difficult = ? AND subject_id = ? ";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Topic.class), new Object[]{type, difficult, subjectId});
+    }
+
 }

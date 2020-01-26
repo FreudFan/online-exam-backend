@@ -4,6 +4,7 @@ import edu.sandau.enums.OrganizationEnum;
 import edu.sandau.entity.Organization;
 import edu.sandau.utils.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -64,8 +65,7 @@ public class OrganizationDao {
 
     public List<Organization> getAll() {
         String sql = " SELECT * FROM organization ORDER by id ASC ";
-        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
-        return (List) MapUtil.mapToObject(mapList, Organization.class);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Organization.class));
     }
 
     /***
@@ -83,8 +83,7 @@ public class OrganizationDao {
             params.add(upperId);
         }
         sql += " ORDER BY id ASC ";
-        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, params);
-        return (List) MapUtil.mapToObject(mapList, Organization.class);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Organization.class), params);
     }
 
     /***
@@ -94,8 +93,7 @@ public class OrganizationDao {
      */
     public List<Organization> getOrgByUpperId(Integer upperId) {
         String sql = " SELECT * FROM organization WHERE upper_id = ? ";
-        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{upperId});
-        return (List) MapUtil.mapToObject(mapList, Organization.class);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Organization.class), new Object[]{upperId});
     }
 
 }

@@ -15,7 +15,7 @@ public class Exam implements Serializable {
     private Integer id;
     private Integer subject_id;
     private String name;
-    private Integer totalScore;
+    private Integer totalScore = 100;
     private String description;
     private Integer flag;
     private Integer createBy;

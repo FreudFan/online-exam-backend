@@ -6,8 +6,6 @@ import edu.sandau.dao.UploadFileDao;
 import edu.sandau.entity.Option;
 import edu.sandau.entity.Topic;
 import edu.sandau.entity.UploadFile;
-import edu.sandau.enums.DifficultTypeEnum;
-import edu.sandau.enums.TopicTypeEnum;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.TopicData;
 import edu.sandau.rest.model.TopicModel;
@@ -250,9 +248,19 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public List<Topic> getTopicById(List<Integer> ids,Integer role) {
+    public List<Topic> getTopicByIds(List<Integer> ids, Integer role) {
         List<Topic> topics = topicDao.listTopicByids(ids,role);
         topics.stream().forEach((topic) -> {
+            Integer id = topic.getId();
+            List<Option> optionList = optionDao.findOptionById(id);
+            topic.setOptionsList(optionList);
+        });
+        return topics;
+    }
+
+    @Override
+    public List<Topic> getTopicsDetail(List<Topic> topics) {
+        topics.forEach((topic) -> {
             Integer id = topic.getId();
             List<Option> optionList = optionDao.findOptionById(id);
             topic.setOptionsList(optionList);

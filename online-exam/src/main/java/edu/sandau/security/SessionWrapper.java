@@ -225,6 +225,7 @@ public class SessionWrapper{
         redisTemplate.expire(key, SESSION_TIMEOUT, TimeUnit.MINUTES);
     }
     public void refresh(String key) {
+        key = this.getId(key);
         redisTemplate.expire(key, SESSION_TIMEOUT, TimeUnit.MINUTES);
     }
     public void refresh(SecurityContext securityContext) {

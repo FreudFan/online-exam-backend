@@ -4,6 +4,7 @@ import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.Page;
 import edu.sandau.utils.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -56,11 +57,11 @@ public class LoginUserDao {
 
     public List<LoginUser> getUserByRealname(String realname ) {
         String sql = " SELECT * FROM login_user WHERE realname = ? ";
-        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, realname);
-        if (mapList.size() == 0) {
+        List<LoginUser> loginUsers = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(LoginUser.class), realname);
+        if (loginUsers.size() == 0) {
             return null;
         } else {
-            return (List) MapUtil.mapToObject(mapList, LoginUser.class);
+            return loginUsers;
         }
     }
 
@@ -81,11 +82,11 @@ public class LoginUserDao {
                 sql.append(keys.get(i)).append(" = ? ");
             }
         }
-        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(sql.toString(), values.toArray());
-        if (mapList.size() == 0) {
+        List<LoginUser> loginUsers = jdbcTemplate.query(sql.toString(), new BeanPropertyRowMapper<>(LoginUser.class), values.toArray());
+        if (loginUsers.size() == 0) {
             return null;
         } else {
-            return (List) MapUtil.mapToObject(mapList, LoginUser.class);
+            return loginUsers;
         }
     }
 
@@ -155,8 +156,7 @@ public class LoginUserDao {
     public List<LoginUser> listUserByPage(Page page) throws Exception {
         int start = (page.getPageNo() - 1) * page.getPageSize();
         String sql = " SELECT * FROM login_user ORDER BY id ASC limit ? , ? ";
-        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{start, page.getPageSize()});
-        return (List) MapUtil.mapToObject(mapList, LoginUser.class);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(LoginUser.class), new Object[]{start, page.getPageSize()});
     }
 
     /***

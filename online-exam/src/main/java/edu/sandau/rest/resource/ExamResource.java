@@ -1,11 +1,10 @@
 package edu.sandau.rest.resource;
 
-
 import edu.sandau.entity.Exam;
 import edu.sandau.entity.Topic;
+import edu.sandau.rest.model.exam.ExamModel;
 import edu.sandau.rest.model.Page;
 import edu.sandau.security.Auth;
-import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.ExamService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,15 +15,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.*;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Path("exam")
 @Api(value = "试卷接口")
 @Auth
 public class ExamResource {
-
-
     @Autowired
     private ExamService examService;
 
@@ -108,4 +104,16 @@ public class ExamResource {
         return Response.ok("ok").build();
     }
 
+    @ApiOperation(value = "自动生成试卷")
+    @POST
+    @Path("autoGenerate")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response autoGenerate(ExamModel examModel){
+        Object topics = examService.autoGenerate(examModel);
+        if(topics instanceof String) {
+            return  Response.ok(topics).status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok(topics).build();
+    }
 }

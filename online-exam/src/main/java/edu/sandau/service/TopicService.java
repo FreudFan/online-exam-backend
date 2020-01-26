@@ -67,7 +67,7 @@ public interface TopicService {
      * @param topics
      * @return
      */
-    public List<TopicModel> refactorEntity(List<Topic> topics);
+    List<TopicModel> refactorEntity(List<Topic> topics);
 
     /***
      * 根据题目id集合查询对应的题目
@@ -75,6 +75,13 @@ public interface TopicService {
      * @param role
      * @return
      */
-    List<Topic> getTopicById(List<Integer> ids,Integer role);
+    List<Topic> getTopicByIds(List<Integer> ids, Integer role);
+
+    /***
+     * 查询题目详细信息
+     * @param topics 题目list
+     * @return
+     */
+    List<Topic> getTopicsDetail(List<Topic> topics);
 
 }
