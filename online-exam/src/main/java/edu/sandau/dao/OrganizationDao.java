@@ -1,6 +1,5 @@
 package edu.sandau.dao;
 
-import edu.sandau.entity.LoginUser;
 import edu.sandau.enums.OrganizationEnum;
 import edu.sandau.entity.Organization;
 import edu.sandau.utils.MapUtil;
@@ -52,13 +51,18 @@ public class OrganizationDao {
         return jdbcTemplate.update(sql, params);
     }
 
+    public Integer delete(Integer id) {
+        String sql = " DELETE FROM organization WHERE id = ? ";
+        return jdbcTemplate.update(sql, new Object[]{id});
+    }
+
     public Organization getOrganizationById(Integer id) {
         String sql = " SELECT * FROM organization WHERE id = ? ";
         Map<String,Object> map = jdbcTemplate.queryForMap(sql, new Object[]{id});
         return (Organization) MapUtil.mapToObject(map, Organization.class);
     }
 
-    public List<Organization> listAll() {
+    public List<Organization> getAll() {
         String sql = " SELECT * FROM organization ORDER by id ASC ";
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
         return (List) MapUtil.mapToObject(mapList, Organization.class);
