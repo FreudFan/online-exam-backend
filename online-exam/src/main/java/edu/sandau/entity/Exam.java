@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class Exam implements Serializable {
     private Integer id;
-
+    private Integer subject_id;
     private String name;
     private Integer totalScore;
     private String description;

@@ -11,6 +11,7 @@ import edu.sandau.enums.TopicTypeEnum;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.TopicData;
 import edu.sandau.rest.model.TopicModel;
+import edu.sandau.service.SubjectService;
 import edu.sandau.service.SysEnumService;
 import edu.sandau.service.TopicService;
 import edu.sandau.utils.ExcelUtil;
@@ -44,7 +45,8 @@ public class TopicServiceImpl implements TopicService {
     private UploadFileDao uploadFileDao;
     @Autowired
     private SysEnumService enumService;
-
+    @Autowired
+    private SubjectService subjectService;
     private final String EXCEL_TYPE = "xlsx";
 
     /***
@@ -235,15 +237,23 @@ public class TopicServiceImpl implements TopicService {
     public List<TopicModel> refactorEntity(List<Topic> topics) {
         List<TopicModel> topicModelList = new ArrayList<TopicModel>();
         topics.stream().forEach((t) -> {
-                    TopicModel topicModel = new TopicModel();
-                    BeanUtils.copyProperties(t, topicModel);
-                    String typeName = enumService.getEnumName("TOPIC", "TYPE", t.getType());
-                    String difficultName = enumService.getEnumName("TOPIC", "DIFFICULT", t.getDifficult());
-                    String subjectName = enumService.getEnumName("TOPIC", "SUBJECT", t.getSubject_id());
-                    topicModel.setTypeName(typeName);
-                    topicModel.setDifficultName(difficultName);
-                    topicModel.setSubjectName(subjectName);
-                    topicModelList.add(topicModel);
+            try {
+                TopicModel topicModel = new TopicModel();
+                BeanUtils.copyProperties(t, topicModel);
+                String typeName = enumService.getEnumName("TOPIC", "TYPE", t.getType());
+                String difficultName = enumService.getEnumName("TOPIC", "DIFFICULT", t.getDifficult());
+                String subjectName = null;
+
+                subjectName = subjectService.getSubjectById(t.getSubject_id()).getName();
+
+                topicModel.setTypeName(typeName);
+                topicModel.setDifficultName(difficultName);
+                topicModel.setSubjectName(subjectName);
+                topicModelList.add(topicModel);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
                 }
         );
         return topicModelList;
