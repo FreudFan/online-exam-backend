@@ -12,5 +12,7 @@ public interface SubjectService {
 
     List<Subject> getSubjectsByOrgId(Integer orgId) throws Exception;
 
+    Subject getSubjectById(Integer id) throws Exception;
+
     Integer deleteById(Integer id) throws Exception;
 }

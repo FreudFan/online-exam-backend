@@ -33,6 +33,11 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    public Subject getSubjectById(Integer id) throws Exception {
+        return subjectDao.getSubjectById(id);
+    }
+
+    @Override
     public Integer deleteById(Integer id) throws Exception {
         return subjectDao.delete(id);
     }
