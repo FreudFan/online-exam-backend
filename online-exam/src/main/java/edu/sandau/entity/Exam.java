@@ -11,7 +11,7 @@ import java.util.List;
  * 试卷
  */
 @Data
-public class Test implements Serializable {
+public class Exam implements Serializable {
     private Integer id;
 
     private String name;
