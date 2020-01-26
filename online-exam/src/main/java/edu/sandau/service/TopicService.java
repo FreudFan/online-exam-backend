@@ -69,4 +69,12 @@ public interface TopicService {
      */
     public List<TopicModel> refactorEntity(List<Topic> topics);
 
+    /***
+     * 根据题目id集合查询对应的题目
+     * @param ids
+     * @param role
+     * @return
+     */
+    List<Topic> getTopicById(List<Integer> ids,Integer role);
+
 }

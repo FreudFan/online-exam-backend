@@ -4,6 +4,7 @@ import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.Page;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.utils.JDBCUtil;
+import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,6 +15,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import java.sql.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Repository
 public class TopicDao {
@@ -94,5 +96,25 @@ public class TopicDao {
         return list;
     }
 
-
+    /***
+     * 查询试卷的试题内容
+     * @param ids
+     * @param role
+     * @return
+     */
+    public List<Topic> listTopicByids(List<Integer> ids,Integer role){
+        //0为学生，1为管理员，管理员返回全部内容
+        StringBuilder sb;
+        if(role == 0) {
+           sb = new StringBuilder("SELECT id,description,topicmark FROM topic where flag = 1 ");
+        }
+        else {
+            sb = new StringBuilder("SELECT * FROM topic where flag = 1 ");
+        }
+        List<String> idsString = ids.stream().map(x -> x + "").collect(Collectors.toList());
+        String id = StringUtils.join(idsString, ',');
+        sb.append(" and id in (" + id + ")");
+        List<Topic> topics = jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<>(Topic.class));
+        return topics;
+    }
 }

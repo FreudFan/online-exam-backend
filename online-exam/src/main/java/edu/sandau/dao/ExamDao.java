@@ -4,6 +4,7 @@ import edu.sandau.entity.Exam;
 import edu.sandau.rest.model.Page;
 import edu.sandau.security.SessionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -58,13 +59,27 @@ public class ExamDao {
     }
 
     public List<Exam> listExamByPage(Page page, int flag){
-        return null;
+        int start = (page.getPageNo() - 1) * page.getPageSize();
+        String sql = " SELECT * FROM exam where flag = ? limit ? , ? ";
+        List<Exam> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Exam.class), new Object[]{flag, start, page.getPageSize()});
+        return list;
     }
 
     public int getCount(int flag) {
         int count = 0;
-        String sql = "select count(1) from exma where flag = ?";
+        String sql = "select count(1) from exam where flag = ?";
          count = jdbcTemplate.queryForObject(sql, Integer.class, flag);
         return count;
+    }
+
+    public List<Integer> listExamDetail(Integer id) {
+        String sql = "select topic_id from exam_detail where exam_id = ?";
+        List<Integer> idList = jdbcTemplate.queryForList(sql, Integer.class, id);
+        return idList;
+    }
+
+    public void deleteExam(Integer id) {
+        String sql = "update exam set flag = 0 where id = ?";
+        jdbcTemplate.update(sql,id);
     }
 }
