@@ -1,5 +1,6 @@
 package edu.sandau.rest.resource;
 
+import edu.sandau.dao.ExamRecordDao;
 import edu.sandau.dao.SysEnumDao;
 import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.TestParam;
@@ -166,11 +167,14 @@ public class TestResource {
         return null;
     }
 
+    @Autowired
+    private ExamRecordDao examRecordDao;
+
     @GET
-    @Path("sessionId")
+    @Path("record")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Object sessionId() throws Exception {
+    public Object record() throws Exception {
 //        return sessionWrapper.getRedisKeyFromSession(httpSession);
 //        sessionWrapper.refresh(httpSession);
 //        sessionWrapper.invalidate(httpSession);
