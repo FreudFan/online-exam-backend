@@ -8,6 +8,7 @@ import edu.sandau.rest.model.Page;
 import edu.sandau.service.ExamService;
 import edu.sandau.service.SysEnumService;
 import edu.sandau.service.TopicService;
+import edu.sandau.service.WorryTopicService;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,8 @@ public class ExamServiceImpI implements ExamService {
     private ExamScheduleDao examScheduleDao;
     @Autowired
     private TopicService topicService;
+    @Autowired
+    private WorryTopicService worryTopicService;
     @Override
     public void saveExam(Exam exam) {
         exam = examDao.save(exam);
@@ -122,10 +125,13 @@ public class ExamServiceImpI implements ExamService {
 
     @Override
     public void makeStandardExam(ExamRecord examRecord) {
+        //拿到试卷Id号
         Integer examId = examScheduleDao.getExamIdById(examRecord.getScheduleId());
+        //获取该试卷的所有题目
         List<Topic> examDetail = getExamDetail(examId, 1);
         List<WorryTopic> worryTopics = new ArrayList<>();
         double total = 0;
+        //获取用户的做题信息
         List<ExamRecordTopic> examRecordTopic = examRecordTopicDao.getExamRecordTopicByRecordId(examRecord.getId());
         Map<Integer,Topic> correctKey = new HashMap<Integer,Topic>(examDetail.size());
         examDetail.stream().forEach((topic)->{
@@ -143,6 +149,7 @@ public class ExamServiceImpI implements ExamService {
                 wt.setUser_id(examRecord.getUserId());
                 wt.setExam_id(examId);
                 wt.setRecord_id(examRecord.getId());
+                wt.setTopic_id(topicId);
                 wt.setCorrectanswer(correctAnswer);
                 wt.setWorryanswer(userAnswer);
                 worryTopics.add(wt);
@@ -150,9 +157,7 @@ public class ExamServiceImpI implements ExamService {
         }
         examRecord.setScore(total);
         examRecordDao.updateScoreById(examRecord.getId(),total);
-        System.out.println(total);
-        System.out.println(worryTopics);
-        System.out.println(worryTopics.size());
+        worryTopicService.saveWorryTopic(worryTopics);
 
     }
 
