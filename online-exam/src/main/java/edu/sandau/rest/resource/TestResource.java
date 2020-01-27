@@ -1,10 +1,14 @@
 package edu.sandau.rest.resource;
 
 import edu.sandau.dao.ExamRecordDao;
+import edu.sandau.dao.ExamScheduleDao;
 import edu.sandau.dao.SysEnumDao;
+import edu.sandau.entity.ExamRecord;
+import edu.sandau.entity.ExamSchedule;
 import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.TestParam;
 import edu.sandau.rest.model.User;
+import edu.sandau.security.Auth;
 import edu.sandau.service.EmailService;
 import edu.sandau.entity.EmailMessage;
 import edu.sandau.security.SessionWrapper;
@@ -13,6 +17,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,13 +27,14 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
 @Api(value = "测试接口")
 @Slf4j
 @Path("test")
-//@Auth
+@Auth
 public class TestResource {
 
     @Autowired
@@ -167,14 +173,11 @@ public class TestResource {
         return null;
     }
 
-    @Autowired
-    private ExamRecordDao examRecordDao;
-
     @GET
-    @Path("record")
+    @Path("sessionId")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Object record() throws Exception {
+    public Object sessionId() throws Exception {
 //        return sessionWrapper.getRedisKeyFromSession(httpSession);
 //        sessionWrapper.refresh(httpSession);
 //        sessionWrapper.invalidate(httpSession);
@@ -184,10 +187,20 @@ public class TestResource {
         return users;
     }
 
+    @Autowired
+    private ExamRecordDao examRecordDao;
+    @Autowired
+    private ExamScheduleDao examScheduleDao;
     @GET
-    @Path("res")
+    @Path("record")
     public Response get() {
-        return Response.ok("fafadsdf").status(HttpStatus.BAD_REQUEST.value()).build();
+        ExamSchedule examSchedule = new ExamSchedule();
+        examSchedule.setExamId(1);
+        examSchedule.setBeginTime(Calendar.getInstance().getTime());
+        examSchedule.setType(1);
+        examSchedule.setDescription("fjalkds");
+        examScheduleDao.save(examSchedule);
+        return Response.ok().build();
     }
 
     @Autowired
