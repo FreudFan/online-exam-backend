@@ -78,7 +78,6 @@ public class ExamResource {
         return Response.ok(page).build();
     }
 
-
     @ApiOperation(value = "查询试卷详细题目，只返回题目、分值和选项")
     @GET
     @Path("showDetail")

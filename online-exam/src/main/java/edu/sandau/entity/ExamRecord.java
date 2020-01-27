@@ -2,6 +2,7 @@ package edu.sandau.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import java.util.Date;
  * 考试记录
  */
 @Data
+@NoArgsConstructor
 public class ExamRecord {
     private Integer id;
     /***
@@ -36,4 +38,10 @@ public class ExamRecord {
     private Date createtime;
     @JSONField(serialize = false)
     private Date updatetime;
+
+    public ExamRecord(Integer userId, Integer scheduleId, Date beginTime) {
+        this.userId = userId;
+        this.scheduleId = scheduleId;
+        this.beginTime = beginTime;
+    }
 }

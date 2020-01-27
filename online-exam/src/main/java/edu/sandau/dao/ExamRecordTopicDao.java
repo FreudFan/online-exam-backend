@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Repository
@@ -57,7 +56,7 @@ public class ExamRecordTopicDao {
     public Integer updateByRecordIdAndTopicId(String answer, Integer recordId, Integer topicId) {
         String sql = " UPDATE exam_record_topic " +
                 " SET answer = ? " +
-                " WHERE record_id = ?, topic_id = ? ";
+                " WHERE record_id = ? AND topic_id = ? ";
         return jdbcTemplate.update(sql, new Object[]{answer, recordId, topicId});
     }
 
@@ -66,12 +65,22 @@ public class ExamRecordTopicDao {
         return jdbcTemplate.update(sql, new Object[]{id});
     }
 
-    public ExamRecordTopic getExamRecordTopicById(Integer id) {
+    public ExamRecordTopic getRecordTopicByElements(Integer recordId, Integer topicId) {
+        String sql = " SELECT * FROM exam_record_topic WHERE record_id = ? AND topic_id = ? ";
+        List<ExamRecordTopic> recordTopics = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), new Object[]{recordId, topicId});
+        if(recordTopics.size() > 0) {
+           return recordTopics.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public ExamRecordTopic getRecordTopicById(Integer id) {
         String sql = " SELECT * FROM exam_record_topic WHERE id = ? ";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), new Object[]{id});
     }
 
-    public List<ExamRecordTopic> getExamRecordTopicByRecordId(Integer id){
+    public List<ExamRecordTopic> getRecordTopicByRecordId(Integer id){
         String sql = " SELECT * FROM exam_record_topic WHERE record_id = ? ORDER by id ASC ";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), id);
     }
