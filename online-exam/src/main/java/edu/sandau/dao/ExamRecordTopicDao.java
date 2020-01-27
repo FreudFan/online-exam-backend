@@ -1,8 +1,8 @@
 package edu.sandau.dao;
 
 import edu.sandau.entity.ExamRecordTopic;
-import edu.sandau.utils.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.Map;
 import java.util.Objects;
 
 @Repository
@@ -49,7 +48,7 @@ public class ExamRecordTopicDao {
         params[0] = examRecordTopic.getRecordId();
         params[1] = examRecordTopic.getTopicId();
         params[2] = examRecordTopic.getAnswer();
-        params[2] = examRecordTopic.getId();
+        params[3] = examRecordTopic.getId();
         return jdbcTemplate.update(sql, params);
     }
 
@@ -66,9 +65,8 @@ public class ExamRecordTopicDao {
     }
 
     public ExamRecordTopic getExamRecordTopicById(Integer id) {
-        String sql = " SELECT * FROM exam_record_topic WHERE id = ? ORDER by id ASC ";
-        Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{id});
-        return (ExamRecordTopic) MapUtil.mapToObject(map, ExamRecordTopic.class);
+        String sql = " SELECT * FROM exam_record_topic WHERE id = ? ";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), new Object[]{id});
     }
 
 }

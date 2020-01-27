@@ -1,9 +1,9 @@
 package edu.sandau.dao;
 
 import edu.sandau.entity.ExamRecord;
-import edu.sandau.utils.MapUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Repository
@@ -75,8 +74,7 @@ public class ExamRecordDao {
 
     public ExamRecord getExamRecordById(Integer id) {
         String sql = " SELECT * FROM exam_record WHERE id = ? ORDER by id ASC ";
-        Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{id});
-        return (ExamRecord) MapUtil.mapToObject(map, ExamRecord.class);
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExamRecord.class), new Object[]{id});
     }
 
 }

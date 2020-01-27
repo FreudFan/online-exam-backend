@@ -3,6 +3,7 @@ package edu.sandau.dao;
 import edu.sandau.entity.ExamSchedule;
 import edu.sandau.security.SessionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -47,6 +48,25 @@ public class ExamScheduleDao {
         int keyId = Objects.requireNonNull(keyHolder.getKey()).intValue();
         examSchedule.setId(keyId);
         return examSchedule;
+    }
+
+    public Integer update(ExamSchedule examSchedule) {
+        String sql = " UPDATE exam_schedule " +
+                " SET exam_id = ?, beginTime = ?, endTime = ?, type = ?, description = ? " +
+                " WHERE id = ? ";
+        Object[] params = new Object[6];
+        params[0] = examSchedule.getExamId();
+        params[1] = examSchedule.getBeginTime();
+        params[2] = examSchedule.getEndTime();
+        params[3] = examSchedule.getType();
+        params[4] = examSchedule.getDescription();
+        params[5] = examSchedule.getId();
+        return jdbcTemplate.update(sql, params);
+    }
+
+    public ExamSchedule getExamScheduleById(Integer id) {
+        String sql = " SELECT * FROM exam_schedule WHERE id = ? ";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExamSchedule.class), new Object[]{id});
     }
 
     public Integer delete(Integer id) {
