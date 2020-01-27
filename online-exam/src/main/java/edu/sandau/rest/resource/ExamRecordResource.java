@@ -51,4 +51,14 @@ public class ExamRecordResource {
         return Response.ok(params).build();
     }
 
+    @ApiOperation(value = "考试结束")
+    @POST
+    @Path("end")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response endExam(ExamTopic examTopic) throws Exception {
+        Boolean ok = examRecordService.endExam(examTopic);
+        return Response.ok(ok).build();
+    }
+
 }

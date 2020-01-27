@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@Transactional
+@Transactional(rollbackFor=Exception.class)
 public class ExamRecordServiceImpl implements ExamRecordService {
     @Autowired
     private ExamRecordDao examRecordDao;
@@ -64,6 +64,26 @@ public class ExamRecordServiceImpl implements ExamRecordService {
         Date beginTime = Calendar.getInstance().getTime();
         ExamRecord record = new ExamRecord(userId, scheduleId, beginTime);
         return examRecordDao.save(record);
+    }
+
+    @Override
+    public Boolean endExam(ExamTopic examTopic) throws Exception {
+        //设置考试结束时间
+        Date endTime = Calendar.getInstance().getTime();
+        ExamRecord record = examRecordDao.getExamRecordById(examTopic.getRecordId());
+        if(record.getEndTime() == null) {
+            record.setEndTime(endTime);
+        }
+        examRecordDao.updateById(record);
+        //重置所有答案
+        this.refreshRecord(examTopic);
+        return true;
+    }
+
+    @Override
+    public void refreshRecord(ExamTopic examTopic) throws Exception {
+        examRecordTopicDao.deleteByRecordId(examTopic.getRecordId());
+        examRecordTopicDao.saveBatch(examTopic);
     }
 
 }

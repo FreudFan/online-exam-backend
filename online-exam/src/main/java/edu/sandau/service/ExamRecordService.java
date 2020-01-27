@@ -31,4 +31,20 @@ public interface ExamRecordService {
      */
     ExamRecord addRecord(Integer scheduleId) throws Exception;
 
+    /***
+     * 结束考试, 更新所有题目答案
+     * @param examTopic
+     * @return
+     * @throws Exception
+     */
+    Boolean endExam(ExamTopic examTopic) throws Exception;
+
+    /***
+     * 更新所有题目
+     * @param examTopic
+     * @return
+     * @throws Exception
+     */
+    void refreshRecord(ExamTopic examTopic) throws Exception;
+
 }

@@ -1,6 +1,7 @@
 package edu.sandau.dao;
 
 import edu.sandau.entity.ExamRecordTopic;
+import edu.sandau.rest.model.exam.ExamTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +10,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +37,23 @@ public class ExamRecordTopicDao {
         int keyId = Objects.requireNonNull(keyHolder.getKey()).intValue();
         examRecordTopic.setId(keyId);
         return examRecordTopic;
+    }
+
+    public void saveBatch(ExamTopic examTopic) throws Exception {
+        String sql = " INSERT INTO exam_record_topic " +
+                "( record_id, topic_id, answer )" +
+                " VALUES " +
+                "( ?, ?, ? )";
+        List<Object[]> params = new ArrayList<>();
+        Integer recordId = examTopic.getRecordId();
+        List<ExamTopic> examTopics = examTopic.getTopics();
+        for (ExamTopic topic: examTopics) {
+            params.add(new Object[]{recordId, topic.getTopicId(), topic.getAnswer()});
+        }
+        int[] num = jdbcTemplate.batchUpdate(sql,params);
+        if(num.length != examTopics.size()) {
+            throw new SQLException("刷新题目失败");
+        }
     }
 
     /***
@@ -63,6 +83,11 @@ public class ExamRecordTopicDao {
     public Integer delete(Integer id) {
         String sql = " DELETE FROM exam_record_topic WHERE id = ? ";
         return jdbcTemplate.update(sql, new Object[]{id});
+    }
+
+    public Integer deleteByRecordId(Integer recordId) {
+        String sql = " DELETE FROM exam_record_topic WHERE record_id = ? ";
+        return jdbcTemplate.update(sql, new Object[]{recordId});
     }
 
     public ExamRecordTopic getRecordTopicByElements(Integer recordId, Integer topicId) {
