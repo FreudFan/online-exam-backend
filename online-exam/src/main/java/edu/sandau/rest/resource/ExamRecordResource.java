@@ -24,6 +24,7 @@ public class ExamRecordResource {
 
     @ApiOperation(value = "保存用户做题答案(做一道存一道)")
     @POST
+    @Path("save")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Boolean saveTopic(ExamTopic examTopic) throws Exception {
@@ -32,6 +33,7 @@ public class ExamRecordResource {
 
     @ApiOperation(value = "开始考试")
     @POST
+    @Path("start")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response startExam() throws Exception {

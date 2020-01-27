@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Repository
@@ -69,4 +71,8 @@ public class ExamRecordTopicDao {
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), new Object[]{id});
     }
 
+    public List<ExamRecordTopic> getExamRecordTopicByRecordId(Integer id){
+        String sql = " SELECT * FROM exam_record_topic WHERE record_id = ? ORDER by id ASC ";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), id);
+    }
 }

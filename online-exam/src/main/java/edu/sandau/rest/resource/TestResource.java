@@ -12,6 +12,8 @@ import edu.sandau.security.Auth;
 import edu.sandau.service.EmailService;
 import edu.sandau.entity.EmailMessage;
 import edu.sandau.security.SessionWrapper;
+import edu.sandau.service.ExamService;
+import edu.sandau.service.impl.ExamServiceImpI;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -218,4 +220,17 @@ public class TestResource {
         ).build();
     }
 
+    @Autowired
+    private ExamService examService ;
+    @GET
+    @Path("makeStandardExam")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public void testMakeStandardExam(){
+       ExamRecord er = new ExamRecord();
+       er.setId(4);
+       er.setUserId(1);
+       er.setScheduleId(5);
+        examService.makeStandardExam(er);
+    }
 }

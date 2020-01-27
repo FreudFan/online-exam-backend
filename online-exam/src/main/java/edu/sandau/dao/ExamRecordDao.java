@@ -77,4 +77,8 @@ public class ExamRecordDao {
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExamRecord.class), new Object[]{id});
     }
 
+    public void updateScoreById(Integer id,Double score) {
+        String sql = "UPDATE exam_record SET score = ? where id = ?";
+        jdbcTemplate.update(sql,score,id);
+    }
 }

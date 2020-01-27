@@ -11,5 +11,4 @@ public interface ExamRecordService {
      * @throws Exception
      */
     Boolean saveTopic(ExamTopic examTopic) throws Exception;
-
 }

@@ -73,4 +73,9 @@ public class ExamScheduleDao {
         String sql = " DELETE FROM exam_schedule WHERE id = ? ";
         return jdbcTemplate.update(sql, new Object[]{id});
     }
+
+    public Integer getExamIdById(Integer id){
+        String sql = "select exam_id from exam_schedule where id = ?";
+        return jdbcTemplate.queryForObject(sql,Integer.class,id);
+    }
 }

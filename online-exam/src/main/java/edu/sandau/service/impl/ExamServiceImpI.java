@@ -1,10 +1,7 @@
 package edu.sandau.service.impl;
 
-import edu.sandau.dao.ExamDao;
-import edu.sandau.dao.TopicDao;
-import edu.sandau.entity.Exam;
-import edu.sandau.entity.ExamDetail;
-import edu.sandau.entity.Topic;
+import edu.sandau.dao.*;
+import edu.sandau.entity.*;
 import edu.sandau.rest.model.exam.ExamClazz;
 import edu.sandau.rest.model.exam.ExamModel;
 import edu.sandau.rest.model.Page;
@@ -17,11 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -33,7 +26,12 @@ public class ExamServiceImpI implements ExamService {
     private TopicDao topicDao;
     @Autowired
     private SysEnumService sysEnumService;
-
+    @Autowired
+    private ExamRecordTopicDao examRecordTopicDao;
+    @Autowired
+    private ExamRecordDao examRecordDao;
+    @Autowired
+    private ExamScheduleDao examScheduleDao;
     @Autowired
     private TopicService topicService;
     @Override
@@ -97,6 +95,7 @@ public class ExamServiceImpI implements ExamService {
         return topicList;
     }
 
+
     /***
      * 随意抽取题目，通过随机生成下标，从list里随机拿数据
      * @param topicList
@@ -119,6 +118,42 @@ public class ExamServiceImpI implements ExamService {
             topics.add(topic);
         }
         return topics;
+    }
+
+    @Override
+    public void makeStandardExam(ExamRecord examRecord) {
+        Integer examId = examScheduleDao.getExamIdById(examRecord.getScheduleId());
+        List<Topic> examDetail = getExamDetail(examId, 1);
+        List<WorryTopic> worryTopics = new ArrayList<>();
+        double total = 0;
+        List<ExamRecordTopic> examRecordTopic = examRecordTopicDao.getExamRecordTopicByRecordId(examRecord.getId());
+        Map<Integer,Topic> correctKey = new HashMap<Integer,Topic>(examDetail.size());
+        examDetail.stream().forEach((topic)->{
+            correctKey.put(topic.getId(),topic);
+        });
+        for (ExamRecordTopic userRecord : examRecordTopic) {
+            Integer topicId = userRecord.getTopicId();
+            String userAnswer = userRecord.getAnswer();
+            String correctAnswer = correctKey.get(topicId).getCorrectkey();
+            Double topicMark = correctKey.get(topicId).getTopicmark();
+            if (userAnswer.equalsIgnoreCase(correctAnswer)) {
+                total += topicMark;
+            }else{
+                WorryTopic wt = new WorryTopic();
+                wt.setUser_id(examRecord.getUserId());
+                wt.setExam_id(examId);
+                wt.setRecord_id(examRecord.getId());
+                wt.setCorrectanswer(correctAnswer);
+                wt.setWorryanswer(userAnswer);
+                worryTopics.add(wt);
+            }
+        }
+        examRecord.setScore(total);
+        examRecordDao.updateScoreById(examRecord.getId(),total);
+        System.out.println(total);
+        System.out.println(worryTopics);
+        System.out.println(worryTopics.size());
+
     }
 
 }
