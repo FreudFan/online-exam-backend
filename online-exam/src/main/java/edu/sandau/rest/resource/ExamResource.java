@@ -17,7 +17,7 @@ import javax.ws.rs.core.*;
 import java.util.List;
 
 @Slf4j
-@Path("exam")
+@Path("exam/paper")
 @Api(value = "试卷接口")
 @Auth
 public class ExamResource {

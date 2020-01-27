@@ -92,11 +92,11 @@ public class LoginUserDao {
 
     public LoginUser login(String loginValue, String loginNmae, String password) throws  Exception {
         String sql = " SELECT * FROM login_user WHERE " + loginValue + " = ? AND password = ? ";
-        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{loginNmae, password});
-        if (mapList.size() == 0) {
+        List<LoginUser> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(LoginUser.class), new Object[]{loginNmae, password});
+        if (users.size() == 0) {
             return null;
         } else {
-            return (LoginUser) MapUtil.mapToObject(mapList.get(0), LoginUser.class);
+            return users.get(0);
         }
     }
 
