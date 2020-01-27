@@ -1,7 +1,6 @@
 package edu.sandau.dao;
 
 import edu.sandau.entity.ExamRecordTopic;
-import edu.sandau.entity.Subject;
 import edu.sandau.utils.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -64,10 +63,10 @@ public class ExamRecordTopicDao {
         return jdbcTemplate.update(sql, new Object[]{id});
     }
 
-    public Subject getExamRecordTopicById(Integer id) {
+    public ExamRecordTopic getExamRecordTopicById(Integer id) {
         String sql = " SELECT * FROM exam_record_topic WHERE id = ? ORDER by id ASC ";
         Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{id});
-        return (Subject) MapUtil.mapToObject(map, Subject.class);
+        return (ExamRecordTopic) MapUtil.mapToObject(map, ExamRecordTopic.class);
     }
 
 }
