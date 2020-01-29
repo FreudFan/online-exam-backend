@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Slf4j
 @Path("exam/record")
-//@Auth
+@Auth
 @Api(value = "考试记录")
 public class ExamRecordResource {
 
