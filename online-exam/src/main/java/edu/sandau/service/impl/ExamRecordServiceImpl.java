@@ -48,12 +48,40 @@ public class ExamRecordServiceImpl implements ExamRecordService {
 
     @Override
     public Map<String, Object> startExam(Integer scheduleId) throws Exception {
-        ExamSchedule schedule = examScheduleDao.getExamScheduleById(scheduleId);
-        List<Topic> topicsList = examService.getExamDetail(schedule.getExamId(),0);
-        ExamRecord record = this.addRecord(scheduleId);
         Map<String, Object> param = new HashMap<>();
-        param.put("recordId", record.getId());
-        param.put("topics", topicsList);
+        ExamSchedule schedule = examScheduleDao.getExamScheduleById(scheduleId);
+        //检查是否在考试开放时间段内
+        Date now = Calendar.getInstance().getTime();
+        Date beginTime = schedule.getBeginTime();
+        Date endTime = schedule.getEndTime();
+        if(now.compareTo(beginTime) < 0) {
+            param.put("error", "当前考试未开始");
+            return param;
+        }
+        if(endTime != null && now.compareTo(endTime) >= 0) {
+            param.put("error", "当前考试已结束");
+            return param;
+        }
+        //获取考试题目
+        List<Topic> topicsList = examService.getExamDetail(schedule.getExamId(),0);
+        //检查查询考试是否在进行中
+        ExamRecord record = this.checkRecord(scheduleId);
+        if(record == null) {
+            record = this.addRecord(scheduleId);
+            param.put("recordId", record.getId());
+            param.put("topics", topicsList);
+        } else {
+            //已完成考试的不允许再次进入考试
+            if (record.getEndTime() == null) {
+                int recordId = record.getId();
+                param.put("recordId", recordId);
+                List<ExamRecordTopic> answers = examRecordTopicDao.getRecordAnswersByRecordId(recordId);
+                param.put("answer", answers);
+                param.put("topics", topicsList);
+            } else {
+                param.put("error", "您已提交答卷");
+            }
+        }
         return param;
     }
 
@@ -67,14 +95,21 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     }
 
     @Override
+    public ExamRecord checkRecord(Integer scheduleId) throws Exception {
+        //查询用户是否有在进行中的考试
+        int userId = sessionWrapper.getUserId();
+        return examRecordDao.getRecordByUserIdAndScheduleId(userId, scheduleId);
+    }
+
+    @Override
     public Boolean endExam(ExamTopic examTopic) throws Exception {
         //设置考试结束时间
         Date endTime = Calendar.getInstance().getTime();
-        ExamRecord record = examRecordDao.getExamRecordById(examTopic.getRecordId());
+        ExamRecord record = examRecordDao.getRecordById(examTopic.getRecordId());
         if(record.getEndTime() == null) {
             record.setEndTime(endTime);
         }
-        examRecordDao.updateById(record);
+        examRecordDao.updateEndTimeById(record);
         //重置所有答案
         this.refreshRecord(examTopic);
         return true;

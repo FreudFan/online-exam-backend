@@ -9,9 +9,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Repository
@@ -28,18 +28,18 @@ public class ExamScheduleDao {
                 "( ?, ?, ?, ?, ?, ? )";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
-            Date beginTime = null;
-            Date endTime = null;
+            Timestamp beginTime = null;
+            Timestamp endTime = null;
             if (examSchedule.getBeginTime() != null) {
-                beginTime = new Date(examSchedule.getBeginTime().getTime());
+                beginTime = new Timestamp(examSchedule.getBeginTime().getTime());
             }
             if(examSchedule.getEndTime() != null) {
-                endTime = new Date(examSchedule.getEndTime().getTime());
+                endTime = new Timestamp(examSchedule.getEndTime().getTime());
             }
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, examSchedule.getExamId());
-            ps.setDate(2, beginTime);
-            ps.setDate(3, endTime);
+            ps.setTimestamp(2, beginTime);
+            ps.setTimestamp(3, endTime);
             ps.setInt(4, examSchedule.getType());
             ps.setInt(5, sessionWrapper.getUserId());
             ps.setString(6, examSchedule.getDescription());

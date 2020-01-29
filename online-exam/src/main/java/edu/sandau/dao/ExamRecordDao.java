@@ -35,7 +35,7 @@ public class ExamRecordDao {
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, examRecord.getUserId());
             ps.setInt(2, examRecord.getScheduleId());
-            ps.setDate(3, new java.sql.Date(examRecord.getBeginTime().getTime()));
+            ps.setTimestamp(3, new java.sql.Timestamp(examRecord.getBeginTime().getTime()));
             return ps;
         }, keyHolder);
         int keyId = Objects.requireNonNull(keyHolder.getKey()).intValue();
@@ -43,28 +43,9 @@ public class ExamRecordDao {
         return examRecord;
     }
 
-    public Integer updateById(ExamRecord examRecord) {
-        String sql = " UPDATE exam_record SET ";
-        List<Object> params = new ArrayList<>();
-        List<String> sqlList = new ArrayList<>();
-        if (examRecord.getScheduleId() != null) {
-            sqlList.add(" record_id = ? ");
-            params.add(examRecord.getScheduleId());
-        }
-        if (examRecord.getScore() != null) {
-            sqlList.add(" score = ? ");
-            params.add(examRecord.getScore());
-        }
-        if (examRecord.getEndTime() != null) {
-            sqlList.add(" endTime = ? ");
-            params.add(examRecord.getEndTime());
-        }
-        if (params.isEmpty()) {
-            return null;
-        }
-        sql += " SET " + StringUtils.join(sqlList);
-        sql += " WHERE id = ? ";
-        return jdbcTemplate.update(sql, params);
+    public Integer updateEndTimeById(ExamRecord examRecord) {
+        String sql = " UPDATE exam_record SET endTime = ? WHERE id = ? ";
+        return jdbcTemplate.update(sql, new Object[]{examRecord.getEndTime(), examRecord.getId()});
     }
 
     public Integer delete(Integer id) {
@@ -72,9 +53,20 @@ public class ExamRecordDao {
         return jdbcTemplate.update(sql, new Object[]{id});
     }
 
-    public ExamRecord getExamRecordById(Integer id) {
+    public ExamRecord getRecordById(Integer id) {
         String sql = " SELECT * FROM exam_record WHERE id = ? ORDER by id ASC ";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExamRecord.class), new Object[]{id});
+    }
+
+    public ExamRecord getRecordByUserIdAndScheduleId(Integer userId, Integer scheduleId) {
+        String sql = " SELECT * FROM exam_record WHERE user_id = ? AND schedule_id = ? ";
+        Object[] params = new Object[]{userId, scheduleId};
+        List<ExamRecord> records = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamRecord.class), params);
+        if(records.isEmpty()) {
+            return null;
+        } else {
+            return records.get(0);
+        }
     }
 
     public void updateScoreById(Integer id,Double score) {

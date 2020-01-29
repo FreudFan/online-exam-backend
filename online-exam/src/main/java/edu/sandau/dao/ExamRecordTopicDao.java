@@ -100,13 +100,19 @@ public class ExamRecordTopicDao {
         }
     }
 
-    public ExamRecordTopic getRecordTopicById(Integer id) {
+    public ExamRecordTopic getTopicById(Integer id) {
         String sql = " SELECT * FROM exam_record_topic WHERE id = ? ";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), new Object[]{id});
     }
 
-    public List<ExamRecordTopic> getRecordTopicByRecordId(Integer id){
+    public List<ExamRecordTopic> getTopicsByRecordId(Integer id){
         String sql = " SELECT * FROM exam_record_topic WHERE record_id = ? ORDER by id ASC ";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), id);
     }
+
+    public List<ExamRecordTopic> getRecordAnswersByRecordId(Integer id){
+        String sql = " SELECT topic_id topicId, answer FROM exam_record_topic WHERE record_id = ? ORDER by id ASC ";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), id);
+    }
+
 }

@@ -32,6 +32,14 @@ public interface ExamRecordService {
     ExamRecord addRecord(Integer scheduleId) throws Exception;
 
     /***
+     * 查询用户是否有在进行中的考试，若有，返回考试记录
+     * @param scheduleId
+     * @return
+     * @throws Exception
+     */
+    ExamRecord checkRecord(Integer scheduleId) throws Exception;
+
+    /***
      * 结束考试, 更新所有题目答案
      * @param examTopic
      * @return

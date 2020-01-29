@@ -1,4 +1,4 @@
-package edu.sandau.rest.resource;
+package edu.sandau.rest.resource.exam;
 
 import edu.sandau.rest.model.exam.ExamTopic;
 import edu.sandau.security.Auth;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Slf4j
 @Path("exam/record")
-@Auth
+//@Auth
 @Api(value = "考试记录")
 public class ExamRecordResource {
 

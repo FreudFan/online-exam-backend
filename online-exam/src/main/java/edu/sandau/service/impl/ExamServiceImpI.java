@@ -132,7 +132,7 @@ public class ExamServiceImpI implements ExamService {
         List<WorryTopic> worryTopics = new ArrayList<>();
         double total = 0;
         //获取用户的做题信息
-        List<ExamRecordTopic> examRecordTopic = examRecordTopicDao.getRecordTopicByRecordId(examRecord.getId());
+        List<ExamRecordTopic> examRecordTopic = examRecordTopicDao.getTopicsByRecordId(examRecord.getId());
         Map<Integer,Topic> correctKey = new HashMap<Integer,Topic>(examDetail.size());
         examDetail.stream().forEach((topic)->{
             correctKey.put(topic.getId(),topic);
