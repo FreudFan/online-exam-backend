@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -66,11 +67,36 @@ public class ExamScheduleDao {
 
     public ExamSchedule getExamScheduleById(Integer id) {
         String sql = " SELECT * FROM exam_schedule WHERE id = ? ";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExamSchedule.class), new Object[]{id});
+        List<ExamSchedule> schedules = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamSchedule.class), new Object[]{id});
+        if (schedules.isEmpty()) {
+            return null;
+        } else {
+            return schedules.get(0);
+        }
+    }
+
+    /***
+     * 根据id查询可用日程
+     * @param id
+     * @return
+     */
+    public ExamSchedule getAccessExamScheduleById(Integer id) {
+        String sql = " SELECT * FROM exam_schedule WHERE flag = 1 AND id = ? ";
+        List<ExamSchedule> schedules = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamSchedule.class), new Object[]{id});
+        if (schedules.isEmpty()) {
+            return null;
+        } else {
+            return schedules.get(0);
+        }
     }
 
     public Integer delete(Integer id) {
         String sql = " DELETE FROM exam_schedule WHERE id = ? ";
+        return jdbcTemplate.update(sql, new Object[]{id});
+    }
+
+    public Integer clock(Integer id) {
+        String sql = " UPDATE exam_schedule SET flag = 0 WHERE id = ? ";
         return jdbcTemplate.update(sql, new Object[]{id});
     }
 

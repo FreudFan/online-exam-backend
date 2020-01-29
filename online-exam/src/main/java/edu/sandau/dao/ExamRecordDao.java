@@ -69,6 +69,11 @@ public class ExamRecordDao {
         }
     }
 
+    public List<ExamRecord> getRecordsByScheduleId(Integer scheduleId) {
+        String sql = " SELECT * FROM exam_record WHERE schedule_id = ? ";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamRecord.class), scheduleId);
+    }
+
     public void updateScoreById(Integer id,Double score) {
         String sql = "UPDATE exam_record SET score = ? where id = ?";
         jdbcTemplate.update(sql,score,id);

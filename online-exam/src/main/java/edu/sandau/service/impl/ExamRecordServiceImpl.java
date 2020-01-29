@@ -49,7 +49,11 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     @Override
     public Map<String, Object> startExam(Integer scheduleId) throws Exception {
         Map<String, Object> param = new HashMap<>();
-        ExamSchedule schedule = examScheduleDao.getExamScheduleById(scheduleId);
+        ExamSchedule schedule = examScheduleDao.getAccessExamScheduleById(scheduleId);
+        if (schedule == null) {
+            param.put("error", "考试不存在或已禁用");
+            return param;
+        }
         //检查是否在考试开放时间段内
         Date now = Calendar.getInstance().getTime();
         Date beginTime = schedule.getBeginTime();
@@ -57,8 +61,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
         if(now.compareTo(beginTime) < 0) {
             param.put("error", "当前考试未开始");
             return param;
-        }
-        if(endTime != null && now.compareTo(endTime) >= 0) {
+        } else if (endTime != null && now.compareTo(endTime) >= 0) {
             param.put("error", "当前考试已结束");
             return param;
         }
