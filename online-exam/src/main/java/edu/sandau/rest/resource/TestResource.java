@@ -228,7 +228,7 @@ public class TestResource {
     @Produces({ MediaType.APPLICATION_JSON })
     public void testMakeStandardExam(){
        ExamRecord er = new ExamRecord();
-       er.setId(4);
+       er.setId(3);
        er.setUserId(1);
        er.setScheduleId(5);
         examService.makeStandardExam(er);
