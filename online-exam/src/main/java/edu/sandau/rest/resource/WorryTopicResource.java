@@ -1,7 +1,9 @@
 package edu.sandau.rest.resource;
 
 
+import edu.sandau.entity.WorryTopic;
 import edu.sandau.rest.model.Page;
+import edu.sandau.rest.model.WorryTopicData;
 import edu.sandau.security.Auth;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.WorryTopicService;

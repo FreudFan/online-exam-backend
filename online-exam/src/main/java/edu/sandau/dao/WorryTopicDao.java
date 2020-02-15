@@ -10,10 +10,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 public class WorryTopicDao {
@@ -50,6 +47,9 @@ public class WorryTopicDao {
     public List<WorryTopicData> selectAll(Page page) {
         int start = (page.getPageNo() - 1) * page.getPageSize();
         Map<String, Object> params = page.getOption();
+        if(params == null || params.size() == 0){
+            params = new HashMap<>();
+        }
         List<Object> obj = new ArrayList<Object>();
 
         StringBuffer sql = new StringBuffer("SELECT t.id,t.`description`,t.`correctkey`,wt.`worryanswer`,t.`difficult`,t.`analysis`,t.`subject_id`,wt.`createtime` " +
@@ -59,9 +59,9 @@ public class WorryTopicDao {
         sql.append(sqlAppend);
         int count = getCount(sql.toString(), obj);
         page.setTotal(count);
-        sql.append(" limit ?,?");
-        obj.add(start);
-        obj.add(page.getPageSize());
+//        sql.append(" limit ?,?");
+//        obj.add(start);
+//        obj.add(page.getPageSize());
         return jdbcTemplate.query(sql.toString(), new BeanPropertyRowMapper<>(WorryTopicData.class), obj.toArray());
     }
 
