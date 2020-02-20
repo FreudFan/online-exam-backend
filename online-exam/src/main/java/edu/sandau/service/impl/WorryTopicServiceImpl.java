@@ -58,7 +58,9 @@ public class WorryTopicServiceImpl implements WorryTopicService {
                 List<Option> optionList = optionDao.findOptionById(id);
                 worryTopic.setOptionList(optionList);
                 String difficultName = enumService.getEnumName("TOPIC", "DIFFICULT", worryTopic.getDifficult());
+                String subjectName = subjectService.getSubjectById(worryTopic.getSubject_id()).getName();
                 worryTopic.setDifficultName(difficultName);
+                worryTopic.setSubjectName(subjectName);
             }catch(Exception e){
                 e.printStackTrace();
             }

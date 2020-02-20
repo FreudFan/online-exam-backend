@@ -20,6 +20,7 @@ public class WorryTopicData {
     private Double topicmark;
     private String analysis;
     private Integer subject_id;
+    private String subjectName;
     private String createtime;
 
     /***
