@@ -1,12 +1,11 @@
 package edu.sandau.security;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import edu.sandau.config.VariableConfig;
 import edu.sandau.rest.model.User;
+import edu.sandau.utils.JacksonUtil;
 import edu.sandau.utils.RedisConstants;
 import edu.sandau.utils.RedisUtil;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
@@ -22,19 +21,18 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class SessionWrapper{
+
+    private final VariableConfig variableConfig;
+    private final StringRedisTemplate redisTemplate;
+    private final HttpSession httpSession;
     /***
      * redis-session的生存时间
      */
     private static Integer SESSION_TIMEOUT;
 
-    @Value(value="${redis.session_timeout:30}")
-    public void setSessionTimeout(Integer sessionTimeout) {
-        SESSION_TIMEOUT = sessionTimeout;
-    }
-
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final HttpSession httpSession;
-    public SessionWrapper(RedisTemplate<String, Object> redisTemplate, HttpSession httpSession) {
+    public SessionWrapper(VariableConfig variableConfig, StringRedisTemplate redisTemplate, HttpSession httpSession) {
+        this.variableConfig = variableConfig;
+        SESSION_TIMEOUT = variableConfig.session_timeout;
         this.redisTemplate = redisTemplate;
         this.httpSession = httpSession;
     }
@@ -53,7 +51,7 @@ public class SessionWrapper{
         String uuid = RedisUtil.createKey(RedisConstants.SESSION_ID);
         String key = this.getId(uuid);
         Map<String,String> attribute = new HashMap<>(1);
-        attribute.put("user", JSON.toJSON(user).toString());
+        attribute.put("user", JacksonUtil.toJSON(user));
         redisTemplate.opsForHash().putAll(key, attribute);
         //设置超时时间10秒 第三个参数控制
         redisTemplate.expire(key, SESSION_TIMEOUT, TimeUnit.MINUTES);
@@ -88,7 +86,7 @@ public class SessionWrapper{
         try {
             String key = this.getId();
             String value =  Objects.requireNonNull(redisTemplate.opsForHash().get(key, "user")).toString();
-            return JSONObject.parseObject(value, User.class);
+            return JacksonUtil.fromJSON(value, User.class);
         } catch (Exception e) {
             return null;
         }
@@ -97,7 +95,7 @@ public class SessionWrapper{
         try {
             String key = this.getId(securityContext);
             String value = Objects.requireNonNull(redisTemplate.opsForHash().get(key, "user")).toString();
-            return JSONObject.parseObject(value, User.class);
+            return JacksonUtil.fromJSON(value, User.class);
         } catch (Exception e) {
             return null;
         }
@@ -107,7 +105,7 @@ public class SessionWrapper{
         try {
             key = this.getId(key);
             value = Objects.requireNonNull(redisTemplate.opsForHash().get(key, "user")).toString();
-            return JSONObject.parseObject(value, User.class);
+            return JacksonUtil.fromJSON(value, User.class);
         } catch (Exception e) {
             return null;
         }

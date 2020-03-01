@@ -1,14 +1,14 @@
 package edu.sandau.utils;
 
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
 public class RedisUtil {
-    private static RedisTemplate<String,String> redisTemplate;
-    public RedisUtil(RedisTemplate<String, String> redisTemplate) {
+    private static StringRedisTemplate redisTemplate;
+    public RedisUtil(StringRedisTemplate redisTemplate) {
         RedisUtil.redisTemplate = redisTemplate;
     }
     /**

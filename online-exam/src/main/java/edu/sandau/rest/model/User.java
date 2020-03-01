@@ -1,6 +1,6 @@
 package edu.sandau.rest.model;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,7 +20,7 @@ public class User {
     private String realname;
 
     @ApiModelProperty(value = "性别")
-    private String gender;
+    private Integer gender;
 
     @ApiModelProperty(value = "性别")
     private String genderName;
@@ -47,8 +47,8 @@ public class User {
     private Integer role;
 
     //用于登录时使用
-    @JSONField(serialize = false)
+    @JsonIgnore
     private String name;
-    @JSONField(serialize = false)
+    @JsonIgnore
     private String password;
 }

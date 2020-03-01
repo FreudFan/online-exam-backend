@@ -1,6 +1,6 @@
 package edu.sandau.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.Date;
@@ -18,8 +18,8 @@ public class WorryTopic {
     private String worryanswer;
     private String correctanswer;
 
-    @JSONField(serialize = false)
+    @JsonIgnore
     private Date createtime;
-    @JSONField(serialize = false)
+    @JsonIgnore
     private Date updatetime;
 }

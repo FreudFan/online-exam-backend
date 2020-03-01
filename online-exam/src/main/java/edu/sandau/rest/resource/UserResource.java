@@ -1,12 +1,12 @@
 package edu.sandau.rest.resource;
 
-import com.alibaba.fastjson.JSONObject;
 import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.User;
 import edu.sandau.security.Auth;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.UserService;
+import edu.sandau.utils.JacksonUtil;
 import edu.sandau.utils.RedisConstants;
 import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
@@ -124,7 +124,7 @@ public class UserResource {
         // 批量获取数据
         for (String key: keys) {
             String value = Objects.requireNonNull(redisTemplate.opsForHash().get(key, "user")).toString();
-            User user = JSONObject.parseObject(value, User.class);
+            User user = JacksonUtil.fromJSON(value, User.class);
             users.add(user);
         }
         return Response.ok(users).build();

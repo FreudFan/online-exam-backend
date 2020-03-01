@@ -1,6 +1,6 @@
 package edu.sandau.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -21,9 +21,9 @@ public class Exam implements Serializable {
     private Integer createBy;
     private Integer updateBy;
 
-    @JSONField(serialize = false)
+    @JsonIgnore
     private Date createtime;
-    @JSONField(serialize = false)
+    @JsonIgnore
     private Date updatetime;
 
     /***

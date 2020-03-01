@@ -1,5 +1,6 @@
 package edu.sandau.service.impl;
 
+import edu.sandau.config.VariableConfig;
 import edu.sandau.entity.EmailMessage;
 import edu.sandau.service.EmailService;
 import edu.sandau.service.MessageService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -16,15 +18,11 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class MessageServiceImpl implements MessageService {
     @Autowired
+    private VariableConfig variableConfig;
+    @Resource
     private RedisTemplate<String,Object> redisTemplate;
     @Autowired
     private EmailService emailService;
-    /** 邮件验证码缓存时间 */
-    @Value("${mail.timeout}")
-    private Integer MAIL_TIME_OUT;
-    /** 短信验证码缓存时间 */
-    @Value("${sms.timeout}")
-    private Integer SMS_TIME_OUT;
 
     @Override
     public String sendEmailVerification(String email) {
@@ -37,7 +35,7 @@ public class MessageServiceImpl implements MessageService {
         try {
             emailService.sendHTMLMail(message, model, "email_code.ftl");
             redisTemplate.opsForValue().set(uuid, String.valueOf(code));
-            redisTemplate.expire(uuid, MAIL_TIME_OUT, TimeUnit.MINUTES);
+            redisTemplate.expire(uuid, variableConfig.getMail_timeout(), TimeUnit.MINUTES);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

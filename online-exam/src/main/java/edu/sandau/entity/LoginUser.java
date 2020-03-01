@@ -1,6 +1,6 @@
 package edu.sandau.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Data
 public class LoginUser implements Serializable {
-    @JSONField(serialize = false)
+    @JsonIgnore
     private final String TABLE_NAME = "login_user";
 
     private Integer id;
@@ -43,16 +43,16 @@ public class LoginUser implements Serializable {
     @ApiModelProperty(value = "用户角色枚举{0:普通用户,1:试题管理员,2:系统管理员}, 前端需赋值, 未赋值则默认为0")
     private Integer role;
 
-    @JSONField(serialize = false)
+    @JsonIgnore
     private Date createtime;
-    @JSONField(serialize = false)
+    @JsonIgnore
     private Date updatetime;
 
-    @JSONField(serialize = false)
+    @JsonIgnore
     @ApiModelProperty(value = "密保问题list")
     private List<String> question;
 
-    @JSONField(serialize = false)
+    @JsonIgnore
     @ApiModelProperty(value = "密保答案list")
     private List<String> answer;
 }

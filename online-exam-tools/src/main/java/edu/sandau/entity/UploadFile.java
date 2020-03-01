@@ -1,6 +1,6 @@
 package edu.sandau.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.io.File;
@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 public class UploadFile implements Serializable {
-    @JSONField(serialize = false)
+    @JsonIgnore
     private final String TABLE_NAME = "upload_file";
 
     private Integer id;
@@ -17,11 +17,11 @@ public class UploadFile implements Serializable {
     private String filePath;
     private Integer user_id;
 
-    @JSONField(serialize = false)
+    @JsonIgnore
     private File file;
 
-    @JSONField(serialize = false)
+    @JsonIgnore
     private Date createtime;
-    @JSONField(serialize = false)
+    @JsonIgnore
     private Date updatetime;
 }

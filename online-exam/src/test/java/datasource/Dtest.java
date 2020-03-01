@@ -1,9 +1,9 @@
 package datasource;
 
-import com.alibaba.fastjson.JSONObject;
 import edu.sandau.datasource.DruidManager;
 import edu.sandau.utils.JDBCUtil;
 import edu.sandau.entity.Topic;
+import edu.sandau.utils.JacksonUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -31,7 +31,7 @@ public class Dtest {
         String sql = "SELECT * FROM MENU";
         List<Map<String,Object>> list = JDBCUtil.queryForList(sql);
         for ( Map<String,Object> map: list ) {
-            System.out.println(new JSONObject(map).toJSONString());
+            System.out.println(JacksonUtil.toJSON(map));
         }
     }
 

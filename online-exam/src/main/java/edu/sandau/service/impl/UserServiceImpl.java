@@ -41,8 +41,8 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         BeanUtils.copyProperties(loginUser, user);
         int gender_id = loginUser.getGender();
-        String gender = enumService.getEnumName("COMMON", "GENDER", gender_id);
-        user.setGender(gender);
+        String genderName = enumService.getEnumName("COMMON", "GENDER", gender_id);
+        user.setGenderName(genderName);
         String school = organizationService.getOrgById(loginUser.getSchool_id()).getName();
         user.setSchool(school);
         String college = organizationService.getOrgById(loginUser.getCollege_id()).getName();

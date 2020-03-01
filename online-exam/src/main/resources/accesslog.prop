@@ -1,6 +1,0 @@
- 
-directory=logs 
-#pattern=%h %l %u %t %r %s %b
-pattern=combined 
-prefix=access_log
-suffix=.txt

@@ -1,6 +1,6 @@
 package edu.sandau.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,9 +26,9 @@ public class ExamRecordTopic {
      */
     private String answer;
 
-    @JSONField(serialize = false)
+    @JsonIgnore
     private Date createtime;
-    @JSONField(serialize = false)
+    @JsonIgnore
     private Date updatetime;
 
     public ExamRecordTopic(Integer recordId, Integer topicId, String answer) {

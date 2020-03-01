@@ -28,7 +28,7 @@ public class EmailMessage implements Serializable {
      */
     private String subject;
     /***
-     * 邮件主题
+     * 邮件内容
      */
     private String content;
 
