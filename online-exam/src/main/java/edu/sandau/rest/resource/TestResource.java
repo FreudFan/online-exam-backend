@@ -9,6 +9,7 @@ import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.TestParam;
 import edu.sandau.rest.model.User;
 import edu.sandau.security.Auth;
+import edu.sandau.security.RequestContent;
 import edu.sandau.service.EmailService;
 import edu.sandau.entity.EmailMessage;
 import edu.sandau.security.SessionWrapper;
@@ -37,7 +38,7 @@ import java.util.*;
 @Api(value = "测试接口")
 @Slf4j
 @Path("test")
-@Auth
+//@Auth
 public class TestResource {
 
     @Autowired
@@ -162,11 +163,10 @@ public class TestResource {
 
     @Autowired
     private SessionWrapper sessionWrapper;
-    @Context
-    private SecurityContext securityContext;
 
     @GET
     @Path("session")
+    @Auth
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String session() throws Exception {
@@ -174,22 +174,22 @@ public class TestResource {
         user.setEmail("faf@fdasf.com");
         user.setPassword("11111");
 //        sessionWrapper.addSessionToRedis(securityContext, user);
-        return null;
+        return RequestContent.getCurrentUser().getId().toString();
     }
 
     @GET
     @Path("sessionId")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    @Auth
+//    @Auth
     public Object sessionId() throws Exception {
 //        return sessionWrapper.getRedisKeyFromSession(httpSession);
 //        sessionWrapper.refresh(httpSession);
 //        sessionWrapper.invalidate(httpSession);
-        User users = sessionWrapper.getCurrentUser(securityContext);
+//        User users = sessionWrapper.getCurrentUser(securityContext);
 //        sessionWrapper.setAttribute(httpSession, "23432", "fadsfjaidosfjaijfaidso");
 //        Map<String,Object> map = sessionWrapper.getAllAttribute(httpSession);
-        return users;
+        return null;
     }
 
     @Autowired

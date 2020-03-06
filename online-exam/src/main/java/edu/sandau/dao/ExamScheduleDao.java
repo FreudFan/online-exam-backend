@@ -1,6 +1,7 @@
 package edu.sandau.dao;
 
 import edu.sandau.entity.ExamSchedule;
+import edu.sandau.security.RequestContent;
 import edu.sandau.security.SessionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -19,8 +20,6 @@ import java.util.Objects;
 public class ExamScheduleDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private SessionWrapper sessionWrapper;
 
     public ExamSchedule save(ExamSchedule examSchedule) {
         String sql = " INSERT INTO exam_schedule " +
@@ -42,7 +41,7 @@ public class ExamScheduleDao {
             ps.setTimestamp(2, beginTime);
             ps.setTimestamp(3, endTime);
             ps.setInt(4, examSchedule.getType());
-            ps.setInt(5, sessionWrapper.getUserId());
+            ps.setInt(5, RequestContent.getCurrentUser().getId());
             ps.setString(6, examSchedule.getDescription());
             return ps;
         }, keyHolder);

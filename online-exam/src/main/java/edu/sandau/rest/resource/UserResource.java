@@ -4,6 +4,7 @@ import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.User;
 import edu.sandau.security.Auth;
+import edu.sandau.security.RequestContent;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.UserService;
 import edu.sandau.utils.JacksonUtil;
@@ -55,7 +56,7 @@ public class UserResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response getCurrentUser() throws Exception {
-        User user = sessionWrapper.getCurrentUser();
+        User user = RequestContent.getCurrentUser();
         return Response.ok(user).build();
     }
 

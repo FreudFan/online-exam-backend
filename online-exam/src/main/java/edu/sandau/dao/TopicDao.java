@@ -2,6 +2,7 @@ package edu.sandau.dao;
 
 import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.Page;
+import edu.sandau.security.RequestContent;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.utils.JDBCUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +23,6 @@ public class TopicDao {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private SessionWrapper sessionWrapper;
 
     /***
      * 批量删除题目方法
@@ -68,7 +67,7 @@ public class TopicDao {
             ps.setInt(6, topic.getDifficult());
             ps.setString(7, topic.getAnalysis());
             ps.setInt(8, topic.getSubject_id());
-            ps.setInt(9, sessionWrapper.getUserId());
+            ps.setInt(9, RequestContent.getCurrentUser().getId());
             return ps;
         }, keyHolder);
         int keyId = Objects.requireNonNull(keyHolder.getKey()).intValue();

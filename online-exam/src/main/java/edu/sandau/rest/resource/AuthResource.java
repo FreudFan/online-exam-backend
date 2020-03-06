@@ -16,11 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +29,6 @@ public class AuthResource {
     private SessionWrapper sessionWrapper;
     @Autowired
     private UserService userService;
-    @Context
-    private SecurityContext securityContext;
     @Autowired
     private MessageService messageService;
     @Autowired

@@ -4,6 +4,7 @@ import edu.sandau.entity.Exam;
 import edu.sandau.entity.ExamDetail;
 import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.Page;
+import edu.sandau.security.RequestContent;
 import edu.sandau.security.SessionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -39,8 +40,8 @@ public class ExamDao {
             ps.setInt(3, exam.getTotalScore());
             ps.setString(4, exam.getDescription());
             ps.setInt(5, exam.getFlag());
-            ps.setInt(6, sessionWrapper.getUserId());
-            ps.setInt(7, sessionWrapper.getUserId());
+            ps.setInt(6, RequestContent.getCurrentUser().getId());
+            ps.setInt(7, RequestContent.getCurrentUser().getId());
             return ps;
         }, keyHolder);
         int keyId = Objects.requireNonNull(keyHolder.getKey()).intValue();

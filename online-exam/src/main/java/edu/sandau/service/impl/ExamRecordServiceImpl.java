@@ -8,6 +8,7 @@ import edu.sandau.entity.ExamRecordTopic;
 import edu.sandau.entity.ExamSchedule;
 import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.exam.ExamTopic;
+import edu.sandau.security.RequestContent;
 import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.ExamRecordService;
 import edu.sandau.service.ExamService;
@@ -91,7 +92,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     @Override
     public ExamRecord addRecord(Integer scheduleId) throws Exception {
         //添加考试记录表，开始考试
-        int userId = sessionWrapper.getUserId();
+        int userId = RequestContent.getCurrentUser().getId();
         Date beginTime = Calendar.getInstance().getTime();
         ExamRecord record = new ExamRecord(userId, scheduleId, beginTime);
         return examRecordDao.save(record);
@@ -100,7 +101,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     @Override
     public ExamRecord checkRecord(Integer scheduleId) throws Exception {
         //查询用户是否有在进行中的考试
-        int userId = sessionWrapper.getUserId();
+        int userId = RequestContent.getCurrentUser().getId();
         return examRecordDao.getRecordByUserIdAndScheduleId(userId, scheduleId);
     }
 

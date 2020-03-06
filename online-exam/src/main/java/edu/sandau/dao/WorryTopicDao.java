@@ -4,6 +4,7 @@ package edu.sandau.dao;
 import edu.sandau.entity.WorryTopic;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.WorryTopicData;
+import edu.sandau.security.RequestContent;
 import edu.sandau.security.SessionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -90,7 +91,7 @@ public class WorryTopicDao {
         //如果前端没有传user_id，则将查询当前登录用户的错题记录
         if(!params.containsKey("user_id")){
             sql.append(" And wt.user_id = ?");
-            obj.add(sessionWrapper.getUserId());
+            obj.add(RequestContent.getCurrentUser().getId());
         }
         return sql.toString();
     }

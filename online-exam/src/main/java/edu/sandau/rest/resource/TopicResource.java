@@ -1,13 +1,10 @@
 package edu.sandau.rest.resource;
 
-import edu.sandau.dao.TopicDao;
 import edu.sandau.entity.Topic;
 import edu.sandau.entity.UploadFile;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.TopicData;
-import edu.sandau.rest.model.TopicModel;
 import edu.sandau.security.Auth;
-import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.TopicService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,13 +28,7 @@ import java.util.*;
 public class TopicResource {
 
     @Autowired
-    private TopicDao topicDao;
-    @Autowired
     private TopicService topicService;
-    @Context
-    private SecurityContext securityContext;
-    @Autowired
-    private SessionWrapper sessionWrapper;
 
     @ApiOperation(value = "导入题库", response = Map.class)
     @POST
