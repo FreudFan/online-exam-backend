@@ -3,15 +3,15 @@ package edu.sandau.service.impl;
 import edu.sandau.dao.ExamRecordDao;
 import edu.sandau.dao.ExamRecordTopicDao;
 import edu.sandau.dao.ExamScheduleDao;
-import edu.sandau.entity.ExamRecord;
-import edu.sandau.entity.ExamRecordTopic;
-import edu.sandau.entity.ExamSchedule;
-import edu.sandau.entity.Topic;
+import edu.sandau.entity.*;
+import edu.sandau.rest.model.Page;
+import edu.sandau.rest.model.exam.ScheduleInfo;
 import edu.sandau.rest.model.exam.ExamTopic;
 import edu.sandau.security.RequestContent;
-import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.ExamRecordService;
 import edu.sandau.service.ExamService;
+import edu.sandau.service.SysEnumService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +26,11 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     @Autowired
     private ExamService examService;
     @Autowired
-    private SessionWrapper sessionWrapper;
-    @Autowired
     private ExamScheduleDao examScheduleDao;
     @Autowired
     private ExamRecordTopicDao examRecordTopicDao;
+    @Autowired
+    private SysEnumService enumService;
 
     @Override
     public Boolean saveOrUpdateTopic(ExamTopic examTopic) throws Exception {
@@ -123,6 +123,25 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     public void refreshRecord(ExamTopic examTopic) throws Exception {
         examRecordTopicDao.deleteByRecordId(examTopic.getRecordId());
         examRecordTopicDao.saveBatch(examTopic);
+    }
+
+    @Override
+    public Page findRecords(Integer userId, Page page) throws Exception {
+        List<ScheduleInfo> scheduleInfos = new ArrayList<>();
+        int total = examRecordDao.getRecordsCountByUserId(userId);
+        page.setTotal(total);
+        List<ExamRecord> records = examRecordDao.getRecordsByUserId(userId, page);
+        for(ExamRecord record: records) {
+            ExamSchedule schedule = examScheduleDao.getExamScheduleById(record.getScheduleId());
+            ScheduleInfo scheduleInfo = new ScheduleInfo();
+            BeanUtils.copyProperties(record, scheduleInfo);
+            BeanUtils.copyProperties(schedule, scheduleInfo);
+            String typeName = enumService.getEnumName("SCHEDULE", "TYPE", schedule.getType());
+            scheduleInfo.setTypeName(typeName);
+            scheduleInfos.add(scheduleInfo);
+        }
+        page.setRows(scheduleInfos);
+        return page;
     }
 
 }

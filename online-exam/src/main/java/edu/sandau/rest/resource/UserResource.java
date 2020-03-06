@@ -26,8 +26,6 @@ public class UserResource {
     @Autowired
     private UserService userService;
     @Autowired
-    private SessionWrapper sessionWrapper;
-    @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 
     @ApiOperation(value = "修改用户信息")

@@ -1,7 +1,9 @@
 package edu.sandau.rest.resource.exam;
 
+import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.exam.ExamTopic;
 import edu.sandau.security.Auth;
+import edu.sandau.security.RequestContent;
 import edu.sandau.service.ExamRecordService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -59,6 +61,20 @@ public class ExamRecordResource {
     public Response endExam(ExamTopic examTopic) throws Exception {
         Boolean ok = examRecordService.endExam(examTopic);
         return Response.ok(ok).build();
+    }
+
+    @ApiOperation(value = "查询我的日程")
+    @GET
+    @Path("list")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Page findMySchedule(Page page) throws Exception {
+        if (page == null) {
+            page = new Page();
+        }
+        Integer userId = RequestContent.getCurrentUser().getId();
+        page = examRecordService.findRecords(userId, page);
+        return page;
     }
 
 }

@@ -1,7 +1,7 @@
 package edu.sandau.dao;
 
 import edu.sandau.entity.ExamRecord;
-import org.apache.commons.lang3.StringUtils;
+import edu.sandau.rest.model.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -56,6 +56,18 @@ public class ExamRecordDao {
     public ExamRecord getRecordById(Integer id) {
         String sql = " SELECT * FROM exam_record WHERE id = ? ORDER by id ASC ";
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExamRecord.class), new Object[]{id});
+    }
+
+    public List<ExamRecord> getRecordsByUserId(Integer userId, Page page) {
+        int start = (page.getPageNo() - 1) * page.getPageSize();
+        String sql = " SELECT * FROM exam_record WHERE user_id = ? limit ? , ? ";
+        Object[] params = new Object[]{userId, start, page.getPageSize()};
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamRecord.class), params);
+    }
+
+    public Integer getRecordsCountByUserId(Integer userId) {
+        String sql = "SELECT count(1) FROM topic WHERE user_id = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, userId);
     }
 
     public ExamRecord getRecordByUserIdAndScheduleId(Integer userId, Integer scheduleId) {

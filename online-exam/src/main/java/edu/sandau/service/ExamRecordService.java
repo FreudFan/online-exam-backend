@@ -1,6 +1,8 @@
 package edu.sandau.service;
 
 import edu.sandau.entity.ExamRecord;
+import edu.sandau.rest.model.Page;
+import edu.sandau.rest.model.exam.ScheduleInfo;
 import edu.sandau.rest.model.exam.ExamTopic;
 
 import java.util.Map;
@@ -55,4 +57,11 @@ public interface ExamRecordService {
      */
     void refreshRecord(ExamTopic examTopic) throws Exception;
 
+    /***
+     * 分页查询用户考试记录
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    Page findRecords(Integer userId, Page page) throws Exception;
 }

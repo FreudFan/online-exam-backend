@@ -24,7 +24,7 @@ public class ExamSchedule {
      */
     private Date endTime;
     /***
-     * 日程类型
+     * 日程类型 枚举(SCHEDULE TYPE)
      */
     private Integer type;
     /***
