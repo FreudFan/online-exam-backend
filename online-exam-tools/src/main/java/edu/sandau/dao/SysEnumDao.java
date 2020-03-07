@@ -3,7 +3,7 @@ package edu.sandau.dao;
 import edu.sandau.entity.SysEnum;
 import edu.sandau.rest.model.Page;
 import edu.sandau.utils.MapUtil;
-import org.apache.commons.collections.MapUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

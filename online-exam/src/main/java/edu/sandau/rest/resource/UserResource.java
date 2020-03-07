@@ -12,7 +12,7 @@ import edu.sandau.utils.RedisConstants;
 import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -26,7 +26,7 @@ public class UserResource {
     @Autowired
     private UserService userService;
     @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+    private StringRedisTemplate redisTemplate;
 
     @ApiOperation(value = "修改用户信息")
     @ApiResponses({

@@ -199,13 +199,13 @@ public class TestResource {
     @GET
     @Path("record")
     public Response get() {
-        ExamSchedule examSchedule = new ExamSchedule();
-        examSchedule.setExamId(1);
-        examSchedule.setBeginTime(Calendar.getInstance().getTime());
-        examSchedule.setType(1);
-        examSchedule.setDescription("fjalkds");
-        examScheduleDao.save(examSchedule);
-        return Response.ok().build();
+//        ExamSchedule examSchedule = new ExamSchedule();
+//        examSchedule.setExamId(1);
+//        examSchedule.setBeginTime(Calendar.getInstance().getTime());
+//        examSchedule.setType(1);
+//        examSchedule.setDescription("fjalkds");
+//        examScheduleDao.save(examSchedule);
+        return Response.ok("123").build();
     }
 
     @Autowired

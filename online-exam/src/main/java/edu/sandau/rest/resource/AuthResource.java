@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -32,7 +32,7 @@ public class AuthResource {
     @Autowired
     private MessageService messageService;
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private StringRedisTemplate redisTemplate;
 
     /***
      * 用户使用 用户名、手机号、邮箱 和 密码 登入

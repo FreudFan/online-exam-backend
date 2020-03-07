@@ -6,11 +6,9 @@ import edu.sandau.service.EmailService;
 import edu.sandau.service.MessageService;
 import edu.sandau.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -19,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class MessageServiceImpl implements MessageService {
     @Autowired
     private VariableConfig variableConfig;
-    @Resource
-    private RedisTemplate<String,Object> redisTemplate;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
     @Autowired
     private EmailService emailService;
 
