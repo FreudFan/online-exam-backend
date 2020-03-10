@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Slf4j
 @Path("auth")
-@Api(value = "登录接口")
+@Api(value = "登录权限接口")
 public class AuthResource {
     @Autowired
     private SessionWrapper sessionWrapper;
