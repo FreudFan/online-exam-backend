@@ -1,4 +1,4 @@
-package edu.sandau.rest.model.exam;
+package edu.sandau.rest.model;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

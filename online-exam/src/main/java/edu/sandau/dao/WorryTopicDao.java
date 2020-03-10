@@ -1,11 +1,9 @@
 package edu.sandau.dao;
 
-
 import edu.sandau.entity.WorryTopic;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.WorryTopicData;
 import edu.sandau.security.RequestContent;
-import edu.sandau.security.SessionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,8 +15,6 @@ import java.util.*;
 public class WorryTopicDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private SessionWrapper sessionWrapper;
 
     public void saveWorryTopic(List<WorryTopic> worryTopicList){
         String sql = "insert into worry_topic" +

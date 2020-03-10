@@ -1,4 +1,4 @@
-package edu.sandau.rest.resource.common;
+package edu.sandau.rest.resource;
 
 import edu.sandau.entity.Subject;
 import edu.sandau.service.SubjectService;

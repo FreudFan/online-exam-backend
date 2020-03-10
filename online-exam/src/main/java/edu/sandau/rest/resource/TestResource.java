@@ -1,20 +1,15 @@
 package edu.sandau.rest.resource;
 
 import edu.sandau.dao.ExamRecordDao;
-import edu.sandau.dao.ExamScheduleDao;
 import edu.sandau.dao.SysEnumDao;
 import edu.sandau.entity.ExamRecord;
-import edu.sandau.entity.ExamSchedule;
 import edu.sandau.entity.LoginUser;
 import edu.sandau.rest.model.TestParam;
-import edu.sandau.rest.model.User;
 import edu.sandau.security.Auth;
 import edu.sandau.security.RequestContent;
 import edu.sandau.service.EmailService;
 import edu.sandau.entity.EmailMessage;
 import edu.sandau.security.SessionWrapper;
-import edu.sandau.service.ExamService;
-import edu.sandau.service.impl.ExamServiceImpI;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -194,8 +189,6 @@ public class TestResource {
 
     @Autowired
     private ExamRecordDao examRecordDao;
-    @Autowired
-    private ExamScheduleDao examScheduleDao;
     @GET
     @Path("record")
     public Response get() {
@@ -223,17 +216,4 @@ public class TestResource {
         ).build();
     }
 
-    @Autowired
-    private ExamService examService ;
-    @GET
-    @Path("makeStandardExam")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public void testMakeStandardExam(){
-       ExamRecord er = new ExamRecord();
-       er.setId(3);
-       er.setUserId(1);
-       er.setScheduleId(5);
-        examService.makeStandardExam(er);
-    }
 }

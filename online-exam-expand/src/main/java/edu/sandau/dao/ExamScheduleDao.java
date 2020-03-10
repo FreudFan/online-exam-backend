@@ -2,7 +2,6 @@ package edu.sandau.dao;
 
 import edu.sandau.entity.ExamSchedule;
 import edu.sandau.security.RequestContent;
-import edu.sandau.security.SessionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

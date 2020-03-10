@@ -5,7 +5,7 @@ import edu.sandau.dao.ExamRecordTopicDao;
 import edu.sandau.dao.ExamScheduleDao;
 import edu.sandau.entity.*;
 import edu.sandau.rest.model.Page;
-import edu.sandau.rest.model.exam.ScheduleInfo;
+import edu.sandau.rest.model.ScheduleInfo;
 import edu.sandau.rest.model.exam.ExamTopic;
 import edu.sandau.security.RequestContent;
 import edu.sandau.service.ExamRecordService;

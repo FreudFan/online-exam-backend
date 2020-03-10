@@ -12,6 +12,7 @@
     <modules>
         <module>online-exam</module>
         <module>online-exam-tools</module>
+        <module>online-exam-expand</module>
     </modules>
 
     <name>在线考试系统app</name>

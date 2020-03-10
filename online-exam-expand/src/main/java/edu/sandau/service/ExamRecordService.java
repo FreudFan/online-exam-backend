@@ -2,7 +2,6 @@ package edu.sandau.service;
 
 import edu.sandau.entity.ExamRecord;
 import edu.sandau.rest.model.Page;
-import edu.sandau.rest.model.exam.ScheduleInfo;
 import edu.sandau.rest.model.exam.ExamTopic;
 
 import java.util.Map;
