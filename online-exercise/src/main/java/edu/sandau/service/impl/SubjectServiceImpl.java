@@ -1,4 +1,4 @@
-package edu.sandau.service.Impl;
+package edu.sandau.service.impl;
 
 import edu.sandau.dao.SubjectDao;
 import edu.sandau.entity.Subject;

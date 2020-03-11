@@ -8,7 +8,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("test")
-@Api(value = "题库接口")
+@Api(value = "测试")
 public class TestResource {
 
     @Autowired

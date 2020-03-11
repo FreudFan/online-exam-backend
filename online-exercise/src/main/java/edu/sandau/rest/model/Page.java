@@ -9,7 +9,7 @@ import java.util.Map;
 
 @ApiModel(description = "分页查询参数")
 @Getter
-public class Page {
+public class Page<E> {
     @ApiModelProperty(value = "当前页码")
     private Integer pageNo = 1;
 
@@ -23,7 +23,7 @@ public class Page {
     private Map<String, Object> option;
 
     @ApiModelProperty(value = "查询内容")
-    private List<?> rows;
+    private List<E> rows;
 
     public void setPageNo(Integer pageNo) {
         if (pageNo < 1) {
@@ -47,7 +47,7 @@ public class Page {
         this.total = total;
     }
 
-    public void setRows(List<?> rows) {
+    public void setRows(List<E> rows) {
         this.rows = rows;
     }
 }
