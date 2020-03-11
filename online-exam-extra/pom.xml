@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>online-exam-expand</artifactId>
+    <artifactId>online-exam-extra</artifactId>
     <name>额外功能模块</name>
 
     <dependencies>
