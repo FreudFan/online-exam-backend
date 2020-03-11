@@ -9,7 +9,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: fan
     password: Fmy1054.
-    url: jdbc:mysql://106.14.120.166:3400/online_exam?useUnicode=true&characterEncoding=utf8&useSSL=true
+    url: jdbc:mysql://106.14.120.166:3400/online_exercise?useUnicode=true&characterEncoding=utf8&useSSL=true
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       #连接池初始化大小
