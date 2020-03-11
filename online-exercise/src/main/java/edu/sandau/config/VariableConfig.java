@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "online-exam")
+@ConfigurationProperties(prefix = "exercise")
 public class VariableConfig {
     /** redis-session的生存时间 */
     public Integer session_timeout;

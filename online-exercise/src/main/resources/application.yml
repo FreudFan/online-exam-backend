@@ -47,6 +47,14 @@ spring:
   jackson:
     #为null时jackson不会将其序列化
     default-property-inclusion: non_null
+  jersey:
+    application-path: /rest
+  session:
+    store-type: redis
+
+#是否开启 swagger-ui
+swagger:
+  enabled: true
 
 exercise:
   #存入redis的session生存时间 ttl 分钟
