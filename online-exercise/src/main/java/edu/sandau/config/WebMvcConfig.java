@@ -27,7 +27,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
-
     /***
      * 允许接受CORS的跨域请求
      * @param registry
