@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -23,23 +24,19 @@ public class TopicDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    /***
-     * 批量删除题目方法
-     * @param idName
-     * @param idArrays
-     */
-    public void deleteTopics(String idName, List<Integer> idArrays) {
-//        String sql = "delete from topic where id = ?";
-//        JDBCU.deleteForRecord("topic", "flag", idName, idArrays);
-    }
 
     /***
-     * 更新一条记录的flag
-     * @param id
+     * 批量禁用题目flag
+     * @param ids
      */
-    public void deleteTopics(Integer id) {
+    public void deleteTopics(Integer... ids) {
         String sql = "update topic set flag = 0 where id = ?";
-        jdbcTemplate.update(sql, id);
+        List<Object[]> params = new ArrayList<Object[]>();
+        for (Integer id : ids) {
+            Object[] o = new Object[]{id};
+            params.add(o);
+        }
+        jdbcTemplate.batchUpdate(sql,params);
     }
 
     /***

@@ -228,8 +228,8 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public void deleteTopics(String idName, List<Integer> idArrays) {
-        topicDao.deleteTopics(idName, idArrays);
+    public void deleteTopics(Integer... ids) {
+        topicDao.deleteTopics(ids);
     }
 
     @Override

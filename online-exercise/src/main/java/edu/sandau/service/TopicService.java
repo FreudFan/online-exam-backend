@@ -38,10 +38,9 @@ public interface TopicService {
 
     /***
      * 批量禁用题目
-     * @param idName
-     * @param idArrays
+     * @param ids
      */
-    void deleteTopics(String idName, List<Integer> idArrays);
+    void deleteTopics(Integer... ids);
 
     /***
      * 将上传文件的数据存入数据库

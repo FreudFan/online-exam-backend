@@ -59,7 +59,7 @@ public class SubjectDao {
 
     public Subject getSubjectById(Integer id) {
         String sql = " SELECT * FROM subject WHERE id = ? ORDER by id ASC ";
-        return jdbcTemplate.queryForObject(sql, Subject.class,new Object[]{id});
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<Subject>(Subject.class),new Object[]{id});
     }
 
     public List<Subject> getSubjectsByOrgId(Integer orgId) {

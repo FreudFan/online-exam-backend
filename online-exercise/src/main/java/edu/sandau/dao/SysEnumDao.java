@@ -77,7 +77,7 @@ public class SysEnumDao {
     public SysEnum getEnum(String catalog, String type, Integer value) {
         String sql = " SELECT * FROM sys_enum WHERE catalog = ? AND type = ? AND value = ? ";
 
-        return  jdbcTemplate.queryForObject(sql, SysEnum.class,new Object[]{catalog, type, value});
+        return  jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<SysEnum>(SysEnum.class),new Object[]{catalog, type, value});
     }
 
     @Cacheable(cacheNames = "enums", key = "#catalog+'-'+#type+'-'+#name", unless = "#result <= 0")
@@ -97,7 +97,7 @@ public class SysEnumDao {
     @Cacheable(cacheNames = "enums", key = "#id", unless = "#result != null")
     public SysEnum getEnumById(Integer id) {
         String sql = " SELECT * FROM sys_enum WHERE id = ? ";
-        return  jdbcTemplate.queryForObject(sql, SysEnum.class,new Object[]{id});
+        return  jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<SysEnum>(SysEnum.class),new Object[]{id});
     }
 
     @CacheEvict(cacheNames = "enums", allEntries = true, beforeInvocation = true)
