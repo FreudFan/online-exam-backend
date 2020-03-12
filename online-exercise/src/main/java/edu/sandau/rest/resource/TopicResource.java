@@ -117,7 +117,6 @@ public class TopicResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response topicSave(TopicData data) throws Exception {
         topicService.save(data);
-
         return Response.accepted("ok").build();
     }
 
@@ -131,11 +130,11 @@ public class TopicResource {
      * @return删除成功
      */
     @ApiOperation(value = "批量禁用题目功能")
-    @POST
+    @GET
     @Path("delete")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response topicDelete_JSON(Integer... ids) {
+    public Response topicDelete(Integer... ids) {
         topicService.deleteTopics(ids);
         return Response.ok("ok").build();
     }

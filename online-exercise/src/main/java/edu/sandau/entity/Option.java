@@ -9,8 +9,11 @@ import java.io.Serializable;
  */
 @Data
 public class Option implements Serializable {
+    //与题目关联，题目id
     private Integer topic_id;
+    //选项(A,B,C,D...)
     private String name;
+    //选项具体内容
     private String content;
 
 }

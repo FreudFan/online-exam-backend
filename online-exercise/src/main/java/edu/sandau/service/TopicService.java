@@ -12,12 +12,19 @@ import java.util.List;
 public interface TopicService {
 
     /***
-     *
+     *分页查询题目
      * @param page
      * @return
      */
     Page getTopicByPage(Page page, int flag);
 
+    /***
+     * 解析excel
+     * @param fileInputStream
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
     TopicData readTopicExcel(InputStream fileInputStream, String fileName) throws Exception;
 
     /***
@@ -27,6 +34,12 @@ public interface TopicService {
      */
     List<List<Object>> checkTopicType(List<List<Object>> data);
 
+    /***
+     *查询要下载的文件
+     * @param id
+     * @return
+     * @throws Exception
+     */
     UploadFile getFileById(Integer id) throws Exception;
 
     /***

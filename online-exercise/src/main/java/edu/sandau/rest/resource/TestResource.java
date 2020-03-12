@@ -22,4 +22,6 @@ public class TestResource {
         return httpSession.getAttribute("123").toString();
     }
 
+
+
 }

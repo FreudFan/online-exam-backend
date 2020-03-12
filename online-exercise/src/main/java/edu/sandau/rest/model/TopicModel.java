@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
-
+//返回给前端的题目Model
 @ApiModel(description = "题目")
 @Data
 public class TopicModel {

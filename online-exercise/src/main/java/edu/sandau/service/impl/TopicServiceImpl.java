@@ -9,6 +9,7 @@ import edu.sandau.entity.UploadFile;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.TopicData;
 import edu.sandau.rest.model.TopicModel;
+import edu.sandau.service.OptionService;
 import edu.sandau.service.SubjectService;
 import edu.sandau.service.SysEnumService;
 import edu.sandau.service.TopicService;
@@ -36,7 +37,7 @@ public class TopicServiceImpl implements TopicService {
     @Autowired
     private TopicDao topicDao;
     @Autowired
-    private OptionDao optionDao;
+    private OptionService optionService;
     @Autowired
     private FileUtil fileUtil;
     @Autowired
@@ -62,7 +63,7 @@ public class TopicServiceImpl implements TopicService {
         //遍历主表数据集合,查找对应的选项数据
         topics.stream().forEach((topic) -> {
             Integer id = topic.getId();
-            List<Option> optionList = optionDao.findOptionById(id);
+            List<Option> optionList = optionService.findOptionById(id);
             topic.setOptionsList(optionList);
         });
         page.setRows(this.refactorEntity(topics));
@@ -186,7 +187,7 @@ public class TopicServiceImpl implements TopicService {
             topicObject.setTopicmark(((BigDecimal) topic.get(size - 4)).doubleValue());
             topicObject.setCorrectkey(topic.get(size - 5).toString());
             int keyId = topicDao.save(topicObject);
-            optionDao.insertOption(keyId, optionArgs);
+            optionService.insertOption(keyId, optionArgs);
         }
         return 0;
     }
@@ -199,14 +200,14 @@ public class TopicServiceImpl implements TopicService {
     public void insertTopics(List<Topic> topicList) {
         topicList.stream().forEach((topic) -> {
             int keyId = topicDao.save(topic);
-            optionDao.insertOption(keyId, topic.getOptionsList());
+            optionService.insertOption(keyId, topic.getOptionsList());
         });
     }
 
     @Override
     public void updateTopics(Topic topic) {
         int keyId = topicDao.save(topic);
-        optionDao.insertOption(keyId, topic.getOptionsList());
+        optionService.insertOption(keyId, topic.getOptionsList());
         topicDao.deleteTopics(topic.getId());
     }
 
@@ -259,7 +260,7 @@ public class TopicServiceImpl implements TopicService {
         List<Topic> topics = topicDao.listTopicByids(ids,role);
         topics.stream().forEach((topic) -> {
             Integer id = topic.getId();
-            List<Option> optionList = optionDao.findOptionById(id);
+            List<Option> optionList = optionService.findOptionById(id);
             topic.setOptionsList(optionList);
         });
         return topics;
@@ -269,7 +270,7 @@ public class TopicServiceImpl implements TopicService {
     public List<Topic> getTopicsDetail(List<Topic> topics) {
         topics.forEach((topic) -> {
             Integer id = topic.getId();
-            List<Option> optionList = optionDao.findOptionById(id);
+            List<Option> optionList = optionService.findOptionById(id);
             topic.setOptionsList(optionList);
         });
         return topics;
