@@ -4,8 +4,6 @@ import edu.sandau.entity.Exam;
 import edu.sandau.entity.ExamDetail;
 import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.Page;
-import edu.sandau.security.RequestContent;
-import edu.sandau.security.SessionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,8 +21,6 @@ import java.util.Objects;
 public class ExamDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private SessionWrapper sessionWrapper;
 
     public Exam save(Exam exam) {
         String sql = " INSERT INTO exam " +

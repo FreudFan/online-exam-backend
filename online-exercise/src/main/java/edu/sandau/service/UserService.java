@@ -80,4 +80,5 @@ public interface UserService {
      */
     User updateUser(User user) throws Exception;
 
+    User getUserById(Integer userId) throws Exception;
 }

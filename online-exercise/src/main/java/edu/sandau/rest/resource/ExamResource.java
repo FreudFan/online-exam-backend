@@ -21,7 +21,6 @@ import java.util.List;
 @Auth
 public class ExamResource {
 
-
     @Autowired
     private ExamService examService;
     /***

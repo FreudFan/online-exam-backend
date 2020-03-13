@@ -22,6 +22,8 @@ public class User implements Serializable {
     private String telephone;
     @ApiModelProperty(value = "用户角色枚举{0:普通用户,1:试题管理员,2:系统管理员}, 前端需赋值, 未赋值则默认为0")
     private Integer role;
+    @JsonIgnore
+    private String wxId;
 
     @JsonIgnore
     private Date createtime;

@@ -138,4 +138,8 @@ public class UserServiceImpl implements UserService {
         return this.refactorEntity(user);
     }
 
+    @Override
+    public User getUserById(Integer userId) throws Exception {
+        return userDao.getUserById(userId);
+    }
 }

@@ -1,9 +1,7 @@
 package edu.sandau.rest.resource;
 
-
 import edu.sandau.rest.model.Page;
 import edu.sandau.security.Auth;
-import edu.sandau.security.SessionWrapper;
 import edu.sandau.service.WorryTopicService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,8 +22,6 @@ import javax.ws.rs.core.Response;
 public class WorryTopicResource {
     @Autowired
     private WorryTopicService worryTopicService;
-    @Autowired
-    private SessionWrapper sessionWrapper;
     /***
      * 传参格式
      * {
