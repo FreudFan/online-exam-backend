@@ -3,6 +3,7 @@ package edu.sandau.service;
 import edu.sandau.entity.Exam;
 import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.Page;
+import edu.sandau.rest.model.exam.ExamModel;
 
 import java.util.List;
 
@@ -39,4 +40,14 @@ public interface ExamService {
      * @param id
      */
     void deleteExam(Integer id);
+
+
+
+    /***
+     * 自动生成试卷
+     * @param examModel
+     * @return
+     */
+    Object autoGenerate(ExamModel examModel);
+
 }

@@ -3,6 +3,7 @@ package edu.sandau.rest.resource;
 import edu.sandau.entity.Exam;
 import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.Page;
+import edu.sandau.rest.model.exam.ExamModel;
 import edu.sandau.security.Auth;
 import edu.sandau.service.ExamService;
 import io.swagger.annotations.Api;
@@ -38,10 +39,11 @@ public class ExamResource {
      *        }
      * 	]
      * }
+     * 随机生成试卷将试卷内容放入topics内传参即可
      * @param exam
      * @return
      */
-    @ApiOperation(value = "保存用户自定义的试卷")
+    @ApiOperation(value = "保存用户自定义/随机生成的试卷")
     @POST
     @Path("save")
     @Consumes({MediaType.APPLICATION_JSON})
@@ -78,7 +80,11 @@ public class ExamResource {
     }
 
 
-
+    /***
+     * 用于学生做题时,只返回部分信息
+     * @param id(试卷id)
+     * @return
+     */
     @ApiOperation(value = "查询试卷详细题目，只返回题目、分值和选项")
     @GET
     @Path("showDetail")
@@ -89,6 +95,11 @@ public class ExamResource {
         return Response.ok(topicsList).build();
     }
 
+    /***
+     * 用于查看做题记录，或者管理员查看试卷时，可以看到试卷中题目的所有信息
+     * @param id(试卷id)
+     * @return
+     */
     @ApiOperation(value = "查询试卷详细题目，返回题目所有内容")
     @GET
     @Path("showDetailAdmin")
@@ -100,7 +111,11 @@ public class ExamResource {
     }
 
 
-
+    /***
+     * 通过试卷id禁用一套试卷
+     * @param id
+     * @return
+     */
     @ApiOperation(value = "禁用试卷")
     @GET
     @Path("delete")
@@ -109,5 +124,42 @@ public class ExamResource {
     public Response deleteExam(Integer id){
         examService.deleteExam(id);
         return Response.ok("ok").build();
+    }
+
+
+    /***
+     * 传参格式
+     * {
+     * 	"subjectId":1,
+     * 	"clazz":[
+     *                {
+     * 			"type":1,
+     * 			"num":9,
+     * 			"difficult":2,
+     * 			"score":90
+     *        },
+     *        {
+     * 			"type":0,
+     * 			"num":1,
+     * 			"difficult":2,
+     * 			"score":10
+     *        }
+     *
+     * 		]
+     * }
+     * @param examModel
+     * @return
+     */
+    @ApiOperation(value = "自动生成试卷")
+    @POST
+    @Path("autoGenerate")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response autoGenerate(ExamModel examModel){
+        Object topics = examService.autoGenerate(examModel);
+        if(topics instanceof String) {
+            return  Response.ok(topics).status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok(topics).build();
     }
 }

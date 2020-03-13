@@ -98,7 +98,7 @@ public class TopicDao {
      * @param role
      * @return
      */
-    public List<Topic> listTopicByids(List<Integer> ids, Integer role){
+    public List<Topic> listTopicByIds(List<Integer> ids, Integer role){
         //0为学生，1为管理员，管理员返回全部内容
         StringBuilder sb;
         if(role == 0) {

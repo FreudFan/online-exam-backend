@@ -105,7 +105,7 @@ public class TopicResource {
     }
 
     /***
-     *
+     *前端传数据时需带上subject_id以及题目的type
      * @param data
      * @return 插入成功
      * @throws Exception

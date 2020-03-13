@@ -9,7 +9,7 @@ import java.util.List;
 @ApiModel(description = "用于接收Execl文件数据格式的题目")
 @Data
 public class TopicData {
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(value = "文件id")
     private Integer id;
     @ApiModelProperty(value = "学科代码")
     private Integer subject_id;

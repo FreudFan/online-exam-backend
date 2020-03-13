@@ -1,6 +1,5 @@
 package edu.sandau.service.impl;
 
-import edu.sandau.dao.OptionDao;
 import edu.sandau.dao.TopicDao;
 import edu.sandau.dao.UploadFileDao;
 import edu.sandau.entity.Option;
@@ -184,7 +183,7 @@ public class TopicServiceImpl implements TopicService {
             Integer difficult = enumService.getEnumValue("TOPIC", "DIFFICULT", topic.get(size - 3).toString());
             topicObject.setDifficult(difficult);
             topicObject.setAnalysis(topic.get(size - 2).toString());
-            topicObject.setTopicmark(((BigDecimal) topic.get(size - 4)).doubleValue());
+            topicObject.setTopicmark( (Double) topic.get(size - 4));
             topicObject.setCorrectkey(topic.get(size - 5).toString());
             int keyId = topicDao.save(topicObject);
             optionService.insertOption(keyId, optionArgs);
@@ -257,7 +256,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<Topic> getTopicById(List<Integer> ids, Integer role) {
-        List<Topic> topics = topicDao.listTopicByids(ids,role);
+        List<Topic> topics = topicDao.listTopicByIds(ids,role);
         topics.stream().forEach((topic) -> {
             Integer id = topic.getId();
             List<Option> optionList = optionService.findOptionById(id);
