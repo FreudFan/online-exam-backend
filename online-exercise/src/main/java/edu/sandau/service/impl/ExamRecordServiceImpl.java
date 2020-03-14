@@ -2,13 +2,12 @@ package edu.sandau.service.impl;
 
 import edu.sandau.dao.ExamRecordDao;
 import edu.sandau.dao.ExamRecordTopicDao;
-import edu.sandau.entity.ExamRecord;
-import edu.sandau.entity.ExamRecordTopic;
-import edu.sandau.entity.Topic;
+import edu.sandau.entity.*;
+import edu.sandau.rest.model.exam.ExamDetailAndWorryTopic;
+import edu.sandau.rest.model.exam.ExamRecordAndExamDeatil;
 import edu.sandau.rest.model.exam.ExamTopic;
 import edu.sandau.security.RequestContent;
-import edu.sandau.service.ExamRecordService;
-import edu.sandau.service.ExamService;
+import edu.sandau.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +20,32 @@ public class ExamRecordServiceImpl implements ExamRecordService {
 
     @Autowired
     private ExamService examService;
-
     @Autowired
     private ExamRecordDao examRecordDao;
-
     @Autowired
     private ExamRecordTopicDao examRecordTopicDao;
+    @Autowired
+    private OptionService optionService;
+    @Autowired
+    private SubjectService subjectService;
+    @Autowired
+    private WorryTopicService worryTopicService;
+
+    @Override
+    public List<ExamDetailAndWorryTopic> findDetailByRecordId(Integer recordId) {
+        List<ExamDetailAndWorryTopic> examDetails = examRecordTopicDao.findDetailByRecordId(recordId);
+        examDetails.stream().forEach((examDetailAndWorryTopic)->{
+            Integer topic_id = examDetailAndWorryTopic.getTopic_id();
+            List<Option> options = optionService.findOptionById(topic_id);
+            examDetailAndWorryTopic.setOptionList(options);
+            WorryTopic worryTopic = worryTopicService.findWorryTopicByRecordId(examDetailAndWorryTopic.getRecord_id(), examDetailAndWorryTopic.getTopic_id());
+            if(worryTopic != null){
+                examDetailAndWorryTopic.setWorryanswer(worryTopic.getWorryanswer());
+                examDetailAndWorryTopic.setWorrycount(worryTopic.getWorrycount());
+            }
+        });
+        return examDetails;
+    }
 
     @Override
     public Map<String, Object> startExam(Integer examId) throws Exception {
@@ -69,7 +88,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     }
 
     @Override
-    public Boolean endExam(ExamTopic examTopic) throws Exception {
+    public Double endExam(ExamTopic examTopic) throws Exception {
         //记录提交时间
         Date endTime = Calendar.getInstance().getTime();
         ExamRecord record = examRecordDao.getRecordById(examTopic.getRecordId());
@@ -79,7 +98,8 @@ public class ExamRecordServiceImpl implements ExamRecordService {
         examRecordDao.updateEndTimeById(record);
         //重置所有答案
         this.refreshRecord(examTopic);
-        return true;
+        Double score = examService.makeStandardExam(record);
+        return score;
     }
 
     @Override
@@ -88,4 +108,31 @@ public class ExamRecordServiceImpl implements ExamRecordService {
         examRecordTopicDao.deleteByRecordId(examTopic.getRecordId());
         examRecordTopicDao.saveBatch(examTopic);
     }
+
+    @Override
+    public void updateScoreById(Integer id, Double score) {
+        examRecordDao.updateScoreById(id,score);
+    }
+
+    @Override
+    public List<ExamRecordAndExamDeatil> findAll(Integer subjectId,Integer userId) {
+        return examRecordDao.findAll(subjectId,userId);
+    }
+
+    @Override
+    public List<Subject> getSubjectByUserId(Integer userId) {
+        List<Subject> subjects = examRecordDao.getSubjectIdByUserId(userId);
+        List<Subject> subjectList = new ArrayList<>();
+        subjects.stream().forEach((subject) -> {
+            try {
+                Subject s = subjectService.getSubjectById(subject.getId());
+                subjectList.add(s);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        return subjectList;
+    }
+
+
 }

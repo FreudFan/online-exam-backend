@@ -53,6 +53,10 @@ public interface ExamService {
 
 
 
-
+    /***
+     * 判卷
+     * @param examRecord
+     */
+    Double makeStandardExam(ExamRecord examRecord);
 
 }

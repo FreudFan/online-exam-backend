@@ -31,17 +31,27 @@ public class WorryTopicServiceImpl implements WorryTopicService {
 
     @Override
     public void saveWorryTopic(List<WorryTopic> worryTopicList) {
-        //考虑考试答案错误情况，插入错题记录之前先进行一次判断
-        findWorryTopicByRecordId(worryTopicList.get(0).getRecord_id(),worryTopicList.get(0).getUser_id());
-        worryTopicDao.saveWorryTopic(worryTopicList);
+        //存入错题表之前先看之前有没有错过这题，错过就修改错误次数,没有存入错题表
+        worryTopicList.stream().forEach((worryTopic)->{
+            WorryTopic wt = findWorryTopicByUserIdAndTopicId(worryTopic.getUser_id(), worryTopic.getTopic_id());
+            if(wt == null){
+                worryTopicDao.saveWorryTopic(worryTopic);
+            }else{
+                worryTopicDao.updateWorryCount(wt);
+            }
+        });
+
     }
 
     @Override
-    public void findWorryTopicByRecordId(Integer RecordId, Integer userId) {
-        List<WorryTopic> worryTopics = worryTopicDao.findById(RecordId, userId);
-        if(worryTopics != null && worryTopics.size() > 0){
-            deleteWorryTopicByRecordId(RecordId,userId);
+    public WorryTopic findWorryTopicByUserIdAndTopicId(Integer userId, Integer topicId) {
+        List<WorryTopic> worryTopic = worryTopicDao.findById(userId, topicId);
+        if(worryTopic != null && worryTopic.size() > 0){
+            return worryTopic.get(0);
+        }else{
+            return null;
         }
+
     }
 
     @Override
@@ -67,5 +77,10 @@ public class WorryTopicServiceImpl implements WorryTopicService {
         });
         page.setRows(worryTopicList);
         return page;
+    }
+
+    @Override
+    public WorryTopic findWorryTopicByRecordId(Integer record_id,Integer topic_id) {
+        return worryTopicDao.findWorryTopicByRecordId(record_id,topic_id);
     }
 }

@@ -15,10 +15,11 @@ public interface WorryTopicService {
 
     /***
      * 根据主键id查找错题表,以判断之前是否已存在相同的错题记录
-     * @param id
+     * @param userId
+     * @param topicId
      * @return
      */
-    void findWorryTopicByRecordId(Integer id, Integer userId);
+    WorryTopic findWorryTopicByUserIdAndTopicId(Integer userId, Integer topicId);
 
     /***
      * 删除错题记录
@@ -32,4 +33,6 @@ public interface WorryTopicService {
      * @return
      */
     Page getWorryTopicByPage(Page page);
+
+    WorryTopic findWorryTopicByRecordId(Integer record_id,Integer topic_id);
 }

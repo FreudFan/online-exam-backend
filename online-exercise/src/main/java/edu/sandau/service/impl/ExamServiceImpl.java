@@ -1,26 +1,20 @@
 package edu.sandau.service.impl;
 
 import edu.sandau.dao.ExamDao;
+import edu.sandau.dao.ExamRecordTopicDao;
 import edu.sandau.dao.TopicDao;
-import edu.sandau.entity.Exam;
-import edu.sandau.entity.ExamDetail;
-import edu.sandau.entity.Topic;
+import edu.sandau.entity.*;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.exam.ExamClazz;
 import edu.sandau.rest.model.exam.ExamModel;
-import edu.sandau.service.ExamService;
-import edu.sandau.service.SysEnumService;
-import edu.sandau.service.TopicService;
+import edu.sandau.service.*;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -34,6 +28,12 @@ public class ExamServiceImpl implements ExamService  {
     private TopicService topicService;
     @Autowired
     private SysEnumService sysEnumService;
+    @Autowired
+    private ExamRecordTopicDao examRecordTopicDao;
+    @Autowired
+    private ExamRecordService examRecordService;
+    @Autowired
+    private WorryTopicService worryTopicService;
     @Override
     public void saveExam(Exam exam) {
         exam = examDao.save(exam);
@@ -95,6 +95,8 @@ public class ExamServiceImpl implements ExamService  {
         return topicList;
     }
 
+
+
     /***
      * 随意抽取题目，通过随机生成下标，从list里随机拿数据
      * @param topicList
@@ -118,4 +120,44 @@ public class ExamServiceImpl implements ExamService  {
         }
         return topics;
     }
+
+
+        @Override
+        public Double makeStandardExam(ExamRecord examRecord) {
+            //拿到试卷Id号
+            Integer examId = examRecord.getExamId();
+            //获取该试卷的所有题目
+            List<Topic> examDetail = getExamDetail(examId, 1);
+            List<WorryTopic> worryTopics = new ArrayList<>();
+            double total = 0;
+            //获取用户的做题信息
+            List<ExamRecordTopic> examRecordTopic = examRecordTopicDao.getTopicsByRecordId(examRecord.getId());
+            Map<Integer,Topic> correctKey = new HashMap<Integer,Topic>(examDetail.size());
+            examDetail.stream().forEach((topic)->{
+                correctKey.put(topic.getId(),topic);
+            });
+            for (ExamRecordTopic userRecord : examRecordTopic) {
+                Integer topicId = userRecord.getTopicId();
+                String userAnswer = userRecord.getAnswer();
+                String correctAnswer = correctKey.get(topicId).getCorrectkey();
+                Double topicMark = correctKey.get(topicId).getTopicmark();
+                if (userAnswer.equalsIgnoreCase(correctAnswer)) {
+                    total += topicMark;
+                }else{
+                    WorryTopic wt = new WorryTopic();
+                    wt.setUser_id(examRecord.getUserId());
+                    wt.setExam_id(examId);
+                    wt.setRecord_id(examRecord.getId());
+                    wt.setTopic_id(topicId);
+                    wt.setCorrectanswer(correctAnswer);
+                    wt.setWorryanswer(userAnswer);
+                    worryTopics.add(wt);
+                }
+            }
+            examRecord.setScore(total);
+            examRecordService.updateScoreById(examRecord.getId(),total);
+            worryTopicService.saveWorryTopic(worryTopics);
+            return examRecord.getScore();
+        }
+
 }

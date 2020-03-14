@@ -16,7 +16,7 @@ public class WorryTopicDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void saveWorryTopic(List<WorryTopic> worryTopicList){
+    public void saveWorryTopicBatch(List<WorryTopic> worryTopicList){
         String sql = "insert into worry_topic" +
                 "(user_id,record_id,exam_id,topic_id,worryanswer,correctanswer)" +
                 "VALUES(?,?,?,?,?,?)";
@@ -30,14 +30,24 @@ public class WorryTopicDao {
     }
 
 
+    public void saveWorryTopic(WorryTopic worryTopic){
+        String sql = "insert into worry_topic" +
+                "(user_id,record_id,exam_id,topic_id,worryanswer,correctanswer,worrycount)" +
+                "VALUES(?,?,?,?,?,?,?)";
+
+        jdbcTemplate.update(sql,worryTopic.getUser_id(),worryTopic.getRecord_id(),worryTopic.getExam_id(),
+                worryTopic.getTopic_id(),worryTopic.getWorryanswer(),worryTopic.getCorrectanswer(),1);
+    }
+
+
     public void deleteById(Integer recordId, Integer userId) {
         String sql = "delete from worry_topic where record_id = ? and user_id = ?";
         jdbcTemplate.update(sql,recordId,userId);
     }
 
-    public List<WorryTopic> findById(Integer recordId, Integer userId) {
-        String sql = "select * from worry_topic where record_id = ? and user_id = ?";
-        List<WorryTopic> worryTopicList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(WorryTopic.class), recordId, userId);
+    public List<WorryTopic> findById(Integer userId, Integer topicId) {
+        String sql = "select * from worry_topic where user_id = ? and topic_id = ?";
+        List<WorryTopic> worryTopicList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(WorryTopic.class), userId, topicId);
         return worryTopicList;
     }
 
@@ -90,5 +100,20 @@ public class WorryTopicDao {
             obj.add(RequestContent.getCurrentUser().getId());
         }
         return sql.toString();
+    }
+
+    public void updateWorryCount(WorryTopic wt) {
+        String sql = "update worry_topic set worrycount = ? where user_id = ? and topic_id = ?";
+        jdbcTemplate.update(sql,wt.getWorrycount() + 1,wt.getUser_id(),wt.getTopic_id());
+
+    }
+
+    public WorryTopic findWorryTopicByRecordId(Integer record_id, Integer topic_id) {
+        String sql = "select worryanswer,worrycount from worry_topic where record_id = ? and topic_id = ? ";
+        List<WorryTopic> worryTopics = jdbcTemplate.query(sql, new BeanPropertyRowMapper<WorryTopic>(WorryTopic.class), record_id, topic_id);
+        if(worryTopics == null || worryTopics.size() == 0){
+            return null;
+        }
+        return worryTopics.get(0);
     }
 }

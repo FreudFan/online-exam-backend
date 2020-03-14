@@ -1,6 +1,7 @@
 package edu.sandau.dao;
 
 import edu.sandau.entity.ExamRecordTopic;
+import edu.sandau.rest.model.exam.ExamDetailAndWorryTopic;
 import edu.sandau.rest.model.exam.ExamTopic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -47,11 +48,11 @@ public class ExamRecordTopicDao {
         List<Object[]> params = new ArrayList<>();
         Integer recordId = examTopic.getRecordId();
         List<ExamTopic> examTopics = examTopic.getTopics();
-        for (ExamTopic topic: examTopics) {
+        for (ExamTopic topic : examTopics) {
             params.add(new Object[]{recordId, topic.getTopicId(), topic.getAnswer()});
         }
-        int[] num = jdbcTemplate.batchUpdate(sql,params);
-        if(num.length != examTopics.size()) {
+        int[] num = jdbcTemplate.batchUpdate(sql, params);
+        if (num.length != examTopics.size()) {
             throw new SQLException("刷新题目失败");
         }
     }
@@ -93,8 +94,8 @@ public class ExamRecordTopicDao {
     public ExamRecordTopic getRecordTopicByElements(Integer recordId, Integer topicId) {
         String sql = " SELECT * FROM exam_record_topic WHERE record_id = ? AND topic_id = ? ";
         List<ExamRecordTopic> recordTopics = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), new Object[]{recordId, topicId});
-        if(recordTopics.size() > 0) {
-           return recordTopics.get(0);
+        if (recordTopics.size() > 0) {
+            return recordTopics.get(0);
         } else {
             return null;
         }
@@ -105,14 +106,19 @@ public class ExamRecordTopicDao {
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), new Object[]{id});
     }
 
-    public List<ExamRecordTopic> getTopicsByRecordId(Integer id){
+    public List<ExamRecordTopic> getTopicsByRecordId(Integer id) {
         String sql = " SELECT * FROM exam_record_topic WHERE record_id = ? ORDER by id ASC ";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), id);
     }
 
-    public List<ExamRecordTopic> getRecordAnswersByRecordId(Integer id){
+    public List<ExamRecordTopic> getRecordAnswersByRecordId(Integer id) {
         String sql = " SELECT topic_id topicId, answer FROM exam_record_topic WHERE record_id = ? ORDER by id ASC ";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamRecordTopic.class), id);
     }
 
+    public List<ExamDetailAndWorryTopic> findDetailByRecordId(Integer recordId) {
+        String sql = "SELECT a.record_id,a.topic_id,description,correctkey,answer,analysis FROM exam_record_topic AS a " +
+                "INNER JOIN topic AS b ON a.topic_id = b.id AND a.record_id = ? ";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<ExamDetailAndWorryTopic>(ExamDetailAndWorryTopic.class), recordId);
+    }
 }
