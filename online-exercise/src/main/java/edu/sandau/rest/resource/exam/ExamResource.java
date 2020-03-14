@@ -1,4 +1,4 @@
-package edu.sandau.rest.resource;
+package edu.sandau.rest.resource.exam;
 
 import edu.sandau.entity.Exam;
 import edu.sandau.entity.Topic;

@@ -1,6 +1,7 @@
 package edu.sandau.service;
 
 import edu.sandau.entity.Exam;
+import edu.sandau.entity.ExamRecord;
 import edu.sandau.entity.Topic;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.exam.ExamModel;
@@ -27,8 +28,8 @@ public interface ExamService {
 
     /***
      * 得到试卷的详细题目
-     * @param id
-     * @param role
+     * @param id(试卷id)
+     * @param role(用于标识,0即代表只返回题目,选项,1代表返回题目所有信息)
      * @return
      */
     List<Topic> getExamDetail(Integer id, Integer role);
@@ -49,5 +50,9 @@ public interface ExamService {
      * @return
      */
     Object autoGenerate(ExamModel examModel);
+
+
+
+
 
 }
