@@ -22,30 +22,31 @@ public class UserDao {
 
     /***
      * 插入返回自增主键
-     * @param loginUser
+     * @param user
      * @return
      */
-    public User save(User loginUser) {
+    public User save(User user) {
         String sql = " INSERT INTO user " +
-                "( username, password, realname, gender, email, telephone, role ) VALUES " +
-                "( ?, ?, ?, ?, ?, ?, ? )";
+                "( username, password, realname, gender, email, telephone, role, wxId ) VALUES " +
+                "( ?, ?, ?, ?, ?, ?, ?, ? )";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, loginUser.getUsername());
-            ps.setString(2, loginUser.getPassword());
-            ps.setString(3, loginUser.getRealname());
-            ps.setInt(4, loginUser.getGender());
-            ps.setString(5, loginUser.getEmail());
-            ps.setString(6, loginUser.getTelephone());
-            ps.setInt(7, loginUser.getRole());
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getRealname());
+            ps.setInt(4, user.getGender());
+            ps.setString(5, user.getEmail());
+            ps.setString(6, user.getTelephone());
+            ps.setInt(7, user.getRole());
+            ps.setString(8, user.getWxId());
             return ps;
         }, keyHolder);
 
         int keyId = Objects.requireNonNull(keyHolder.getKey()).intValue();
-        loginUser.setId(keyId);
-        return loginUser;
+        user.setId(keyId);
+        return user;
     }
 
     public List<User> getUserByRealname(String realname ) {
@@ -55,6 +56,16 @@ public class UserDao {
             return null;
         } else {
             return users;
+        }
+    }
+
+    public User getUserByWxId(String wxId ) {
+        String sql = " SELECT * FROM user WHERE wxId = ? ";
+        List<User> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), wxId);
+        if (users.size() == 0) {
+            return null;
+        } else {
+            return users.get(0);
         }
     }
 
@@ -107,9 +118,9 @@ public class UserDao {
     public Integer update(User user) throws Exception {
         String sql = " UPDATE user " +
                 " SET username = ?, realname = ?, gender = ?, email = ?, telephone = ?, " +
-                " role = ? " +
+                " role = ?, wxId = ? " +
                 " WHERE id = ? ";
-        Object[] param = new Object[7];
+        Object[] param = new Object[8];
         param[0] = user.getUsername();
         param[1] = user.getRealname();
         param[2] = user.getGender();
@@ -117,6 +128,7 @@ public class UserDao {
         param[4] = user.getTelephone();
         param[5] = user.getRole();
         param[6] = user.getId();
+        param[7] = user.getWxId();
         return jdbcTemplate.update(sql, param);
     }
 

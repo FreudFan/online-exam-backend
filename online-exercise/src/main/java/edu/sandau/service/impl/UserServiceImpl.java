@@ -5,6 +5,7 @@ import edu.sandau.entity.User;
 import edu.sandau.enums.LoginValueEnum;
 import edu.sandau.enums.RoleTypeEnum;
 import edu.sandau.rest.model.Page;
+import edu.sandau.security.SessionUtils;
 import edu.sandau.service.SysEnumService;
 import edu.sandau.service.UserService;
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,8 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
     @Autowired
     private SysEnumService enumService;
+    @Autowired
+    private HttpSession httpSession;
 
     @Override
     public User refactorEntity(User user) {
@@ -41,6 +45,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(User user) throws Exception {
+        String openId = (String) httpSession.getAttribute(SessionUtils.USER_wxID_PREFIX);
+        user.setWxId(openId);
         if ( user.getRole() == null ) {
             //默认为注册用户
             user.setRole(RoleTypeEnum.NORMAL_USER.getValue());
@@ -58,7 +64,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User check(User user) throws Exception {
         List<User> users = this.checkList(user);
-        if (!users.isEmpty()) {
+        if (users != null) {
             return users.get(0);
         }
         return null;
@@ -141,5 +147,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Integer userId) throws Exception {
         return userDao.getUserById(userId);
+    }
+
+    @Override
+    public User getUserByWxId(String wxId) throws Exception {
+        return userDao.getUserByWxId(wxId);
     }
 }

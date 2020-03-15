@@ -2,7 +2,7 @@ package edu.sandau.rest.resource.auth;
 
 import edu.sandau.entity.User;
 import edu.sandau.enums.LoginValueEnum;
-import edu.sandau.security.UserSessionUtils;
+import edu.sandau.security.SessionUtils;
 import edu.sandau.service.UserService;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class AuthResource {
     @Autowired
     private UserService userService;
     @Autowired
-    private UserSessionUtils userSessionUtils;
+    private SessionUtils sessionUtils;
 
     /***
      * 用户使用 用户名、手机号、邮箱 和 密码 登入
@@ -35,7 +35,7 @@ public class AuthResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response login(User user) throws Exception {
-        String name = user.getUsername();
+        String name = user.getName();
         String password = user.getPassword();
         if (StringUtils.isEmpty(name) || StringUtils.isEmpty(password)) {
             return Response.accepted().status(Response.Status.BAD_REQUEST).build();
@@ -55,7 +55,7 @@ public class AuthResource {
             return Response.accepted().status(Response.Status.BAD_REQUEST).build();
         }
 
-        userSessionUtils.addUserToSession(user);
+        sessionUtils.addUserToSession(user);
         return Response.ok(user).build();
     }
 
@@ -81,7 +81,7 @@ public class AuthResource {
         if ( user == null ) {
             return Response.accepted("same value").status(Response.Status.BAD_REQUEST).build();
         }
-        userSessionUtils.addUserToSession(user);
+        sessionUtils.addUserToSession(user);
         return Response.accepted(user).build();
     }
 
