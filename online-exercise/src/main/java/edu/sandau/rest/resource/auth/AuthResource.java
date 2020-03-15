@@ -105,4 +105,12 @@ public class AuthResource {
         return Response.ok().build();
     }
 
+    @GET
+    @Path("logout")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response logout() throws Exception {
+        sessionUtils.clean();
+        return Response.ok().build();
+    }
 }

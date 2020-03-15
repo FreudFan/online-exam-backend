@@ -23,4 +23,9 @@ public class SessionUtils {
         log.info("用户 {} 已登录 user={}", user.getUsername(), JacksonUtil.toJSON(user));
     }
 
+    public void clean() {
+        httpSession.invalidate();
+        RequestContent.remove();
+    }
+
 }
