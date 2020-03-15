@@ -206,7 +206,6 @@ public class TopicResource {
         return Response.ok("ok").build();
     }
 
-
     @ApiOperation(value = "查询已禁用的题目")
     @GET
     @Path("showDelete")

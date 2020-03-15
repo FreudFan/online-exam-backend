@@ -1,6 +1,5 @@
 package edu.sandau.rest.resource.exam;
 
-import edu.sandau.entity.ExamRecord;
 import edu.sandau.entity.Subject;
 import edu.sandau.rest.model.exam.ExamDetailAndWorryTopic;
 import edu.sandau.rest.model.exam.ExamRecordAndExamDeatil;
@@ -21,7 +20,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
-
 
 @Slf4j
 @Path("exam/record")
@@ -49,7 +47,6 @@ public class ExamRecordResource {
         return Response.ok(params).build();
     }
 
-
     /***
      * 传参格式
      * {
@@ -62,7 +59,6 @@ public class ExamRecordResource {
      * @return
      * @throws Exception
      */
-
     @ApiOperation(value = "保存用户做题答案(做一道存一道)")
     @POST
     @Path("save")
@@ -71,7 +67,6 @@ public class ExamRecordResource {
     public Boolean saveTopic(ExamTopic examTopic) throws Exception {
         return examRecordService.saveOrUpdateTopic(examTopic);
     }
-
 
     /***
      * 传参格式
@@ -134,7 +129,6 @@ public class ExamRecordResource {
         return Response.ok(score).build();
     }
 
-
     @ApiOperation(value = "查看用户的所有做题记录")
     @POST
     @Path("show")
@@ -161,7 +155,6 @@ public class ExamRecordResource {
         List<ExamDetailAndWorryTopic> examDetailAndWorryTopic = examRecordService.findDetailByRecordId(recordId);
         return Response.ok(examDetailAndWorryTopic).build();
     }
-
 
     @ApiOperation(value = "查询用户做过哪些课程的试卷")
     @POST
