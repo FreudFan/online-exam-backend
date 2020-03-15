@@ -24,7 +24,7 @@ public class RequestFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
         boolean access = true;
         try {
-            int userId = NumberUtils.toInt(httpSession.getAttribute("userId").toString());
+            int userId = NumberUtils.toInt(httpSession.getAttribute(SessionUtils.USER_ID_PREFIX).toString());
             User user = userService.getUserById(userId);
             RequestContent.add(user);
             access = false;

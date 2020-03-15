@@ -1,5 +1,7 @@
 package edu.sandau.config;
 
+import edu.sandau.security.RequestFilter;
+import edu.sandau.security.ResponseFilter;
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.AcceptHeaderApiListingResource;
 import io.swagger.jaxrs.listing.ApiListingResource;
@@ -20,6 +22,9 @@ public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
         this.packages("edu.sandau.rest");
         this.register(MultiPartFeature.class);
+
+        this.register(RequestFilter.class);
+        this.register(ResponseFilter.class);
     }
 
     @PostConstruct

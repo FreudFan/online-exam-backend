@@ -18,7 +18,8 @@ public class SessionUtils {
     final public static String USER_wxID_PREFIX = "user_wxId";
 
     public void addUserToSession(User user) {
-        httpSession.setAttribute(USER_ID_PREFIX, user.getWxId());
+        httpSession.setAttribute(USER_ID_PREFIX, user.getId());
+        httpSession.setAttribute(USER_wxID_PREFIX, user.getWxId());
         RequestContent.add(user);
         log.info("用户 {} 已登录 user={}", user.getUsername(), JacksonUtil.toJSON(user));
     }
