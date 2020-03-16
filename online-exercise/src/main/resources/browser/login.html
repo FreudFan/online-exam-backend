@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>login</title>
-    <script src="jquery-3.4.1.min.js"></script>
-    <script src="vue.min.js"></script>
-    <link href="bootstrap.min.css" rel="stylesheet">
-    <script src="bootstrap.min.js"></script>
+    <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/webjars/vue/2.6.11/vue.min.js"></script>
+    <link href="/webjars/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
         body {
-            background: url('background.jpg') no-repeat;
+            background: url('./image/background.jpg') no-repeat;
             background-size:100% 100%;
             background-attachment:fixed;
         }
@@ -38,7 +38,7 @@
 <body>
 <div class="container" id="main">
     <div class="form row">
-        <div class="form-horizontal col-md-offset-3" id="login_form">
+        <div class="form-horizontal col-md-offset-3" id="login_form" style="margin: 0 auto">
             <h3 class="form-title">题库后台管理系统</h3>
             <div class="col-md-9">
                 <div class="form-group">
@@ -54,7 +54,7 @@
                         <input type="checkbox" name="remember" value="1"/>记住我
                     </label>
                 </div>
-                <div class="form-group col-md-offset-9">
+                <div class="form-group col-md-offset-9" style="text-align: center">
                     <button type="submit" class="btn btn-success pull-right"  @click="login">登录</button>
                 </div>
             </div>
