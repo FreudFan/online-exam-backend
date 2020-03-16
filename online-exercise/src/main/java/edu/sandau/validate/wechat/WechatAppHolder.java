@@ -36,7 +36,7 @@ public class WechatAppHolder {
         param.put("code", code);
         JsCode2Session jscode2session = wxRestTemplate.getForObject(URL, JsCode2Session.class, param);
         if (jscode2session != null && jscode2session.getErrcode() == 0) {
-            log.info("微信用户 openId = {} 已上线", jscode2session.getOpenid());
+            log.info("微信用户 openId : {} 上线", jscode2session.getOpenid());
             return jscode2session;
         } else {
             log.error("调用微信登录接口异常 JsCode2Session : {}", JacksonUtil.toJSON(jscode2session));

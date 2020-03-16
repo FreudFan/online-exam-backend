@@ -93,16 +93,13 @@ public class AuthResource {
      */
     @ApiOperation(value = "检查是否有存在指定用户", response = String.class,
                     notes = "检查 username，email，telephone 是否唯一")
-    @PUT
+    @GET
     @Path("check")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response check(User user) throws Exception {
+    public Boolean check(User user) throws Exception {
         user = userService.check(user);
-        if (user != null) {
-            return Response.ok("exist").build();
-        }
-        return Response.ok().build();
+        return user == null;
     }
 
     @GET
