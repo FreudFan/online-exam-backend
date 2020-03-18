@@ -16,6 +16,8 @@ public class Exam implements Serializable {
     private Integer id;
     //学科id
     private Integer subject_id;
+    //学科中文名
+    private String subjectName;
     //试卷的名称
     private String name;
     //试卷的总分

@@ -82,6 +82,7 @@
                }).then(
                    //操作成功回调函数
                    function (response) {
+                       sessionStorage.setItem("user",response.data.username);
                        location.href = 'home.html';
                    console.log(response);
                }).catch(

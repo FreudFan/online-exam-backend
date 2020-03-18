@@ -34,6 +34,8 @@ public class ExamServiceImpl implements ExamService  {
     private ExamRecordService examRecordService;
     @Autowired
     private WorryTopicService worryTopicService;
+    @Autowired
+    private SubjectService subjectService;
     @Override
     public void saveExam(Exam exam) {
         exam = examDao.save(exam);
@@ -43,6 +45,13 @@ public class ExamServiceImpl implements ExamService  {
     @Override
     public Page getExamByPage(Page page, int flag) {
         List<Exam> exams = examDao.listExamByPage(page,flag);
+        exams.stream().forEach((exam)->{
+            try {
+                exam.setSubjectName(subjectService.getSubjectById(exam.getSubject_id()).getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         int total = examDao.getCount(flag);
         page.setTotal(total);
         page.setRows(exams);
