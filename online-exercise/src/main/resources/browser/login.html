@@ -5,8 +5,8 @@
     <title>login</title>
     <script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
     <script src="/webjars/vue/2.6.11/vue.min.js"></script>
-    <link href="/webjars/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
-    <script src="/webjars/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/webjars/axios/0.19.2/dist/axios.js"></script>
     <style>
         body {
@@ -38,7 +38,7 @@
 <body>
 <div class="container" id="main">
     <div class="form row">
-        <div class="form-horizontal col-md-offset-3" id="login_form" style="margin: 0 auto">
+        <div class="form-horizontal col-md-offset-3" id="login_form" >
             <h3 class="form-title">题库后台管理系统</h3>
             <div class="col-md-9">
                 <div class="form-group">
@@ -82,7 +82,7 @@
                }).then(
                    //操作成功回调函数
                    function (response) {
-                       alert("登录成功!");
+                       location.href = 'home.html';
                    console.log(response);
                }).catch(
                    //操作失败回调函数
