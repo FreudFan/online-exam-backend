@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 
 <head>
     <!-- 页面meta -->
@@ -94,11 +94,11 @@
             <!-- 内容头部 -->
             <section class="content-header">
                 <h1>
-                    试卷管理
+                    题库管理
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-                    <li><a href="#">试卷管理</a></li>
+                    <li><a href="#">题库管理</a></li>
                 </ol>
             </section>
             <!-- 内容头部 /-->
@@ -109,7 +109,10 @@
                 <!-- .box-body -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">试卷列表</h3>
+                        <h3 class="box-title" style="float: left">题库列表</h3>
+                        <a href="javascript:;" class="a-upload" style="float: right">
+                            <i class="fa fa-file-o"></i> <input type="file" @change="fileUpload()" name="file" id="file">点击这里导入题库
+                        </a>
                     </div>
 
                     <div class="box-body">
@@ -121,7 +124,6 @@
                             <div class="pull-left">
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-default" title="新建试卷"><i class="fa fa-file-o"></i> 新建试卷</button>
                                         <button type="button" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i> 禁用</button>
                                         <button type="button" class="btn btn-default" title="启用"><i class="fa fa-check"></i> 启用</button>
                                         <button type="button" class="btn btn-default" title="刷新"><i class="fa fa-refresh"></i> 刷新</button>
@@ -144,27 +146,27 @@
                                         <input id="selall" type="checkbox" class="icheckbox_square-blue">
                                     </th>
                                     <th class="sorting_asc">ID</th>
-                                    <th class="sorting_desc">试卷名</th>
-                                    <th class="sorting_asc">总分</th>
-                                    <th class="sorting_desc sorting_desc_disabled">课程号</th>
-                                    <th class="sorting">试卷描述</th>
+                                    <th class="sorting_desc" width="700px">题目名</th>
+                                    <th class="sorting_asc">难度</th>
+                                    <th class="sorting_desc sorting_desc_disabled">课程名</th>
+                                    <th class="sorting">题目类型</th>
                                     <th class="text-center">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="exam in examList">
+                                <tr v-for="topic in topicList">
                                     <td><input name="ids" type="checkbox"></td>
-                                    <td>{{exam.id}}</td>
-                                    <td>{{exam.name}}</td>
-                                    <td>{{exam.totalScore}}</td>
-                                    <td>{{exam.subjectName}}</td>
-                                    <td>{{exam.description}}</td>
+                                    <td>{{topic.id}}</td>
+                                    <td>{{topic.description}}</td>
+                                    <td>{{topic.difficultName}}</td>
+                                    <td>{{topic.subjectName}}</td>
+                                    <td>{{topic.typeName}}</td>
                                     <td class="text-center">
                                         <button type="button" class="btn bg-olive btn-xs">详情</button>
-                                        <button type="button" class="btn bg-olive btn-xs">编辑</button>
                                         <button type="button" class="btn bg-olive btn-xs">禁用</button>
                                     </td>
                                 </tr>
+                                </tbody>
                             </table>
                             <!--数据列表/-->
                         </div>
@@ -223,7 +225,51 @@
         </footer>
         <!-- 底部导航 /-->
 
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="width: 900px;height:500px;overflow: auto">
+                    <div class="modal-header">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <h4 class="modal-title" id="myModalLabel">题目信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>请选择学科:</label>
+                            <select class="form-control" v-model="chooseSubject" @change="getSubject($event)">
+                                <option v-for="subject in subjectList" :value="subject.id">{{subject.name}}</option>
+                            </select>
+                        </div>
+                        <table id="fileList" class="table table-bordered table-striped table-hover dataTable">
+                            <thead>
+                                <th class="text-center" v-for=" title in fileData[0]" width="150px">{{title}}</th>
+                            </thead>
+                            <tbody>
+                            <tr v-for="row in fileData">
+                                <td v-for="value in row">{{value}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" @click="save()">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+
+
+
+
+
+
+
+    <!--模态窗口/-->
+
+
+
 
 
     <script src="./plugins/jQuery/jquery-2.2.3.min.js"></script>
@@ -305,6 +351,16 @@
                 $(this).data("clicks", !clicks);
             });
         });
+
+        $('#myModal').on('shown.bs.modal', function (e) {
+            // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+            $(this).css('display', 'block');
+            var modalHeight = $(window).height() / 2 - $('#myModel .modal-dialog').height() / 2;
+            $(this).find('.modal-dialog').css({
+                'margin-top': modalHeight
+            });
+        });
+
     </script>
 
 
@@ -312,14 +368,70 @@
     new Vue({
         el:"#main",
         data:{
-            examList:[]
+            topicList:[],
+            fileData:[],
+            subjectList:[],
+            chooseSubject:'',
+            fileId:'',
+        },
+        methods:{
+            fileUpload:function () {
+                var _this = this;
+                var formData = new FormData();
+                formData.append("file",$("input[name='file']")[0].files[0]);
+                axios({
+                    method:"post",
+                    url:"rest/topic/import",
+                    data:formData,
+                    header:{
+                        'Content-Type':'multipart/form-data'
+                    }
+                }).then(function (response) {
+                    _this.fileData = response.data.file;
+                    _this.fileId=response.data.id;
+                    $('#myModal').modal('show');
+                    console.log(_this.fileData);
+                }).catch(function (reason) {
+
+                    console.log(reason);
+                })
+                var obj = document.getElementById('file') ;
+                $('#file').val('');
+            },
+            getSubject:function (event) {
+                this.chooseSubject = event.target.value;
+                console.log(this.chooseSubject);
+            },
+            save:function () {
+                var _this = this;
+                axios.post('rest/topic/save',{
+                    id:_this.fileId,
+                    subject_id:_this.chooseSubject,
+                    type:_this.type,
+                    file:this.fileData
+                }).then(function (value) {
+                    $('#myModal').modal('hide');
+                    alert("导入成功!!!");
+                    console.log(value);
+                }).catch(function (reason) {
+                    console.log(reason);
+                })
+            }
         },
         created:function () {
             var vue = this;
-            axios.get('rest/exam/paper/show').then(function (response) {
-                vue.examList = response.data.rows;
+            axios.get('rest/topic/show').then(function (response) {
+                vue.topicList = response.data.rows;
+                console.log(vue.topicList);
             }).catch(function (reason) {
                 alert(reason);
+            })
+            axios.get('rest/common/sub/show').then(function (response) {
+                vue.subjectList = response.data;
+                vue.chooseSubject = vue.subjectList[0].id;
+                console.log(vue.subjectList);
+            }).catch(function (reason) {
+                console.log(reason);
             })
         }
     })

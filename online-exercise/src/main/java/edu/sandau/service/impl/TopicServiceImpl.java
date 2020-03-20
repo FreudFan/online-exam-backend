@@ -183,7 +183,13 @@ public class TopicServiceImpl implements TopicService {
             Integer difficult = enumService.getEnumValue("TOPIC", "DIFFICULT", topic.get(size - 3).toString());
             topicObject.setDifficult(difficult);
             topicObject.setAnalysis(topic.get(size - 2).toString());
-            topicObject.setTopicmark( (Double) topic.get(size - 4));
+            Object topicmark = topic.get(size - 4);
+            if(topicmark instanceof Integer){
+                Double tm = ((Integer) topicmark).doubleValue();
+                topicObject.setTopicmark(tm);
+            }else {
+                topicObject.setTopicmark((Double) topicmark);
+            }
             topicObject.setCorrectkey(topic.get(size - 5).toString());
             int keyId = topicDao.save(topicObject);
             optionService.insertOption(keyId, optionArgs);

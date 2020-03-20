@@ -67,4 +67,8 @@ public class SubjectDao {
         return jdbcTemplate.query(sql,new BeanPropertyRowMapper<Subject>(Subject.class),orgId);
     }
 
+    public List<Subject> showSub() {
+        String sql = " SELECT * FROM subject";
+        return jdbcTemplate.query(sql,new BeanPropertyRowMapper<Subject>(Subject.class));
+    }
 }

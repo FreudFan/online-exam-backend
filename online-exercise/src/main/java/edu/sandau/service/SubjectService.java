@@ -15,4 +15,6 @@ public interface SubjectService {
     Subject getSubjectById(Integer id) throws Exception;
 
     Integer deleteById(Integer id) throws Exception;
+
+    List<Subject> showSub();
 }

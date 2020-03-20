@@ -41,4 +41,9 @@ public class SubjectServiceImpl implements SubjectService {
     public Integer deleteById(Integer id) throws Exception {
         return subjectDao.delete(id);
     }
+
+    @Override
+    public List<Subject> showSub() {
+        return subjectDao.showSub();
+    }
 }

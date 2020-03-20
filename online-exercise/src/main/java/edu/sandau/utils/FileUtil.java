@@ -41,7 +41,8 @@ public class FileUtil {
             uploadFile.setFileName(fileName);
             uploadFile.setFile(file);
             uploadFile.setFilePath(UPLOAD_DIR + File.separatorChar + fileName);
-            Integer userId = Integer.parseInt(httpSession.getAttribute("userId").toString());
+//            Integer userId = Integer.parseInt(httpSession.getAttribute("userId").toString());
+            Integer userId = 1;
             uploadFile.setUser_id(userId);
             uploadFileDao.save(uploadFile);
         } catch ( Exception e ) {

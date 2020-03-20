@@ -13,7 +13,7 @@ public class TopicData {
     private Integer id;
     @ApiModelProperty(value = "学科代码")
     private Integer subject_id;
-    @ApiModelProperty(value = "学科种类")
+    @ApiModelProperty(value = "题目种类")
     private Integer type;
     @ApiModelProperty(value = "题目数据")
     List<List<Object>> file;
