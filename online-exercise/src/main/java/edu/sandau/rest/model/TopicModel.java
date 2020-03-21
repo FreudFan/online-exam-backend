@@ -4,6 +4,7 @@ package edu.sandau.rest.model;
 import edu.sandau.entity.Option;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.util.List;
@@ -17,8 +18,12 @@ public class TopicModel {
     private Integer file_id;
     @ApiModelProperty(value = "题目类型")
     private String typeName;
+    @ApiModelProperty(value = "题目类型Id")
+    private Integer type;
     @ApiModelProperty(value = "题目难度")
     private String difficultName;
+    @ApiModelProperty(value = "题目难度(整型)")
+    private Integer difficult;
     @ApiModelProperty(value = "题目描述")
     private String description;
     @ApiModelProperty(value = "题目正确答案")
@@ -29,6 +34,8 @@ public class TopicModel {
     private String analysis;
     @ApiModelProperty(value = "所属学科")
     private String subjectName;
+    @ApiModelProperty(value = "所属学科id")
+    private Integer subject_id;
     @ApiModelProperty(value = "选项内容")
     private List<Option> optionsList;
 }

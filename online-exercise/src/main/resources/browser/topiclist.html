@@ -162,8 +162,8 @@
                                     <td>{{topic.subjectName}}</td>
                                     <td>{{topic.typeName}}</td>
                                     <td class="text-center">
-                                        <button type="button" class="btn bg-olive btn-xs">详情</button>
-                                        <button type="button" class="btn bg-olive btn-xs">禁用</button>
+                                        <button type="button" class="btn bg-olive btn-xs" @click="getDetail(topic)">详情</button>
+                                        <button type="button" class="btn bg-olive btn-xs" @click="disableTopic(topic.id)">禁用</button>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -258,11 +258,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
 
 
 
@@ -398,6 +393,14 @@
                 var obj = document.getElementById('file') ;
                 $('#file').val('');
             },
+            show:function(){
+                var vue = this;
+                axios.get('rest/topic/show').then(function (response) {
+                    vue.topicList = response.data.rows;
+                }).catch(function (reason) {
+                    alert(reason);
+                })
+            },
             getSubject:function (event) {
                 this.chooseSubject = event.target.value;
                 console.log(this.chooseSubject);
@@ -416,20 +419,33 @@
                 }).catch(function (reason) {
                     console.log(reason);
                 })
+            },
+            disableTopic:function (id) {
+                if(confirm("确定要删除嘛?")) {
+                    var _this = this;
+                    axios.get('rest/topic/delete', {
+                        params: {
+                            ids: id
+                        }
+                    }).then(function (response) {
+                        _this.show();
+                        console.log(response);
+                    }).catch(function (reason) {
+                        console.log(reason);
+                    })
+                }
+            },
+            getDetail:function (topic) {
+                localStorage.setItem("topic",JSON.stringify(topic));
+                location.href="topicdetail.html";
             }
         },
         created:function () {
             var vue = this;
-            axios.get('rest/topic/show').then(function (response) {
-                vue.topicList = response.data.rows;
-                console.log(vue.topicList);
-            }).catch(function (reason) {
-                alert(reason);
-            })
+            vue.show();
             axios.get('rest/common/sub/show').then(function (response) {
                 vue.subjectList = response.data;
                 vue.chooseSubject = vue.subjectList[0].id;
-                console.log(vue.subjectList);
             }).catch(function (reason) {
                 console.log(reason);
             })

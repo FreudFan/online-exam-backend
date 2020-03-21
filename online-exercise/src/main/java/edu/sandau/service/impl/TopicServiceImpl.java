@@ -248,9 +248,12 @@ public class TopicServiceImpl implements TopicService {
                 String typeName = enumService.getEnumName("TOPIC", "TYPE", t.getType());
                 String difficultName = enumService.getEnumName("TOPIC", "DIFFICULT", t.getDifficult());
                 String subjectName = subjectService.getSubjectById(t.getSubject_id()).getName();
+                topicModel.setType(t.getType());
                 topicModel.setTypeName(typeName);
                 topicModel.setDifficultName(difficultName);
+                topicModel.setDifficult(t.getDifficult());
                 topicModel.setSubjectName(subjectName);
+                topicModel.setSubject_id(t.getSubject_id());
                 topicModelList.add(topicModel);
             }catch(Exception e){
                 e.printStackTrace();
