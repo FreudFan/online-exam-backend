@@ -272,6 +272,8 @@
         update:function () {
             var vue = this;
             axios.post('rest/topic/update',vue.topic).then(function (value) {
+                alert("修改成功!!!");
+                history.back(-1);
                 console.log(value);
             }).catch(function (reason) {
                 console.log(reason);

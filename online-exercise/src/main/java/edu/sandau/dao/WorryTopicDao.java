@@ -73,7 +73,7 @@ public class WorryTopicDao {
     }
 
     public int getCount(String sql, List<Object> obj) {
-        StringBuilder sqlCount = new StringBuilder("select count(1) from  ( ");
+        StringBuffer sqlCount = new StringBuffer("select count(1) from  ( ");
         sqlCount.append(sql);
         sqlCount.append(" ) a");
         return jdbcTemplate.queryForObject(sqlCount.toString(), Integer.class,obj.toArray());

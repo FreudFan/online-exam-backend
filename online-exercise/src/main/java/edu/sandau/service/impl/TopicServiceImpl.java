@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -54,11 +55,9 @@ public class TopicServiceImpl implements TopicService {
      * @return page
      */
     @Override
-    public Page getTopicByPage(Page page, int flag) {
+    public Page getTopicByPage(Page page) {
         //分页查询主表数据
-        List<Topic> topics = topicDao.listTopicByPage(page, flag);
-        int total = topicDao.getCount(flag);
-        page.setTotal(total);
+        List<Topic> topics = topicDao.listTopicByPage(page);
         //遍历主表数据集合,查找对应的选项数据
         topics.stream().forEach((topic) -> {
             Integer id = topic.getId();

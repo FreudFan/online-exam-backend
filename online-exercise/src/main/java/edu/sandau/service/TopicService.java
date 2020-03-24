@@ -16,7 +16,7 @@ public interface TopicService {
      * @param page
      * @return
      */
-    Page getTopicByPage(Page page, int flag);
+    Page getTopicByPage(Page page);
 
     /***
      * 解析excel
