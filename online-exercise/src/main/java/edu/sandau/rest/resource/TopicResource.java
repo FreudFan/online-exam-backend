@@ -92,7 +92,7 @@ public class TopicResource {
      * @throws Exception
      */
     @ApiOperation(value = "分页查询题目", response = Map.class)
-    @GET
+    @POST
     @Path("show")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
@@ -100,7 +100,7 @@ public class TopicResource {
         if (page == null) {
             page = new Page();
         }
-        page = topicService.getTopicByPage(page, 1);
+        page = topicService.getTopicByPage(page);
         return Response.ok(page).build();
     }
 
@@ -206,18 +206,18 @@ public class TopicResource {
         return Response.ok("ok").build();
     }
 
-    @ApiOperation(value = "查询已禁用的题目")
-    @GET
-    @Path("showDelete")
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response deleteTopicShow(Page page) {
-        if (page == null) {
-            page = new Page();
-        }
-        page = topicService.getTopicByPage(page, 0);
-        return Response.ok(page).build();
-    }
-
+//    @ApiOperation(value = "查询已禁用的题目")
+//    @GET
+//    @Path("showDelete")
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public Response deleteTopicShow(Page page) {
+//        if (page == null) {
+//            page = new Page();
+//        }
+//        page = topicService.getTopicByPage(page, 0);
+//        return Response.ok(page).build();
+//    }
+//
 
 }

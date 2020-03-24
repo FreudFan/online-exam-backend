@@ -13,9 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -75,9 +73,9 @@ public class TopicDao {
      * 得到topic表的总题目数量
      * @return 题目总数量
      */
-    public int getCount(int flag) {
-        String sql = "select count(1) from topic where flag = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, flag);
+    public int getCount( String sb, List<Object> obj) {
+        String sql = "select count(1) from topic where 1 = 1 " + sb;
+        return jdbcTemplate.queryForObject(sql, Integer.class, obj.toArray());
     }
 
     /***
@@ -85,13 +83,40 @@ public class TopicDao {
      * @param page
      * @return List<Topic>
      */
-    public List<Topic> listTopicByPage(Page page, int flag) {
+    public List<Topic> listTopicByPage(Page page) {
+        Map<String,Object> params = page.getOption();
+        List<Object> obj = new ArrayList<>();
+        StringBuffer sb = new StringBuffer("SELECT * FROM topic where 1 = 1 ");
+        String sql = this.getSqlAndParams(params, obj);
+        page.setTotal(getCount(sql,obj));
+        sb.append(sql);
+        sb.append(" ORDER BY createtime DESC limit ?,? ");
         int start = (page.getPageNo() - 1) * page.getPageSize();
-        String sql = " SELECT * FROM topic where flag = ? limit ? , ? ";
-        List<Topic> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Topic.class), new Object[]{flag, start, page.getPageSize()});
+        obj.add(start);
+        obj.add(page.getPageSize());
+        List<Topic> list = jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<>(Topic.class), obj.toArray());
         return list;
     }
 
+
+    // 获取动态sql
+    private String getSqlAndParams(Map<String, Object> params, List<Object> obj){
+        StringBuffer sql = new StringBuffer();
+        Set<String> keySet = params.keySet();
+        for (String key : keySet) {
+            Object value = params.get(key);
+            if(value != null && !"all".equalsIgnoreCase(value.toString()) && !"".equalsIgnoreCase(value.toString())) {
+                if("description".equals(key)){
+                    sql.append(" And " + key + " like ? ");
+                    obj.add("%" + value + "%");
+                }else {
+                    sql.append(" And " + key + "= ? ");
+                    obj.add(value);
+                }
+            }
+        }
+        return sql.toString();
+    }
     /***
      * 查询试卷的试题内容
      * @param ids

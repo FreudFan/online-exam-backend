@@ -29,6 +29,14 @@
     <link rel="stylesheet" href="./plugins/ionslider/ion.rangeSlider.css">
     <link rel="stylesheet" href="./plugins/ionslider/ion.rangeSlider.skinNice.css">
     <link rel="stylesheet" href="./plugins/bootstrap-slider/slider.css">
+
+    <style>
+        .search{
+            float:right;
+            margin-left: 30px;
+        }
+
+    </style>
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini">
@@ -130,12 +138,48 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="box-tools pull-right">
-                                <div class="has-feedback">
-                                    <input type="text" class="form-control input-sm" placeholder="搜索">
-                                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+
+                            <div class="form-inline search">
+                            <label>状态:</label>
+                            <select class="input-sm form-control"  v-model="findByFlag" @change="show(1)">
+                                <option value="all" >全部</option>
+                                <option value="1" >已启用</option>
+                                <option value="0" >已禁用</option>
+                            </select>
+                        </div>
+                            <div class="form-inline search">
+                                <label>题目类型:</label>
+                                <select class="input-sm form-control"  v-model="findByType" @change="show(1)">
+                                    <option value="all" >全部</option>
+                                    <option value="0" >判断题</option>
+                                    <option value="1" >选择题</option>
+                                </select>
+                            </div>
+
+                            <div class="form-inline search">
+                                <label>难度:</label>
+                                <select class="input-sm form-control"  v-model="findByDifficult" @change="show(1)">
+                                    <option value="all" >全部</option>
+                                    <option value="0" >易</option>
+                                    <option value="1" >中</option>
+                                    <option value="2" >难</option>
+                                </select>
+                            </div>
+                            <div  class="form-inline search">
+                                <label>学科:</label>
+                                <select v-model="findBySubject" class="input-sm form-control" @change="show(1)">
+                                    <option value="all" >全部</option>
+                                    <option v-for="subject in subjectList" :value="subject.id">{{subject.name}}</option>
+                                </select>
+                            </div>
+                            <div class="box-tools pull-right ">
+                                <div class="has-feedback form-inline" >
+                                    <label>请输入题目名:</label>
+                                    <input type="text" class="form-control input-sm" placeholder="搜索" v-model="findByDescription" @change="show(1)">
+                                    <span class="glyphicon glyphicon-search form-control-feedback" style="top: 0px;" ></span>
                                 </div>
                             </div>
+
                             <!--工具栏/-->
 
                             <!--数据列表-->
@@ -178,31 +222,30 @@
                     <div class="box-footer">
                         <div class="pull-left">
                             <div class="form-group form-inline">
-                                总共2 页，共14 条数据。 每页
-                                <select class="form-control">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select> 条
+                                总共{{totalPage}}页，当前是第{{pageNo}}页,共{{total}}条数据
+                                <!--总共{{totalPage}}页，当前是第{{pageNo}}页,共{{total}}条数据。 每页-->
+                                <!--<select class="form-control">-->
+                                    <!--<option>1</option>-->
+                                    <!--<option>2</option>-->
+                                    <!--<option>3</option>-->
+                                    <!--<option>4</option>-->
+                                    <!--<option>5</option>-->
+                                <!--</select> 条-->
                             </div>
                         </div>
 
                         <div class="box-tools pull-right">
                             <ul class="pagination">
                                 <li>
-                                    <a href="#" aria-label="Previous">首页</a>
+                                    <a href="javascript:0" aria-label="Previous" @click="show(1)">首页</a>
                                 </li>
-                                <li><a href="#">上一页</a></li>
-                                <li><a href="#">1</a></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">5</a></li>
-                                <li><a href="#">下一页</a></li>
+                                <li><a href="javascript:0" @click="show(pageNo - 1)">上一页</a></li>
+                                <li v-for="index of 10" v-if=" pageNumber + index - 1 <= totalPage && pageNumber + index - 1 != 0">
+                                    <a href="javascript:0" @click="show(pageNumber + index - 1)">{{pageNumber + index -  1 }}</a>
+                                </li>
+                                <li><a href="javascript:0" @click="show(pageNo + 1)">下一页</a></li>
                                 <li>
-                                    <a href="#" aria-label="Next">尾页</a>
+                                    <a href="javascript:0" aria-label="Next" @click="show(totalPage)">尾页</a>
                                 </li>
                             </ul>
                         </div>
@@ -368,6 +411,16 @@
             subjectList:[],
             chooseSubject:'',
             fileId:'',
+            findBySubject:'all',
+            findByDifficult:'all',
+            findByType:'all',
+            findByFlag:'1',
+            findByDescription:'',
+            pageSize:5,
+            total:0,
+            pageNo:1,
+            totalPage:0,
+            pageNumber:0
         },
         methods:{
             fileUpload:function () {
@@ -393,10 +446,32 @@
                 var obj = document.getElementById('file') ;
                 $('#file').val('');
             },
-            show:function(){
+            show:function(pageNo){
                 var vue = this;
-                axios.get('rest/topic/show').then(function (response) {
+                vue.pageNo = pageNo;
+                if(vue.pageNo >= vue.totalPage){
+                    vue.pageNo = vue.totalPage;
+                }
+                if(vue.pageNo <= 0){
+                    vue.pageNo = 1;
+                }
+                console.log(vue.pageNo)
+                axios.post('rest/topic/show',{
+                        pageNo:vue.pageNo,
+                        pageSize:10,
+                        option: {
+                            description:vue.findByDescription,
+                            difficult:vue.findByDifficult,
+                            type:vue.findByType,
+                            subject_id:vue.findBySubject,
+                            flag:vue.findByFlag
+                        }
+                }).then(function (response) {
                     vue.topicList = response.data.rows;
+                    vue.total = response.data.total;
+                    vue.pageSize = response.data.pageSize;
+                    vue.totalPage = Math.ceil(vue.total / vue.pageSize);
+                    vue.pageNumber = Math.floor(pageNo / 10) *10;
                 }).catch(function (reason) {
                     alert(reason);
                 })
@@ -428,7 +503,7 @@
                             ids: id
                         }
                     }).then(function (response) {
-                        _this.show();
+                        _this.show(_this.pageNo);
                         console.log(response);
                     }).catch(function (reason) {
                         console.log(reason);
@@ -442,7 +517,7 @@
         },
         created:function () {
             var vue = this;
-            vue.show();
+            vue.show(vue.pageNo);
             axios.get('rest/common/sub/show').then(function (response) {
                 vue.subjectList = response.data;
                 vue.chooseSubject = vue.subjectList[0].id;
