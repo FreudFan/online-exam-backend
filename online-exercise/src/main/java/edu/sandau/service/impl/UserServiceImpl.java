@@ -45,8 +45,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(User user) throws Exception {
-        String openId = (String) httpSession.getAttribute(SessionUtils.USER_wxID_PREFIX);
-        user.setWxId(openId);
         if ( user.getRole() == null ) {
             //默认为注册用户
             user.setRole(RoleTypeEnum.NORMAL_USER.getValue());
