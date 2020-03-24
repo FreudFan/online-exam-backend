@@ -17,6 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -45,11 +46,15 @@ public class WechatResource {
         String wxId = jscode2session.getOpenid();
         httpSession.setAttribute(SessionUtils.USER_wxID_PREFIX, wxId);
         User user = userService.getUserByWxId(wxId);
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("wxId", wxId);
         if(user == null) {
-            return Response.accepted("用户未注册~").status(Response.Status.UNAUTHORIZED).build();
+            params.put("msg", "用户未注册~");
+            return Response.accepted(params).status(Response.Status.UNAUTHORIZED).build();
         }
+        params.put("user", user);
         sessionUtils.addUserToSession(user);
-        return Response.ok(user).build();
+        return Response.ok(params).build();
     }
 
 }

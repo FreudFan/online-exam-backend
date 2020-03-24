@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
      * 发送邮箱地址 FROM
      */
     @Value("${spring.mail.username}")
-    private static String USERNAME;
+    private String USERNAME;
 
     public void sendSimpleMail(EmailMessage emailMessage) {
         try {
@@ -49,12 +50,12 @@ public class EmailServiceImpl implements EmailService {
     public void sendHTMLMail(EmailMessage emailMessage, Map<String,Object> model, String templateFileName) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper messageHelper
-                    = new MimeMessageHelper(mimeMessage,true,"UTF-8");
+            mimeMessage.setFrom(new InternetAddress(USERNAME));
+            mimeMessage.addRecipients(MimeMessage.RecipientType.CC, InternetAddress.parse(USERNAME));
+            mimeMessage.addRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(emailMessage.getEmail()));
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
             messageHelper.setSubject(emailMessage.getSubject());    //设置邮件主题
-    //        messageHelper.setText(emailMessage.getContent());   //设置邮件主题内容
-            messageHelper.setTo(emailMessage.getEmail());   //设定收件人Email
-
+//            messageHelper.setTo(InternetAddress.parse(emailMessage.getEmail()));   //设定收件人Email
             String text = FreemarkerUtil.getTemplate(templateFileName, model);
             messageHelper.setText(text, true);  //设置邮件主题内容
             mailSender.send(mimeMessage);
