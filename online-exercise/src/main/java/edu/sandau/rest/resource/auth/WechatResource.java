@@ -1,6 +1,7 @@
 package edu.sandau.rest.resource.auth;
 
 import edu.sandau.entity.User;
+import edu.sandau.security.Auth;
 import edu.sandau.security.SessionUtils;
 import edu.sandau.service.UserService;
 import edu.sandau.validate.wechat.JsCode2Session;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@Auth
 @Path("auth/wechat")
 @Api(value = "登录权限接口")
 public class WechatResource {
