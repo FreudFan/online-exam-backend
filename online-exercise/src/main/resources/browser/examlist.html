@@ -11,6 +11,7 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <script src="/webjars/vue/2.6.11/vue.min.js"></script>
     <script src="/webjars/axios/0.19.2/dist/axios.js"></script>
+    <script src="js/my.js"></script>
   <![endif]-->
     <link rel="stylesheet" href="./plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css">
@@ -316,10 +317,14 @@
         },
         created:function () {
             var vue = this;
-            axios.get('rest/exam/paper/show').then(function (response) {
+            axios.get('rest/exam/paper/show',{
+                headers: {
+                    'Authorization':sessionStorage.getItem("token")
+                }
+            }).then(function (response) {
                 vue.examList = response.data.rows;
             }).catch(function (reason) {
-                alert(reason);
+                checkToken(reason.response.status);
             })
         }
     })

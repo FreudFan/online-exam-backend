@@ -79,6 +79,10 @@
                axios.post('rest/auth/login',{
                    name:vue.user.username,
                    password:vue.user.password
+               }, {
+                   headers: {
+                    'Authorization':sessionStorage.getItem("token")
+                }
                }).then(
                    //操作成功回调函数
                    function (response) {
@@ -91,6 +95,15 @@
                    alert("用户名或密码错误!!!");
                })
             }
+        },
+        created:function () {
+            var vue = this;
+            axios.get('rest/auth/open').then(function (response) {
+                sessionStorage.setItem("token",response.data);
+                console.log(response);
+            }).catch(function (reason) {
+                console.log(reason);
+            })
         }
 
     })
