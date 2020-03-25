@@ -1,5 +1,7 @@
 package edu.sandau.validate.code.processor;
 
+import edu.sandau.security.SessionUtils;
+import edu.sandau.utils.JacksonUtil;
 import edu.sandau.validate.code.ValidateCode;
 import edu.sandau.validate.code.ValidateCodeParam;
 import edu.sandau.validate.code.generator.ValidateCodeGenerator;
@@ -8,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -16,7 +18,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     @Autowired
     private Map<String, ValidateCodeGenerator> validateCodeGenerators;
     @Autowired
-    private HttpSession httpSession;
+    private SessionUtils sessionUtils;
 
     @Override
     public void create(HttpServletRequest request, ValidateCodeParam validateCodeParam) throws Exception {
@@ -41,7 +43,9 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     }
 
     private void save(HttpServletRequest request, ValidateCode validateCode) {
-        httpSession.setAttribute(getSessionKey(request), validateCode);
+        Map<String, String> param = new HashMap<>(1);
+        param.put(getSessionKey(request), JacksonUtil.toJSON(validateCode));
+        sessionUtils.setAttribute(param);
     }
 
     private String getSessionKey(HttpServletRequest request) {
@@ -51,15 +55,15 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     @Override
     public Boolean validate(HttpServletRequest request, ValidateCodeParam validateCodeParam) {
         String sessionKey = getSessionKey(request);
-        ValidateCode codeInSession = (ValidateCode)httpSession.getAttribute(sessionKey);
+        ValidateCode codeInSession = sessionUtils.getAttribute(sessionKey, ValidateCode.class);
         if(codeInSession != null && codeInSession.isNotExpired()) {
             String code = validateCodeParam.getCode();
             if (StringUtils.equals(codeInSession.getCode(), code)) {
-                httpSession.removeAttribute(sessionKey);
+                sessionUtils.removeAttribute(sessionKey);
                 return true;
             }
         } else {
-            httpSession.removeAttribute(sessionKey);
+            sessionUtils.removeAttribute(sessionKey);
         }
         return false;
     }

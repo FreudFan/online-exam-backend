@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -29,8 +28,6 @@ public class WechatResource {
     @Autowired
     private UserService userService;
     @Autowired
-    private HttpSession httpSession;
-    @Autowired
     private SessionUtils sessionUtils;
 
     @POST
@@ -39,12 +36,12 @@ public class WechatResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response login(Map<String, String> param) throws Exception {
         String code = MapUtils.getString(param, "code", null);
-        if(code==null) {
+        if(code == null) {
             return Response.accepted().status(Response.Status.BAD_REQUEST).build();
         }
         JsCode2Session jscode2session = wechatAppHolder.login(code);
         String wxId = jscode2session.getOpenid();
-        httpSession.setAttribute(SessionUtils.USER_wxID_PREFIX, wxId);
+        sessionUtils.setAttribute(SessionUtils.USER_wxID_PREFIX, wxId);
         User user = userService.getUserByWxId(wxId);
         Map<String, Object> params = new HashMap<>(2);
         params.put("wxId", wxId);

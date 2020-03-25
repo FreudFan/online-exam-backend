@@ -2,10 +2,10 @@ package edu.sandau.utils;
 
 import edu.sandau.dao.UploadFileDao;
 import edu.sandau.entity.UploadFile;
+import edu.sandau.security.RequestContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpSession;
 import java.io.*;
 
 @Component
@@ -22,8 +22,6 @@ public class FileUtil {
     }
     @Autowired
     private UploadFileDao uploadFileDao;
-    @Autowired
-    private HttpSession httpSession;
 
     public UploadFile saveFile(InputStream inputStream, String fileName) {
         File file = new File(UPLOAD_DIR,fileName);
@@ -41,8 +39,7 @@ public class FileUtil {
             uploadFile.setFileName(fileName);
             uploadFile.setFile(file);
             uploadFile.setFilePath(UPLOAD_DIR + File.separatorChar + fileName);
-            Integer userId = Integer.parseInt(httpSession.getAttribute("user_Id").toString());
-//            Integer userId = 1;
+            Integer userId = RequestContent.getCurrentUser().getId();
             uploadFile.setUser_id(userId);
             uploadFileDao.save(uploadFile);
         } catch ( Exception e ) {

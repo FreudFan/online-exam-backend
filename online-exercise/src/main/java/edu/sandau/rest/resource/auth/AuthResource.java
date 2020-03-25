@@ -2,6 +2,7 @@ package edu.sandau.rest.resource.auth;
 
 import edu.sandau.entity.User;
 import edu.sandau.enums.LoginValueEnum;
+import edu.sandau.security.Auth;
 import edu.sandau.security.SessionUtils;
 import edu.sandau.service.UserService;
 import io.swagger.annotations.*;
@@ -15,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Slf4j
+@Auth
 @Path("auth")
 @Api(value = "登录权限接口")
 public class AuthResource {

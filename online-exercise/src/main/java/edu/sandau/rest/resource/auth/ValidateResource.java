@@ -1,5 +1,6 @@
 package edu.sandau.rest.resource.auth;
 
+import edu.sandau.security.Auth;
 import edu.sandau.validate.code.ValidateCodeParam;
 import edu.sandau.validate.code.ValidateCodeProcessorHolder;
 import io.swagger.annotations.Api;
@@ -15,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Slf4j
+@Auth
 @Path("auth/validate")
 @Api(value = "验证码接口")
 public class ValidateResource {

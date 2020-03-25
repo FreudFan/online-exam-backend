@@ -1,14 +1,14 @@
 package edu.sandau.security;
 
 import edu.sandau.entity.User;
-import edu.sandau.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
@@ -16,18 +16,27 @@ import java.io.IOException;
 @Slf4j
 public class RequestFilter implements ContainerRequestFilter {
     @Autowired
-    private HttpSession httpSession;
+    private SessionUtils sessionUtils;
     @Autowired
-    private UserService userService;
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+        String token = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         boolean access = true;
         try {
-            int userId = NumberUtils.toInt(httpSession.getAttribute(SessionUtils.USER_ID_PREFIX).toString());
-            User user = userService.getUserById(userId);
-            RequestContent.add(user);
-            access = false;
+            if (StringUtils.isNotEmpty(token) && redisTemplate.hasKey(sessionUtils.getToken(token))) {
+                RequestContent.add(token);
+                User user = sessionUtils.getAttribute(SessionUtils.USER_INFO_PREFIX, User.class);
+                //用户存在
+                if (user != null && user.getId() > -1) {
+                    RequestContent.add(user);
+                    sessionUtils.addUserToSession(user);
+                    sessionUtils.refresh();
+                }
+                access = false;
+                sessionUtils.refresh();
+            }
         } catch (Exception e) {
             log.warn("用户未登录", e);
         }

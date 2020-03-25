@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private SysEnumService enumService;
     @Autowired
-    private HttpSession httpSession;
+    private SessionUtils sessionUtils;
 
     @Override
     public User refactorEntity(User user) {
@@ -45,9 +44,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(User user) throws Exception {
-        if ( user.getRole() == null ) {
+        if (user.getRole() == null) {
             //默认为注册用户
             user.setRole(RoleTypeEnum.NORMAL_USER.getValue());
+        }
+        if(user.getWxId() == null) {
+            String wxId = sessionUtils.getAttribute(SessionUtils.USER_wxID_PREFIX, String.class);
+            user.setWxId(wxId);
         }
         if ( this.check(user) == null ) {
             //添加用户主表
