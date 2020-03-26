@@ -34,6 +34,7 @@ public class JacksonUtil {
         try {
             jsonStr = objectMapper.writeValueAsString(obj);
         } catch (Exception e) {
+            log.error("Jackson序列化失败");
             throw new RuntimeException(e);
         }
         return jsonStr;
@@ -51,6 +52,7 @@ public class JacksonUtil {
         try {
             obj = objectMapper.readValue(json, clazz);
         } catch (Exception e) {
+            log.error("Jackson反序列化失败");
             throw new RuntimeException(e);
         }
         return obj;
