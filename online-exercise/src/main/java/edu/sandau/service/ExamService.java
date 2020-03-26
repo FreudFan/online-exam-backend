@@ -20,10 +20,9 @@ public interface ExamService {
     /***
      * 分页展示所有试卷
      * @param page
-     * @param flag
      * @return
      */
-    Page getExamByPage(Page page, int flag);
+    Page getExamByPage(Page page);
 
 
     /***

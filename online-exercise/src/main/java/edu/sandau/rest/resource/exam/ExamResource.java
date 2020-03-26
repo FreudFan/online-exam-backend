@@ -62,22 +62,22 @@ public class ExamResource {
         if (page == null) {
             page = new Page();
         }
-        page = examService.getExamByPage(page,1);
+        page = examService.getExamByPage(page);
         return Response.ok(page).build();
     }
 
-    @ApiOperation(value = "查询所有禁用试卷")
-    @GET
-    @Path("showDelete")
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response showDeleteExam(Page page){
-        if (page == null) {
-            page = new Page();
-        }
-        page = examService.getExamByPage(page,0);
-        return Response.ok(page).build();
-    }
+//    @ApiOperation(value = "查询所有禁用试卷")
+//    @GET
+//    @Path("showDelete")
+//    @Consumes({MediaType.APPLICATION_JSON})
+//    @Produces({MediaType.APPLICATION_JSON})
+//    public Response showDeleteExam(Page page){
+//        if (page == null) {
+//            page = new Page();
+//        }
+//        page = examService.getExamByPage(page,0);
+//        return Response.ok(page).build();
+//    }
 
 
     /***
