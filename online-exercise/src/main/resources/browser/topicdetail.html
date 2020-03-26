@@ -271,21 +271,31 @@
         },
         update:function () {
             var vue = this;
-            axios.post('rest/topic/update',vue.topic).then(function (value) {
+            axios.post('rest/topic/update',vue.topic,{
+                headers: {
+                    'Authorization':sessionStorage.getItem("token")
+                }
+            }).then(function (value) {
                 alert("修改成功!!!");
                 history.back(-1);
                 console.log(value);
             }).catch(function (reason) {
+                checkToken(reason.response.status);
                 console.log(reason);
             })
         }
         },
         created:function () {
             var vue = this;
-            axios.get('rest/common/sub/show').then(function (response) {
+            axios.get('rest/common/sub/show',{
+                headers: {
+                    'Authorization':sessionStorage.getItem("token")
+                }
+            }).then(function (response) {
                 vue.subjectList = response.data;
                 console.log(vue.topic);
             }).catch(function (reason) {
+                checkToken(reason.response.status);
                 console.log(reason);
             })
         }

@@ -403,6 +403,7 @@
 
 
 <script>
+
     new Vue({
         el:"#main",
         data:{
@@ -431,8 +432,9 @@
                     method:"post",
                     url:"rest/topic/import",
                     data:formData,
-                    header:{
-                        'Content-Type':'multipart/form-data'
+                    headers:{
+                        'Content-Type':'multipart/form-data',
+                        'Authorization':sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     _this.fileData = response.data.file;
@@ -440,7 +442,7 @@
                     $('#myModal').modal('show');
                     console.log(_this.fileData);
                 }).catch(function (reason) {
-
+                    checkToken(reason.response.status);
                     console.log(reason);
                 })
                 var obj = document.getElementById('file') ;
@@ -466,6 +468,10 @@
                             subject_id:vue.findBySubject,
                             flag:vue.findByFlag
                         }
+                },{
+                    headers: {
+                        'Authorization':sessionStorage.getItem("token")
+                    }
                 }).then(function (response) {
                     vue.topicList = response.data.rows;
                     vue.total = response.data.total;
@@ -473,6 +479,7 @@
                     vue.totalPage = Math.ceil(vue.total / vue.pageSize);
                     vue.pageNumber = Math.floor(pageNo / 10) *10;
                 }).catch(function (reason) {
+                    checkToken(reason.response.status);
                     alert(reason);
                 })
             },
@@ -487,11 +494,16 @@
                     subject_id:_this.chooseSubject,
                     type:_this.type,
                     file:this.fileData
+                },{
+                    headers: {
+                        'Authorization':sessionStorage.getItem("token")
+                    }
                 }).then(function (value) {
                     $('#myModal').modal('hide');
                     alert("导入成功!!!");
                     console.log(value);
                 }).catch(function (reason) {
+                    checkToken(reason.response.status);
                     console.log(reason);
                 })
             },
@@ -499,6 +511,10 @@
                 if(confirm("确定要删除嘛?")) {
                     var _this = this;
                     axios.get('rest/topic/delete', {
+                        headers: {
+                            'Authorization':sessionStorage.getItem("token")
+                        }
+                    ,
                         params: {
                             ids: id
                         }
@@ -506,6 +522,7 @@
                         _this.show(_this.pageNo);
                         console.log(response);
                     }).catch(function (reason) {
+                        checkToken(reason.response.status);
                         console.log(reason);
                     })
                 }
@@ -518,10 +535,15 @@
         created:function () {
             var vue = this;
             vue.show(vue.pageNo);
-            axios.get('rest/common/sub/show').then(function (response) {
+            axios.get('rest/common/sub/show',{
+                headers: {
+                    'Authorization':sessionStorage.getItem("token")
+                }
+            }).then(function (response) {
                 vue.subjectList = response.data;
                 vue.chooseSubject = vue.subjectList[0].id;
             }).catch(function (reason) {
+                checkToken(reason.response.status);
                 console.log(reason);
             })
         }
