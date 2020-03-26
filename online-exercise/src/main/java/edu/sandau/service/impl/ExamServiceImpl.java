@@ -43,8 +43,8 @@ public class ExamServiceImpl implements ExamService  {
     }
 
     @Override
-    public Page getExamByPage(Page page, int flag) {
-        List<Exam> exams = examDao.listExamByPage(page,flag);
+    public Page getExamByPage(Page page) {
+        List<Exam> exams = examDao.listExamByPage(page);
         exams.stream().forEach((exam)->{
             try {
                 exam.setSubjectName(subjectService.getSubjectById(exam.getSubject_id()).getName());
@@ -52,8 +52,6 @@ public class ExamServiceImpl implements ExamService  {
                 e.printStackTrace();
             }
         });
-        int total = examDao.getCount(flag);
-        page.setTotal(total);
         page.setRows(exams);
         return page;
     }

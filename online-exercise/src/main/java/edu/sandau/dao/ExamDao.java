@@ -13,9 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Repository
 public class ExamDao {
@@ -57,21 +55,42 @@ public class ExamDao {
     }
 
 
-    public List<Exam> listExamByPage(Page page, int flag){
+    public List<Exam> listExamByPage(Page page){
+        StringBuffer sb = new StringBuffer(" SELECT * FROM exam where 1 = 1 ");
+        List<Object> obj = new ArrayList<>();
+        Map<String,Object> params = page.getOption();
+        String sql = getSqlAndParams(params, obj);
+        sb.append(sql);
+        sb.append(" limit ? , ? ");
+        page.setTotal(getCount(sql,obj));
         int start = (page.getPageNo() - 1) * page.getPageSize();
-        String sql = " SELECT * FROM exam where flag = ? limit ? , ? ";
-        List<Exam> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Exam.class), new Object[]{flag, start, page.getPageSize()});
+        obj.add(start);
+        obj.add(page.getPageSize());
+        List<Exam> list = jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<>(Exam.class), obj.toArray());
         return list;
     }
 
-    public int getCount(int flag) {
+    public int getCount(String sb, List<Object> obj ) {
         int count = 0;
-        String sql = "select count(1) from exam where flag = ?";
-        count = jdbcTemplate.queryForObject(sql, Integer.class, flag);
+        String sql = "select count(1) from exam where 1 = 1 " + sb;
+        count = jdbcTemplate.queryForObject(sql, Integer.class, obj.toArray());
         return count;
     }
 
-
+    // 获取动态sql
+    private String getSqlAndParams(Map<String, Object> params, List<Object> obj){
+        if(params == null || params.size() <= 0){
+            return "";
+        }
+        StringBuffer sql = new StringBuffer();
+        Set<String> keySet = params.keySet();
+        for (String key : keySet) {
+            Object value = params.get(key);
+            sql.append(" And " + key + "= ?");
+            obj.add(value);
+        }
+        return sql.toString();
+    }
     public List<ExamDetail> listExamDetail(Integer id) {
         String sql = "select topic_id,topicmark from exam_detail where exam_id = ?";
         List<ExamDetail> idList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamDetail.class), id);
