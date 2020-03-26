@@ -19,7 +19,6 @@ public class SubjectResource {
     @Autowired
     private SubjectService subjectService;
 
-
     @ApiOperation(value = "查询所有课程")
     @Path("show")
     @GET
