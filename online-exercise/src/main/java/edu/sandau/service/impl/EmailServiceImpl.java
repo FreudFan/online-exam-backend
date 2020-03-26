@@ -50,12 +50,14 @@ public class EmailServiceImpl implements EmailService {
     public void sendHTMLMail(EmailMessage emailMessage, Map<String,Object> model, String templateFileName) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
-            mimeMessage.setFrom(new InternetAddress(USERNAME));
-            mimeMessage.addRecipients(MimeMessage.RecipientType.CC, InternetAddress.parse(USERNAME));
-            mimeMessage.addRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(emailMessage.getEmail()));
+//            mimeMessage.setFrom(new InternetAddress(USERNAME));
+//            mimeMessage.addRecipients(MimeMessage.RecipientType.CC, InternetAddress.parse(USERNAME));
+//            mimeMessage.addRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(emailMessage.getEmail()));
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
+            messageHelper.setFrom(new InternetAddress(USERNAME));
+            messageHelper.setTo(InternetAddress.parse(emailMessage.getEmail()));   //设定收件人Email
+            messageHelper.setCc(InternetAddress.parse(USERNAME));
             messageHelper.setSubject(emailMessage.getSubject());    //设置邮件主题
-//            messageHelper.setTo(InternetAddress.parse(emailMessage.getEmail()));   //设定收件人Email
             String text = FreemarkerUtil.getTemplate(templateFileName, model);
             messageHelper.setText(text, true);  //设置邮件主题内容
             mailSender.send(mimeMessage);

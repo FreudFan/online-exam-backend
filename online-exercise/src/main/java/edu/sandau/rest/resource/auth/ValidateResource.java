@@ -24,6 +24,11 @@ public class ValidateResource {
     @Autowired
     private ValidateCodeProcessorHolder validateCodeProcessorHolder;
 
+    /*
+    {
+        "email": "2630265292@qq.com",
+        "mobile" : "12368546558"
+    }
     /***
      * 发邮件、短信验证
      *  to 短信、邮件
@@ -42,6 +47,17 @@ public class ValidateResource {
         return Response.ok().build();
     }
 
+    /*
+    {
+        "code": 552129
+    }
+     */
+    /***
+     * type 邮件：email， 短信：sms
+     * @param type
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value = "验证码校验", response = Boolean.class)
     @POST
     @Path("code/check/{type}")

@@ -32,7 +32,6 @@ public class RequestFilter implements ContainerRequestFilter {
                 if (user != null && user.getId() > -1) {
                     RequestContent.add(user);
                     sessionUtils.addUserToSession(user);
-                    sessionUtils.refresh();
                 }
                 access = false;
                 sessionUtils.refresh();

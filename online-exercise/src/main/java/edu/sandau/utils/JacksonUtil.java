@@ -1,10 +1,27 @@
 package edu.sandau.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Slf4j
 public class JacksonUtil {
+
+    private static ObjectMapper objectMapper = new ObjectMapper();
+
+    static {
+        JavaTimeModule timeModule = new JavaTimeModule();
+        timeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
+        timeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer());
+        objectMapper.registerModule(timeModule);
+    }
 
     /***
      * 对象序列化为json字符串
@@ -13,7 +30,6 @@ public class JacksonUtil {
      * @return
      */
     public static <T> String toJSON(T obj) {
-        ObjectMapper objectMapper = new ObjectMapper();
         String jsonStr;
         try {
             jsonStr = objectMapper.writeValueAsString(obj);
@@ -31,7 +47,6 @@ public class JacksonUtil {
      * @return
      */
     public static <T> T fromJSON(String json, Class<T> clazz) {
-        ObjectMapper objectMapper = new ObjectMapper();
         T obj;
         try {
             obj = objectMapper.readValue(json, clazz);
@@ -39,6 +54,21 @@ public class JacksonUtil {
             throw new RuntimeException(e);
         }
         return obj;
+    }
+
+    public static class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
+        @Override
+        public void serialize(LocalDateTime localDateTime, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+            jsonGenerator.writeNumber(localDateTime.toInstant(ZoneOffset.ofHours(8)).toEpochMilli());
+        }
+    }
+
+    public static class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
+        @Override
+        public LocalDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+            long timestamp = jsonParser.getLongValue();
+            return LocalDateTime.ofEpochSecond(timestamp / 1000, 0, ZoneOffset.ofHours(8));
+        }
     }
 
 }

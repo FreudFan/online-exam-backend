@@ -93,8 +93,17 @@ public class SessionUtils {
     }
 
     public String getToken() {
-        String token = RequestContent.getSessionToken();
-        return RedisConstants.SESSION_ID + ":" + token;
+        try {
+            String token = RequestContent.getSessionToken();
+            if(token == null) {
+                throw new Exception("Authorization Token不存在");
+            } else {
+                return RedisConstants.SESSION_ID + ":" + token;
+            }
+        } catch (Exception e) {
+            log.error("Authorization Token不存在", e);
+        }
+        return null;
     }
 
     public String getToken(String token) {
