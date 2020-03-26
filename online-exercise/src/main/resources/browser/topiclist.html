@@ -11,6 +11,7 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <script src="/webjars/vue/2.6.11/vue.min.js"></script>
     <script src="/webjars/axios/0.19.2/dist/axios.js"></script>
+    <script src="js/my.js"></script>
   <![endif]-->
     <link rel="stylesheet" href="./plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css">
@@ -434,7 +435,6 @@
                     data:formData,
                     headers:{
                         'Content-Type':'multipart/form-data',
-                        'Authorization':sessionStorage.getItem("token")
                     }
                 }).then(function (response) {
                     _this.fileData = response.data.file;
@@ -468,10 +468,6 @@
                             subject_id:vue.findBySubject,
                             flag:vue.findByFlag
                         }
-                },{
-                    headers: {
-                        'Authorization':sessionStorage.getItem("token")
-                    }
                 }).then(function (response) {
                     vue.topicList = response.data.rows;
                     vue.total = response.data.total;
@@ -494,10 +490,6 @@
                     subject_id:_this.chooseSubject,
                     type:_this.type,
                     file:this.fileData
-                },{
-                    headers: {
-                        'Authorization':sessionStorage.getItem("token")
-                    }
                 }).then(function (value) {
                     $('#myModal').modal('hide');
                     alert("导入成功!!!");
@@ -511,10 +503,6 @@
                 if(confirm("确定要删除嘛?")) {
                     var _this = this;
                     axios.get('rest/topic/delete', {
-                        headers: {
-                            'Authorization':sessionStorage.getItem("token")
-                        }
-                    ,
                         params: {
                             ids: id
                         }
@@ -535,11 +523,7 @@
         created:function () {
             var vue = this;
             vue.show(vue.pageNo);
-            axios.get('rest/common/sub/show',{
-                headers: {
-                    'Authorization':sessionStorage.getItem("token")
-                }
-            }).then(function (response) {
+            axios.get('rest/common/sub/show').then(function (response) {
                 vue.subjectList = response.data;
                 vue.chooseSubject = vue.subjectList[0].id;
             }).catch(function (reason) {

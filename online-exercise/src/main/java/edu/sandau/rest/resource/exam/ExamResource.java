@@ -54,7 +54,7 @@ public class ExamResource {
     }
 
     @ApiOperation(value = "查询所有可用试卷")
-    @GET
+    @POST
     @Path("show")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})

@@ -11,6 +11,7 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <script src="/webjars/vue/2.6.11/vue.min.js"></script>
     <script src="/webjars/axios/0.19.2/dist/axios.js"></script>
+    <script src="js/my.js"></script>
   <![endif]-->
     <link rel="stylesheet" href="./plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css">
@@ -271,11 +272,7 @@
         },
         update:function () {
             var vue = this;
-            axios.post('rest/topic/update',vue.topic,{
-                headers: {
-                    'Authorization':sessionStorage.getItem("token")
-                }
-            }).then(function (value) {
+            axios.post('rest/topic/update',vue.topic).then(function (value) {
                 alert("修改成功!!!");
                 history.back(-1);
                 console.log(value);
@@ -287,11 +284,7 @@
         },
         created:function () {
             var vue = this;
-            axios.get('rest/common/sub/show',{
-                headers: {
-                    'Authorization':sessionStorage.getItem("token")
-                }
-            }).then(function (response) {
+            axios.get('rest/common/sub/show').then(function (response) {
                 vue.subjectList = response.data;
                 console.log(vue.topic);
             }).catch(function (reason) {

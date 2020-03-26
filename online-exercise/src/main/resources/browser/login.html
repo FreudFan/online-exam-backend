@@ -97,13 +97,15 @@
             }
         },
         created:function () {
-            var vue = this;
-            axios.get('rest/auth/open').then(function (response) {
-                sessionStorage.setItem("token",response.data);
-                console.log(response);
-            }).catch(function (reason) {
-                console.log(reason);
-            })
+            if(sessionStorage.getItem("token") == null || sessionStorage.getItem("token") == undefined) {
+                var vue = this;
+                axios.get('rest/auth/open').then(function (response) {
+                    sessionStorage.setItem("token", response.data);
+                    console.log(response);
+                }).catch(function (reason) {
+                    console.log(reason);
+                })
+            }
         }
 
     })
