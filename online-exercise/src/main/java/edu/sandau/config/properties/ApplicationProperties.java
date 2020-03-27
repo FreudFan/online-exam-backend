@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "exercise")
 public class ApplicationProperties {
 
-    private TimeoutProperties timeout;
+    private TimeoutProperties timeout = new TimeoutProperties();
 
-    private WechatAccountProperties wechat;
+    private WechatAccountProperties wechat = new WechatAccountProperties();
+
 }
