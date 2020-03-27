@@ -93,15 +93,15 @@
                 </div>
                 <div class="col-md-2 title rowHeight2x" style="height: 210px">选项</div>
                 <div class="col-md-10 data rowHeight2x" style="height: 210px">
-                    <select multiple="multiple" style="height: 170px;width: 100%;">
-                        <option v-for="item in topic.optionsList" style="margin-top:10px">
+                    <select multiple="multiple" style="height: 170px;width: 100%;" v-model="chooseOption" @change="getOption($event)">
+                        <option v-for="(item,index) in topic.optionsList" style="margin-top:10px" :value="index">
                             {{item.name}}.{{item.content}}
                         </option>
                     </select>
                     <div style="text-align: center">
-                        <button type="button" class="btn bg-maroon">添加选项</button>
-                        <button type="button" class="btn bg-maroon">删除选项</button>
-                        <button type="button" class="btn bg-maroon">修改选项</button>
+                        <button type="button" class="btn bg-maroon" @click="insertOption()">添加选项</button>
+                        <button type="button" class="btn bg-maroon" @click="updateOption()" v-bind:style="{display:chooseOption == ''?'none':'inline-block'}">修改选项</button>
+                        <button type="button" class="btn bg-maroon" @click="deleteOption()" v-bind:style="{display:chooseOption == ''?'none':'inline-block'}">删除选项</button>
                     </div>
                 </div>
                 <div class="col-md-2 title">正确答案</div>
@@ -150,6 +150,26 @@
         </div>
 
 
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                        <h4 class="modal-title" id="myModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="content" id="contentLabel"></label>
+                            <input type="text" class="form-control" id="content"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" @click="saveUpdate()">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         </div>
         <!-- @@close -->
         <!-- 内容区域 /-->
@@ -232,6 +252,7 @@
         data:{
          topic:JSON.parse(localStorage.getItem("topic")),
         subjectList:[],
+        chooseOption:'',
         },
         methods:{
         getSubject:function (event) {
@@ -246,6 +267,9 @@
             this.topic.difficult = event.target.value;
             console.log(this.topic.difficult);
         },
+        getOption:function (event) {
+                this.chooseOption = event.target.value;
+            },
         update:function () {
             var vue = this;
             axios.post('rest/topic/update',vue.topic).then(function (value) {
@@ -256,7 +280,46 @@
                 checkToken(reason.response.status);
                 console.log(reason);
             })
-        }
+        },
+        insertOption:function () {
+                var choice = this.topic.optionsList[this.topic.optionsList.length - 1].name;
+                $('#contentLabel').html("选项" + String.fromCharCode((choice.charCodeAt(0) + 1))+":");
+                $('#content').val('');
+                $('#myModalLabel').val('新增选项');
+            $('#myModal').modal('show');
+        },
+        updateOption:function(){
+                $('#contentLabel').html('选项'+this.topic.optionsList[this.chooseOption].name+':');
+               $('#content').val(this.topic.optionsList[this.chooseOption].content);
+                $('#myModalLabel').val('修改选项');
+                $('#myModal').modal('show');
+
+            },
+        deleteOption:function () {
+                var options = this.topic.optionsList;
+                var choice =  options[this.chooseOption].name;
+                var temp;
+                options.splice(this.chooseOption,1);
+                for (var i = this.chooseOption; i < options.length; i++) {
+                        temp = options[i].name;
+                        options[i].name = choice;
+                        choice = temp;
+                }
+                console.log(options);
+            },
+            saveUpdate:function () {
+                var title = $('#myModalLabel').val();
+                if(title === '修改选项') {
+                    this.topic.optionsList[this.chooseOption].content = $('#content').val();
+                }else if(title === '新增选项'){
+                    this.topic.optionsList.push({
+                        name:$('#contentLabel').html().substr(2,1),
+                        content:$('#content').val(),
+                    })
+                    console.log(this.topic.optionsList)
+                }
+                $('#myModal').modal('hide');
+            }
         },
         created:function () {
             var vue = this;
