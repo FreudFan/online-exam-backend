@@ -16,6 +16,7 @@ import edu.sandau.utils.ExcelUtil;
 import edu.sandau.utils.FileUtil;
 import edu.sandau.utils.TimeUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,7 +108,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public List<List<Object>> checkTopicType(List<List<Object>> data) {
+    public List<List<Object>> checkTopicType(List<List<Object>> data) throws Exception {
         List<List<Object>> topics = new LinkedList<>();
         List<Object> title = data.get(0);
         title.add("题目类型");
@@ -131,10 +132,15 @@ public class TopicServiceImpl implements TopicService {
                 if (empty) {
                     topic.add("判断题");
                 } else {
-                    topic.add("选择题");
+                    throw new Exception("Excel表格式错误");
                 }
             } else {
-                topic.add("选择题");
+                String answer = topic.get(count+1).toString();
+                if(answer.toCharArray().length > 1) {
+                    topic.add("多选题");
+                } else {
+                    topic.add("单选题");
+                }
             }
             topics.add(topic);
         }
@@ -179,16 +185,10 @@ public class TopicServiceImpl implements TopicService {
             int size = topic.size();
             Integer type = enumService.getEnumValue("TOPIC", "TYPE", topic.get(size - 1).toString());
             topicObject.setType(type);
-            Integer difficult = enumService.getEnumValue("TOPIC", "DIFFICULT", topic.get(size - 3).toString());
+            Integer difficult = enumService.getEnumValue("TOPIC", "DIFFICULT", topic.get(size - 2).toString());
             topicObject.setDifficult(difficult);
             topicObject.setAnalysis(topic.get(size - 2).toString());
-            Object topicmark = topic.get(size - 4);
-            if(topicmark instanceof Integer){
-                Double tm = ((Integer) topicmark).doubleValue();
-                topicObject.setTopicmark(tm);
-            }else {
-                topicObject.setTopicmark((Double) topicmark);
-            }
+            topicObject.setTopicmark(NumberUtils.toDouble(topic.get(size - 4).toString()));
             topicObject.setCorrectkey(topic.get(size - 5).toString());
             int keyId = topicDao.save(topicObject);
             optionService.insertOption(keyId, optionArgs);

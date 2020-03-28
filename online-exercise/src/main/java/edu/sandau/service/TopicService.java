@@ -32,7 +32,7 @@ public interface TopicService {
      * @param data
      * @return
      */
-    List<List<Object>> checkTopicType(List<List<Object>> data);
+    List<List<Object>> checkTopicType(List<List<Object>> data) throws Exception;
 
     /***
      *查询要下载的文件
