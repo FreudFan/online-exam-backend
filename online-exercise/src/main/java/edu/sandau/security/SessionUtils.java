@@ -86,10 +86,16 @@ public class SessionUtils {
     }
 
     public String createToken() {
-       String token = RedisUtil.createKey(RedisConstants.SESSION_ID);
-       redisTemplate.opsForHash().put(this.getToken(token), SessionUtils.CREATED_TIME, String.valueOf(Calendar.getInstance().getTimeInMillis()));
-       redisTemplate.expire(token, properties.getTimeout().getRedis(), TimeUnit.MINUTES);
-       return token;
+        String token = RedisUtil.createKey(RedisConstants.SESSION_ID);
+        try {
+            redisTemplate.opsForHash().put(this.getToken(token), SessionUtils.CREATED_TIME, String.valueOf(Calendar.getInstance().getTimeInMillis()));
+            redisTemplate.expire(this.getToken(token), properties.getTimeout().getRedis(), TimeUnit.MINUTES);
+            return token;
+        } catch (Exception e) {
+            log.error("注册session失败", e);
+            redisTemplate.delete(this.getToken(token));
+            return null;
+        }
     }
 
     public String getToken() {
