@@ -185,7 +185,7 @@ public class TopicServiceImpl implements TopicService {
             int size = topic.size();
             Integer type = enumService.getEnumValue("TOPIC", "TYPE", topic.get(size - 1).toString());
             topicObject.setType(type);
-            Integer difficult = enumService.getEnumValue("TOPIC", "DIFFICULT", topic.get(size - 2).toString());
+            Integer difficult = enumService.getEnumValue("TOPIC", "DIFFICULT", topic.get(size - 3).toString());
             topicObject.setDifficult(difficult);
             topicObject.setAnalysis(topic.get(size - 2).toString());
             topicObject.setTopicmark(NumberUtils.toDouble(topic.get(size - 4).toString()));

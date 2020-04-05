@@ -57,9 +57,7 @@ swagger:
   enabled: true
 
 exercise:
-  #存入redis的session生存时间 ttl 分钟
-  session_timeout: 20
-  #邮箱验证码有效期 分钟
-  mail_timeout: 10
-  #短信验证码有效期 分钟
-  sms_timeout: 3
+  timeout:
+    redis: 120
+    mail: 10
+    sms: 5

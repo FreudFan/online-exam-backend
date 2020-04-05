@@ -115,7 +115,10 @@
                     <div class="box-header with-border">
                         <h3 class="box-title" style="float: left">题库列表</h3>
                         <a href="javascript:;" class="a-upload" style="float: right">
-                            <i class="fa fa-file-o"></i> <input type="file" @change="fileUpload()" name="file" id="file">点击这里导入题库
+                            <i class="fa fa-file-o"></i> <input type="file" @change="fileUpload()" name="file" id="file">导入题库
+                        </a>
+                        <a href="javascript:;" class="a-upload" style="float: right" @click="downloadFromWork()">
+                            <i class="fa fa-file-o"></i>下载模板
                         </a>
                     </div>
 
@@ -148,7 +151,8 @@
                                 <select class="input-sm form-control"  v-model="findByType" @change="show(1)">
                                     <option value="all" >全部</option>
                                     <option value="0" >判断题</option>
-                                    <option value="1" >选择题</option>
+                                    <option value="1" >单选题</option>
+                                    <option value="2" >多选题</option>
                                 </select>
                             </div>
 
@@ -495,6 +499,21 @@
             getDetail:function (topic) {
                 localStorage.setItem("topic",JSON.stringify(topic));
                 location.href="topicdetail.html";
+            },
+            downloadFromWork:function () {
+                axios.get('rest/topic/downloadFromWork',{
+                    responseType: 'blob'
+                }).then(function (response) {
+                    var url = window.URL.createObjectURL(new Blob([response.data]))
+                    var link= document.createElement('a')
+                    link.style.display='none'
+                    link.href=url
+                    link.setAttribute('download', '题库模板下载.xlsx')
+                    document.body.appendChild(link)
+                    link.click()
+
+
+                })
             }
         },
         created:function () {

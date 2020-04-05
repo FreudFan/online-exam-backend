@@ -12,6 +12,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -220,4 +221,27 @@ public class TopicResource {
 //    }
 //
 
+    @ApiOperation(value = "下载模板文件", response = InputStream.class)
+    @GET
+    @Path("downloadFromWork")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response downloadFromWork( @Context HttpHeaders httpHeaders) throws Exception {
+        File f = new File("files" + File.separator + "考试题目上传模板.xlsx");
+        String fileName = f.getName();
+        if (!f.exists()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else {
+            String agent = httpHeaders.getHeaderString("USER-AGENT");
+            //需要对文件名进行编码，否则会乱码 火狐浏览器下载文件需单独处理文件编码
+            if (agent != null && agent.toLowerCase().indexOf("firefox") > 0) {
+                fileName = "=?UTF-8?B?" + Base64.getEncoder().encodeToString(fileName.getBytes(StandardCharsets.UTF_8)) + "?=";
+            } else {
+                fileName = URLEncoder.encode(fileName, "UTF-8");
+            }
+            String mt = new MimetypesFileTypeMap().getContentType(f);
+            return Response.ok(f,mt).header("Content-disposition", "attachment;filename=" + fileName)
+                    .header("Cache-Control", "no-cache").build();
+        }
+    }
 }
