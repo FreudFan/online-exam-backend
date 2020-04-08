@@ -197,15 +197,13 @@ public class TopicServiceImpl implements TopicService {
     }
 
     /***
-     * 批量插入题目
-     * @param topicList
+     * 插入题目
+     * @param topic
      */
     @Override
-    public void insertTopics(List<Topic> topicList) {
-        topicList.stream().forEach((topic) -> {
+    public void insertTopics(Topic topic) {
             int keyId = topicDao.save(topic);
             optionService.insertOption(keyId, topic.getOptionsList());
-        });
     }
 
     @Override

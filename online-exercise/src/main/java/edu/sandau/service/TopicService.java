@@ -64,9 +64,9 @@ public interface TopicService {
 
     /***
      * 将用户自定义的题目插入数据库
-     * @param topicList
+     * @param topic
      */
-    void insertTopics(List<Topic> topicList);
+    void insertTopics(Topic topic);
 
     /***
      * 更新题目

@@ -131,6 +131,7 @@
                             <div class="pull-left">
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
+                                        <button type="button" class="btn btn-default" title="新增" @click="add()"><i class="fa fa-trash-o"></i> 新增</button>
                                         <button type="button" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i> 禁用</button>
                                         <button type="button" class="btn btn-default" title="启用"><i class="fa fa-check"></i> 启用</button>
                                         <button type="button" class="btn btn-default" title="刷新"><i class="fa fa-refresh"></i> 刷新</button>
@@ -497,7 +498,7 @@
                 }
             },
             getDetail:function (topic) {
-                localStorage.setItem("topic",JSON.stringify(topic));
+                sessionStorage.setItem("topic",JSON.stringify(topic));
                 location.href="topicdetail.html";
             },
             downloadFromWork:function () {
@@ -514,6 +515,9 @@
 
 
                 })
+            },
+            add:function () {
+                location.href = 'topicadd.html'
             }
         },
         created:function () {

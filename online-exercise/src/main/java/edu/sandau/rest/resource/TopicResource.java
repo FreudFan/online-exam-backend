@@ -160,7 +160,7 @@ public class TopicResource {
      *        }
      *     	]
      *批量插入题目
-     * @param topicList
+     * @param topic
      * @return插入成功
      */
     @ApiOperation(value = "插入用户自定义题目")
@@ -168,8 +168,8 @@ public class TopicResource {
     @Path("insert")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response topicInsert(List<Topic> topicList) {
-        topicService.insertTopics(topicList);
+    public Response topicInsert(Topic topic) {
+        topicService.insertTopics(topic);
         return Response.ok("ok").build();
     }
 

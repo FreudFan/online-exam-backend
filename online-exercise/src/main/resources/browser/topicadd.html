@@ -85,9 +85,9 @@
         <!-- 内容区域 -->
 
         <div class="content-wrapper">
-            <h2 align="center">题目详情</h2>
+            <h2 align="center">新增题目</h2>
             <div class="row data-type">
-                <div class="col-md-2 title rowHeight2x">题目详情</div>
+                <div class="col-md-2 title rowHeight2x">题目内容</div>
                 <div class="col-md-10 data rowHeight2x">
                     <textarea class="form-control" rows="3" placeholder="请输入..." v-model="topic.description"></textarea>
                 </div>
@@ -100,8 +100,6 @@
                     </select>
                     <div style="text-align: center">
                         <button type="button" class="btn bg-maroon" @click="insertOption()">添加选项</button>
-                        <button type="button" class="btn bg-maroon" @click="updateOption()" v-bind:style="{display:chooseOption == ''?'none':'inline-block'}">修改选项</button>
-                        <button type="button" class="btn bg-maroon" @click="deleteOption()" v-bind:style="{display:chooseOption == ''?'none':'inline-block'}">删除选项</button>
                     </div>
                 </div>
                 <div class="col-md-2 title">正确答案</div>
@@ -143,7 +141,7 @@
                 </div>
                 <div class="col-md-2 title"></div>
                 <div class="col-md-10 data text-center">
-                    <button type="button" class="btn bg-maroon" @click="update()">保存</button>
+                    <button type="button" class="btn bg-maroon" @click="insert()">保存</button>
                     <button type="button" class="btn bg-default" onclick="history.back(-1);">返回</button>
                 </div>
 
@@ -166,7 +164,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary" @click="saveUpdate()">确定</button>
+                        <button type="button" class="btn btn-primary" @click="saveInsert()">确定</button>
                     </div>
                 </div>
             </div>
@@ -204,16 +202,6 @@
     <script src="./plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="./plugins/datatables/dataTables.bootstrap.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // 选择框
-            $(".select2").select2();
-
-            // WYSIHTML5编辑器
-            $(".textarea").wysihtml5({
-                locale: 'zh-CN'
-            });
-        });
-
 
         // 设置激活菜单
         function setSidebarActive(tagUri) {
@@ -246,7 +234,16 @@
     new Vue({
         el:"#main",
         data:{
-         topic:JSON.parse(sessionStorage.getItem("topic")),
+         topic: {
+                description:'',
+                optionsList:[],
+                correctkey:'',
+                topicmark:'',
+                difficult:'',
+                type:'',
+                subject_id:'',
+                analysis:''
+            },
         subjectList:[],
         chooseOption:'',
         },
@@ -266,10 +263,10 @@
         getOption:function (event) {
                 this.chooseOption = event.target.value;
             },
-        update:function () {
+        insert:function () {
             var vue = this;
-            axios.post('rest/topic/update',vue.topic).then(function (value) {
-                alert("修改成功!!!");
+            axios.post('rest/topic/insert',vue.topic).then(function (value) {
+                alert("新增成功!!!");
                 history.back(-1);
                 console.log(value);
             }).catch(function (reason) {
@@ -278,43 +275,22 @@
             })
         },
         insertOption:function () {
-                var choice = this.topic.optionsList[this.topic.optionsList.length - 1].name;
-                $('#contentLabel').html("选项" + String.fromCharCode((choice.charCodeAt(0) + 1))+":");
+                if(this.topic.optionsList.length === 0){
+                    $('#contentLabel').html("选项A:");
+                }else {
+                    var choice = this.topic.optionsList[this.topic.optionsList.length - 1].name;
+                    $('#contentLabel').html("选项" + String.fromCharCode((choice.charCodeAt(0) + 1)) + ":");
+                }
                 $('#content').val('');
                 $('#myModalLabel').val('新增选项');
             $('#myModal').modal('show');
         },
-        updateOption:function(){
-                $('#contentLabel').html('选项'+this.topic.optionsList[this.chooseOption].name+':');
-               $('#content').val(this.topic.optionsList[this.chooseOption].content);
-                $('#myModalLabel').val('修改选项');
-                $('#myModal').modal('show');
-
-            },
-        deleteOption:function () {
-                var options = this.topic.optionsList;
-                var choice =  options[this.chooseOption].name;
-                var temp;
-                options.splice(this.chooseOption,1);
-                for (var i = this.chooseOption; i < options.length; i++) {
-                        temp = options[i].name;
-                        options[i].name = choice;
-                        choice = temp;
-                }
-                console.log(options);
-            },
-            saveUpdate:function () {
-                var title = $('#myModalLabel').val();
-                if(title === '修改选项') {
-                    this.topic.optionsList[this.chooseOption].content = $('#content').val();
-                }else if(title === '新增选项'){
-                    this.topic.optionsList.push({
-                        name:$('#contentLabel').html().substr(2,1),
-                        content:$('#content').val(),
-                    })
-                    console.log(this.topic.optionsList)
-                }
-                $('#myModal').modal('hide');
+        saveInsert:function () {
+            this.topic.optionsList.push({
+                name:$('#contentLabel').html().substr(2,1),
+                content:$('#content').val(),
+            })
+            $('#myModal').modal('hide');
             }
         },
         created:function () {
