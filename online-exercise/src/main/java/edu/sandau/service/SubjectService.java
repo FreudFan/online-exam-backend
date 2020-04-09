@@ -16,4 +16,6 @@ public interface SubjectService {
     Integer deleteById(Integer id) throws Exception;
 
     Page showSub(Page page);
+
+    List<Subject> getAll();
 }

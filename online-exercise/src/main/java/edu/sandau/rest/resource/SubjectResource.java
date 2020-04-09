@@ -26,7 +26,12 @@ public class SubjectResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public Response showSub(Page page) throws Exception {
-        page = subjectService.showSub(page);
+        if(page == null){
+            List<Subject> subjects = subjectService.getAll();
+            return Response.ok(subjects).build();
+        }else {
+            page = subjectService.showSub(page);
+        }
         return Response.ok(page).build();
     }
 

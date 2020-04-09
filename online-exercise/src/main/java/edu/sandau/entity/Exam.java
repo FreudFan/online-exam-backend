@@ -24,6 +24,10 @@ public class Exam implements Serializable {
     private Integer totalScore = 100;
     //试卷的描述
     private String description;
+    //试卷难度
+    private Integer difficult;
+    //难度中文
+    private String difficultName;
     //试卷标识,标识试卷可不可用 1:可用 0:不可用
     private Integer flag;
     //创建人

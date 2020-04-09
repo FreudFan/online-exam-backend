@@ -48,6 +48,8 @@ public class ExamServiceImpl implements ExamService  {
         exams.stream().forEach((exam)->{
             try {
                 exam.setSubjectName(subjectService.getSubjectById(exam.getSubject_id()).getName());
+                String difficultName = sysEnumService.getEnumName("TOPIC", "DIFFICULT", exam.getDifficult());
+                exam.setDifficultName(difficultName);
             } catch (Exception e) {
                 e.printStackTrace();
             }

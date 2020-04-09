@@ -528,7 +528,7 @@
         created:function () {
             var vue = this;
             vue.show(vue.pageNo);
-            axios.get('rest/common/sub/show').then(function (response) {
+            axios.post('rest/common/sub/show').then(function (response) {
                 vue.subjectList = response.data;
                 vue.chooseSubject = vue.subjectList[0].id;
             }).catch(function (reason) {

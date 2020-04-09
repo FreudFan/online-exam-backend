@@ -146,7 +146,8 @@
                                     <th class="sorting_asc">ID</th>
                                     <th class="sorting_desc">试卷名</th>
                                     <th class="sorting_asc">总分</th>
-                                    <th class="sorting_desc sorting_desc_disabled">课程号</th>
+                                    <th class="sorting_asc">难度</th>
+                                    <th class="sorting_desc sorting_desc_disabled">课程</th>
                                     <th class="sorting">试卷描述</th>
                                     <th class="text-center">操作</th>
                                 </tr>
@@ -157,6 +158,7 @@
                                     <td>{{exam.id}}</td>
                                     <td>{{exam.name}}</td>
                                     <td>{{exam.totalScore}}</td>
+                                    <td>{{exam.difficultName}}</td>
                                     <td>{{exam.subjectName}}</td>
                                     <td>{{exam.description}}</td>
                                     <td class="text-center">
@@ -299,12 +301,17 @@
     new Vue({
         el:"#main",
         data:{
-            examList:[]
+            examList:[],
+            pageNo:1,
+            pageSize:10
         },
         created:function () {
-            var vue = this;
-            axios.post('rest/exam/paper/show').then(function (response) {
-                vue.examList = response.data.rows;
+            var _this = this;
+            axios.post('rest/exam/paper/show',{
+                pageSize:_this.pageSize,
+                pageNo:_this.pageNo
+            }).then(function (response) {
+                _this.examList = response.data.rows;
             }).catch(function (reason) {
                 checkToken(reason.response.status);
             })

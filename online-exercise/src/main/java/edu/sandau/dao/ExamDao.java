@@ -61,13 +61,15 @@ public class ExamDao {
         Map<String,Object> params = page.getOption();
         String sql = getSqlAndParams(params, obj);
         sb.append(sql);
-        sb.append(" limit ? , ? ");
-        page.setTotal(getCount(sql,obj));
-        int start = (page.getPageNo() - 1) * page.getPageSize();
-        obj.add(start);
-        obj.add(page.getPageSize());
-        List<Exam> list = jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<>(Exam.class), obj.toArray());
-        return list;
+        page.setTotal(getCount(sql, obj));
+        if(page.getPageSize() != null && page.getPageNo() != null) {
+            sb.append(" limit ? , ? ");
+            int start = (page.getPageNo() - 1) * page.getPageSize();
+            obj.add(start);
+            obj.add(page.getPageSize());
+        }
+        return jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<>(Exam.class), obj.toArray());
+
     }
 
     public int getCount(String sb, List<Object> obj ) {

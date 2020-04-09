@@ -11,10 +11,10 @@ import java.util.Map;
 @Getter
 public class Page<E> {
     @ApiModelProperty(value = "当前页码")
-    private Integer pageNo = 1;
+    private Integer pageNo;
 
     @ApiModelProperty(value = "页面大小, 默认是5")
-    private Integer pageSize = 5;
+    private Integer pageSize;
 
     @ApiModelProperty(value = "查询总数")
     private Integer total;

@@ -52,7 +52,6 @@ public class WorryTopicDao {
     }
 
     public List<WorryTopicData> selectAll(Page page) {
-        int start = (page.getPageNo() - 1) * page.getPageSize();
         Map<String, Object> params = page.getOption();
         if(params == null || params.size() == 0){
             params = new HashMap<>();
@@ -66,9 +65,12 @@ public class WorryTopicDao {
         sql.append(sqlAppend);
         int count = getCount(sql.toString(), obj);
         page.setTotal(count);
-        sql.append(" limit ?,?");
-        obj.add(start);
-        obj.add(page.getPageSize());
+        if(page.getPageSize() != null && page.getPageNo() != null) {
+            int start = (page.getPageNo() - 1) * page.getPageSize();
+            sql.append(" limit ?,?");
+            obj.add(start);
+            obj.add(page.getPageSize());
+        }
         return jdbcTemplate.query(sql.toString(), new BeanPropertyRowMapper<>(WorryTopicData.class), obj.toArray());
     }
 

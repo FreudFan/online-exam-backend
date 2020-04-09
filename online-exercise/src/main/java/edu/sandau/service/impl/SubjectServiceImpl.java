@@ -45,4 +45,9 @@ public class SubjectServiceImpl implements SubjectService {
         page.setRows(subjectList);
         return page;
     }
+
+    @Override
+    public List<Subject> getAll() {
+        return subjectDao.getAll();
+    }
 }

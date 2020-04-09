@@ -301,7 +301,7 @@
         },
         created:function () {
             var vue = this;
-            axios.get('rest/common/sub/show').then(function (response) {
+            axios.post('rest/common/sub/show').then(function (response) {
                 vue.subjectList = response.data;
                 console.log(vue.topic);
             }).catch(function (reason) {
