@@ -2,6 +2,7 @@ package edu.sandau.service.impl;
 
 import edu.sandau.dao.SubjectDao;
 import edu.sandau.entity.Subject;
+import edu.sandau.rest.model.Page;
 import edu.sandau.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,17 +21,13 @@ public class SubjectServiceImpl implements SubjectService {
         return subjectDao.save(subject);
     }
 
-    @Override
-    public Subject update(Subject subject) throws Exception {
-        int id = subject.getId();
-        subjectDao.update(subject);
-        return subjectDao.getSubjectById(id);
-    }
+//    @Override
+//    public Subject update(Subject subject) throws Exception {
+//        int id = subject.getId();
+//        subjectDao.update(subject);
+//        return subjectDao.getSubjectById(id);
+//    }
 
-    @Override
-    public List<Subject> getSubjectsByOrgId(Integer orgId) throws Exception {
-        return subjectDao.getSubjectsByOrgId(orgId);
-    }
 
     @Override
     public Subject getSubjectById(Integer id) throws Exception {
@@ -43,7 +40,9 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<Subject> showSub() {
-        return subjectDao.showSub();
+    public Page showSub(Page page) {
+        List<Subject> subjectList = subjectDao.showSub(page);
+        page.setRows(subjectList);
+        return page;
     }
 }

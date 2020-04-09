@@ -1,6 +1,7 @@
 package edu.sandau.rest.resource;
 
 import edu.sandau.entity.Subject;
+import edu.sandau.rest.model.Page;
 import edu.sandau.service.SubjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,16 +22,18 @@ public class SubjectResource {
 
     @ApiOperation(value = "查询所有课程")
     @Path("show")
-    @GET
+    @POST
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
-    public Response showSub() throws Exception {
-        List<Subject> subjectList = subjectService.showSub();
-        return Response.ok(subjectList).build();
+    public Response showSub(Page page) throws Exception {
+        page = subjectService.showSub(page);
+        return Response.ok(page).build();
     }
 
 
+
     @ApiOperation(value = "新增课程")
+    @Path("insert")
     @POST
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
@@ -39,24 +42,19 @@ public class SubjectResource {
         return Response.ok(subject).build();
     }
 
-    @ApiOperation(value = "更改课程")
-    @PUT
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public Response updateSub(Subject subject) throws Exception {
-        subject = subjectService.update(subject);
-        return Response.ok(subject).build();
-    }
+//    @ApiOperation(value = "更改课程")
+//    @PUT
+//    @Consumes({ MediaType.APPLICATION_JSON })
+//    @Produces({ MediaType.APPLICATION_JSON })
+//    public Response updateSub(Subject subject) throws Exception {
+//        subject = subjectService.update(subject);
+//        return Response.ok(subject).build();
+//    }
 
-    @ApiOperation(value = "根据组织id查找课程")
-    @GET
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
-    public List<Subject> getSubByOrgId(@QueryParam("orgId") Integer orgId) throws Exception {
-        return subjectService.getSubjectsByOrgId(orgId);
-    }
+
 
     @ApiOperation(value = "根据id删除课程")
+    @Path("delete")
     @DELETE
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })

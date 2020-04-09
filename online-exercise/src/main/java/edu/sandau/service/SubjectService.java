@@ -1,6 +1,7 @@
 package edu.sandau.service;
 
 import edu.sandau.entity.Subject;
+import edu.sandau.rest.model.Page;
 
 import java.util.List;
 
@@ -8,13 +9,11 @@ public interface SubjectService {
 
     Subject save(Subject subject) throws Exception;
 
-    Subject update(Subject subject) throws Exception;
-
-    List<Subject> getSubjectsByOrgId(Integer orgId) throws Exception;
+//    Subject update(Subject subject) throws Exception;
 
     Subject getSubjectById(Integer id) throws Exception;
 
     Integer deleteById(Integer id) throws Exception;
 
-    List<Subject> showSub();
+    Page showSub(Page page);
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 
 <head>
     <!-- 页面meta -->
@@ -8,12 +8,13 @@
     <title>题库后台管理系统</title>
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script src="/webjars/vue/2.6.11/vue.min.js"></script>
     <script src="/webjars/axios/0.19.2/dist/axios.js"></script>
     <script src="js/my.js"></script>
+
     <link rel="stylesheet" href="./plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="./plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="./plugins/ionicons/css/ionicons.min.css">
@@ -24,6 +25,14 @@
     <link rel="stylesheet" href="./plugins/adminLTE/css/AdminLTE.css">
     <link rel="stylesheet" href="./plugins/adminLTE/css/skins/_all-skins.min.css">
     <link rel="stylesheet" href="./css/style.css">
+
+    <style>
+        .search{
+            float:right;
+            margin-left: 30px;
+        }
+
+    </style>
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini">
@@ -94,11 +103,11 @@
             <!-- 内容头部 -->
             <section class="content-header">
                 <h1>
-                    试卷管理
+                    题库管理
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="home.html"><i class="fa fa-dashboard"></i> 首页</a></li>
-                    <li><a href="examlist.html">试卷管理</a></li>
+                    <li><a href="topiclist.html">课程管理</a></li>
                 </ol>
             </section>
             <!-- 内容头部 /-->
@@ -109,7 +118,7 @@
                 <!-- .box-body -->
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">试卷列表</h3>
+                        <h3 class="box-title" style="float: left">课程列表</h3>
                     </div>
 
                     <div class="box-body">
@@ -121,19 +130,22 @@
                             <div class="pull-left">
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-default" title="新建试卷"><i class="fa fa-file-o"></i> 新建试卷</button>
-                                        <button type="button" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i> 禁用</button>
+                                        <button type="button" class="btn btn-default" title="新增" @click="add()"><i class="fa fa-trash-o"></i> 新增</button>
+                                        <button type="button" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i> 删除</button>
                                         <button type="button" class="btn btn-default" title="启用"><i class="fa fa-check"></i> 启用</button>
                                         <button type="button" class="btn btn-default" title="刷新"><i class="fa fa-refresh"></i> 刷新</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="box-tools pull-right">
-                                <div class="has-feedback">
-                                    <input type="text" class="form-control input-sm" placeholder="搜索">
-                                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+
+                            <div class="box-tools pull-right ">
+                                <div class="has-feedback form-inline" >
+                                    <label>请输入课程名:</label>
+                                    <input type="text" class="form-control input-sm" placeholder="搜索"  v-model="findOption" @change="show(1)">
+                                    <span class="glyphicon glyphicon-search form-control-feedback" style="top: 0px;" ></span>
                                 </div>
                             </div>
+
                             <!--工具栏/-->
 
                             <!--数据列表-->
@@ -143,28 +155,21 @@
                                     <th class="" style="padding-right:0px;">
                                         <input id="selall" type="checkbox" class="icheckbox_square-blue">
                                     </th>
-                                    <th class="sorting_asc">ID</th>
-                                    <th class="sorting_desc">试卷名</th>
-                                    <th class="sorting_asc">总分</th>
-                                    <th class="sorting_desc sorting_desc_disabled">课程号</th>
-                                    <th class="sorting">试卷描述</th>
+                                    <th class="sorting_asc">课程号</th>
+                                    <th class="sorting_desc">课程名</th>
                                     <th class="text-center">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="exam in examList">
+                                <tr v-for="subject in subjectList">
                                     <td><input name="ids" type="checkbox"></td>
-                                    <td>{{exam.id}}</td>
-                                    <td>{{exam.name}}</td>
-                                    <td>{{exam.totalScore}}</td>
-                                    <td>{{exam.subjectName}}</td>
-                                    <td>{{exam.description}}</td>
+                                    <td>{{subject.id}}</td>
+                                    <td>{{subject.name}}</td>
                                     <td class="text-center">
-                                        <button type="button" class="btn bg-olive btn-xs">详情</button>
-                                        <button type="button" class="btn bg-olive btn-xs">编辑</button>
-                                        <button type="button" class="btn bg-olive btn-xs">禁用</button>
+                                        <button type="button" class="btn bg-olive btn-xs" @click="deleteSubject(subject.id)">删除</button>
                                     </td>
                                 </tr>
+                                </tbody>
                             </table>
                             <!--数据列表/-->
                         </div>
@@ -176,31 +181,30 @@
                     <div class="box-footer">
                         <div class="pull-left">
                             <div class="form-group form-inline">
-                                总共2 页，共14 条数据。 每页
-                                <select class="form-control">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select> 条
+                                总共{{totalPage}}页，当前是第{{pageNo}}页,共{{total}}条数据
+                                <!--总共{{totalPage}}页，当前是第{{pageNo}}页,共{{total}}条数据。 每页-->
+                                <!--<select class="form-control">-->
+                                    <!--<option>1</option>-->
+                                    <!--<option>2</option>-->
+                                    <!--<option>3</option>-->
+                                    <!--<option>4</option>-->
+                                    <!--<option>5</option>-->
+                                <!--</select> 条-->
                             </div>
                         </div>
 
                         <div class="box-tools pull-right">
                             <ul class="pagination">
                                 <li>
-                                    <a href="#" aria-label="Previous">首页</a>
+                                    <a href="javascript:0" aria-label="Previous" @click="show(1)">首页</a>
                                 </li>
-                                <li><a href="#">上一页</a></li>
-                                <li><a href="#">1</a></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">5</a></li>
-                                <li><a href="#">下一页</a></li>
+                                <li><a href="javascript:0" @click="show(pageNo - 1)">上一页</a></li>
+                                <li v-for="index of 10" v-if=" pageNumber + index - 1 <= totalPage && pageNumber + index - 1 != 0">
+                                    <a href="javascript:0" @click="show(pageNumber + index - 1)">{{pageNumber + index -  1 }}</a>
+                                </li>
+                                <li><a href="javascript:0" @click="show(pageNo + 1)">下一页</a></li>
                                 <li>
-                                    <a href="#" aria-label="Next">尾页</a>
+                                    <a href="javascript:0" aria-label="Next" @click="show(totalPage)">尾页</a>
                                 </li>
                             </ul>
                         </div>
@@ -209,10 +213,8 @@
 
             </section>
             <!-- 正文区域 /-->
+
         </div>
-
-
-
         <!-- @@close -->
         <!-- 内容区域 /-->
 
@@ -225,9 +227,14 @@
         </footer>
         <!-- 底部导航 /-->
 
+    </div>
 
 
-</div>
+
+    <!--模态窗口/-->
+
+
+
 
 
     <script src="./plugins/jQuery/jquery-2.2.3.min.js"></script>
@@ -291,6 +298,8 @@
                 $(this).data("clicks", !clicks);
             });
         });
+
+
     </script>
 
 
@@ -299,16 +308,62 @@
     new Vue({
         el:"#main",
         data:{
-            examList:[]
+            subjectList:[],
+            pageNo:1,
+            pageSize:10,
+            totalPage:0,
+            total:0,
+            pageNumber:0,
+            findOption:''
+
+        },
+        methods:{
+            add:function () {
+                location.href = 'subjectadd.html'
+            },
+            show:function (pageNo) {
+                var _this = this;
+                _this.pageNo = pageNo;
+                if( _this.pageNo >=  _this.totalPage){
+                    _this.pageNo =  _this.totalPage;
+                }
+                if( _this.pageNo <= 0){
+                    _this.pageNo = 1;
+                }
+                axios.post('rest/common/sub/show',{
+                    pageNo:_this.pageNo,
+                    pageSize:_this.pageSize,
+                    option:{
+                        name:_this.findOption
+                    }
+                }).then(function (response) {
+                    _this.subjectList = response.data.rows;
+                    _this.total =  response.data.total;
+                    _this.totalPage = Math.ceil( _this.total /  _this.pageSize);
+                    _this.pageNumber = Math.floor(pageNo / 10) *10;
+                    console.log( _this.subjectList)
+                    console.log(response)
+                }).catch(function (reason) {
+                    checkToken(reason.response.status);
+                    console.log(reason);
+                })
+            },
+            deleteSubject:function (id) {
+                if(confirm("确定要删除嘛?")) {
+                    var _this = this;
+                    axios.delete('rest/common/sub/delete?id=' + id).then(function (response) {
+                        _this.show(_this.pageNo)
+                    }).catch(function (reason) {
+                        checkToken(reason.response.status);
+                        console.log(reason);
+                    })
+                }
+            }
         },
         created:function () {
-            var vue = this;
-            axios.post('rest/exam/paper/show').then(function (response) {
-                vue.examList = response.data.rows;
-            }).catch(function (reason) {
-                checkToken(reason.response.status);
-            })
+                this.show(this.pageNo)
         }
+
     })
     //用户名
     $(function () {

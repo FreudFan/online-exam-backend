@@ -90,63 +90,19 @@
         <!-- 内容区域 -->
 
         <div class="content-wrapper">
-            <h2 align="center">新增题目</h2>
+            <h2 align="center">新增课程</h2>
             <div class="row data-type">
-                <div class="col-md-2 title rowHeight2x">题目内容</div>
-                <div class="col-md-10 data rowHeight2x">
-                    <textarea class="form-control" rows="3" placeholder="请输入..." v-model="topic.description"></textarea>
-                </div>
-                <div class="col-md-2 title rowHeight2x" style="height: 210px">选项</div>
-                <div class="col-md-10 data rowHeight2x" style="height: 210px">
-                    <select multiple="multiple" style="height: 170px;width: 100%;" v-model="chooseOption" @change="getOption($event)">
-                        <option v-for="(item,index) in topic.optionsList" style="margin-top:10px" :value="index">
-                            {{item.name}}.{{item.content}}
-                        </option>
-                    </select>
-                    <div style="text-align: center">
-                        <button type="button" class="btn bg-maroon" @click="insertOption()">添加选项</button>
-                    </div>
-                </div>
-                <div class="col-md-2 title">正确答案</div>
+                <div class="col-md-2 title">课程号</div>
                 <div class="col-md-4 data">
-                    <input type="text" class="form-control"  v-model="topic.correctkey">
+                    <input type="number" class="form-control"  v-model="subject.id">
                 </div>
-                <div class="col-md-2 title">分值</div>
+                <div class="col-md-2 title">课程名</div>
                 <div class="col-md-4 data">
-                    <input type="text" class="form-control"  v-model="topic.topicmark">
-                </div>
-                <div class="col-md-2 title">难度</div>
-                <div class="col-md-4 data">
-                    <select class="form-control"  v-model="topic.difficult" @change="getDifficult($event)">
-                        <option value="0" >易</option>
-                        <option value="1" >中</option>
-                        <option value="2" >难</option>
-                    </select>
-                </div>
-                <div class="col-md-2 title">题目类型</div>
-                <div class="col-md-4 data">
-                    <select class="form-control"  v-model="topic.type" @change="getType($event)">
-                        <option value="0" >判断题</option>
-                        <option value="1" >单选题</option>
-                        <option value="2" >多选题</option>
-                    </select>
-                </div>
-                <div class="col-md-2 title">所属学科</div>
-                <div class="col-md-4 data">
-                    <select class="form-control"  v-model="topic.subject_id" @change="getSubject($event)">
-                        <option v-for="subject in subjectList" :value="subject.id" >{{subject.name}}</option>
-                    </select>
-                </div>
-                <div class="col-md-2 title"></div>
-                <div class="col-md-4 data">
-                </div>
-                <div class="col-md-2 title rowHeight2x">解析</div>
-                <div class="col-md-10 data rowHeight2x">
-                    <textarea class="form-control" rows="3" v-model="topic.analysis"></textarea>
+                    <input type="text" class="form-control"  v-model="subject.name">
                 </div>
                 <div class="col-md-2 title"></div>
                 <div class="col-md-10 data text-center">
-                    <button type="button" class="btn bg-maroon" @click="insert()">保存</button>
+                    <button type="button" class="btn bg-maroon" @click="saveSubject()">保存</button>
                     <button type="button" class="btn bg-default" onclick="history.back(-1);">返回</button>
                 </div>
 
@@ -154,26 +110,7 @@
         </div>
 
 
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
-            <div class="modal-dialog" role="document">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-                        <h4 class="modal-title" id="myModalLabel"></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="content" id="contentLabel"></label>
-                            <input type="text" class="form-control" id="content"/>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary" @click="saveInsert()">确定</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <!-- @@close -->
         <!-- 内容区域 /-->
@@ -187,7 +124,6 @@
         </footer>
         <!-- 底部导航 /-->
     </div>
-
 
     <script src="./plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script src="./plugins/jQueryUI/jquery-ui.min.js"></script>
@@ -240,74 +176,26 @@
     new Vue({
         el:"#main",
         data:{
-         topic: {
-                description:'',
-                optionsList:[],
-                correctkey:'',
-                topicmark:'',
-                difficult:'',
-                type:'',
-                subject_id:'',
-                analysis:''
-            },
-        subjectList:[],
-        chooseOption:'',
-        },
-        methods:{
-        getSubject:function (event) {
-            this.topic.subject_id = event.target.value;
-            console.log(this.topic.subject_id );
-        },
-        getType:function (event) {
-                this.topic.type = event.target.value;
-                console.log(this.topic.type);
-        },
-        getDifficult:function (event) {
-            this.topic.difficult = event.target.value;
-            console.log(this.topic.difficult);
-        },
-        getOption:function (event) {
-                this.chooseOption = event.target.value;
-            },
-        insert:function () {
-            var vue = this;
-            axios.post('rest/topic/insert',vue.topic).then(function (value) {
-                alert("新增成功!!!");
-                history.back(-1);
-                console.log(value);
-            }).catch(function (reason) {
-                checkToken(reason.response.status);
-                console.log(reason);
-            })
-        },
-        insertOption:function () {
-                if(this.topic.optionsList.length === 0){
-                    $('#contentLabel').html("选项A:");
-                }else {
-                    var choice = this.topic.optionsList[this.topic.optionsList.length - 1].name;
-                    $('#contentLabel').html("选项" + String.fromCharCode((choice.charCodeAt(0) + 1)) + ":");
-                }
-                $('#content').val('');
-                $('#myModalLabel').val('新增选项');
-            $('#myModal').modal('show');
-        },
-        saveInsert:function () {
-            this.topic.optionsList.push({
-                name:$('#contentLabel').html().substr(2,1),
-                content:$('#content').val(),
-            })
-            $('#myModal').modal('hide');
+            subject:{
+                id:'',
+                name:''
             }
         },
-        created:function () {
-            var vue = this;
-            axios.get('rest/common/sub/show').then(function (response) {
-                vue.subjectList = response.data;
-                console.log(vue.topic);
+        methods:{
+        saveSubject:function () {
+            var _this = this
+            axios.post('/rest/common/sub/insert',_this.subject).then(function (value) {
+                alert("新增成功!!!");
+                console.log(value);
+                history.back(-1);
             }).catch(function (reason) {
                 checkToken(reason.response.status);
                 console.log(reason);
             })
+        }
+        },
+        created:function () {
+
         }
     })
     //用户名

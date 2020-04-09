@@ -13,7 +13,6 @@ public class Subject {
     private Integer id;
 
     private String name;
-    private Integer orgId;
 
     @JsonIgnore
     private Date createtime;
