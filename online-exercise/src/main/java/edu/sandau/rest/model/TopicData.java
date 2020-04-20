@@ -1,5 +1,6 @@
 package edu.sandau.rest.model;
 
+import edu.sandau.entity.Topic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,4 +18,6 @@ public class TopicData {
     private Integer type;
     @ApiModelProperty(value = "题目数据")
     List<List<Object>> file;
+    @ApiModelProperty(value = "题目对象集合")
+    List<Topic> topics;
 }

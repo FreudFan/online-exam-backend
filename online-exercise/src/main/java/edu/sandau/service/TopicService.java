@@ -56,11 +56,11 @@ public interface TopicService {
     void deleteTopics(Integer... ids);
 
     /***
-     * 将上传文件的数据存入数据库
+     * 将解析excel的数据类型转换为Topic对象
      * @param data
      * @return
      */
-    int save(TopicData data);
+    List<Topic> convertToModel(TopicData data);
 
     /***
      * 将用户自定义的题目插入数据库
@@ -96,4 +96,5 @@ public interface TopicService {
      */
     List<Topic> getTopicsDetail(List<Topic> topics);
 
+    void save(List<Topic> topics,Integer subject_id);
 }

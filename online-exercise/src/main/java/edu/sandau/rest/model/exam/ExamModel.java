@@ -10,7 +10,6 @@ public class ExamModel {
      * 学科id
      */
     private Integer subjectId;
-
     private List<ExamClazz> clazz;
 }
 

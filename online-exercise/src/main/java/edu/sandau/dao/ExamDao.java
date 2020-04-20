@@ -22,9 +22,9 @@ public class ExamDao {
 
     public Exam save(Exam exam) {
         String sql = " INSERT INTO exam " +
-                "(subject_id ,name, totalScore, description, flag, createBy, updateBy )" +
+                "(subject_id ,name, totalScore, description,difficult, flag, createBy, updateBy )" +
                 " VALUES " +
-                "( ?,?, ?, ?, ?, ?, ? )";
+                "( ?,?, ?, ?, ?, ?, ? ,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -32,9 +32,10 @@ public class ExamDao {
             ps.setString(2, exam.getName());
             ps.setInt(3, exam.getTotalScore());
             ps.setString(4, exam.getDescription());
-            ps.setInt(5, exam.getFlag());
-            ps.setInt(6, 1);
+            ps.setInt(5, exam.getDifficult());
+            ps.setInt(6, exam.getFlag());
             ps.setInt(7, 1);
+            ps.setInt(8, 1);
             return ps;
         }, keyHolder);
         int keyId = Objects.requireNonNull(keyHolder.getKey()).intValue();

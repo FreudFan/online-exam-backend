@@ -282,19 +282,31 @@
                         <h4 class="modal-title" id="myModalLabel">题目信息</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
+                        <div class="form-group form-inline">
                             <label>请选择学科:</label>
                             <select class="form-control" v-model="chooseSubject" @change="getSubject($event)">
-                                <option v-for="subject in subjectList" :value="subject.id">{{subject.name}}</option>
+                                <option v-for="subject in subjectList" :value="subject.id" width="90%">{{subject.name}}</option>
                             </select>
                         </div>
                         <table id="fileList" class="table table-bordered table-striped table-hover dataTable">
                             <thead>
-                                <th class="text-center" v-for=" title in fileData[0]" width="150px">{{title}}</th>
+                                <th class="text-center" width="150px">题目描述</th>
+                                <th class="text-center" >选项</th>
+                                <th class="text-center" >正确答案</th>
+                                <th class="text-center">分值</th>
+                                <th class="text-center" >题目类型</th>
+                                <th class="text-center" >难度</th>
+                                <th class="text-center" >答案解析</th>
                             </thead>
                             <tbody>
                             <tr v-for="row in fileData">
-                                <td v-for="value in row">{{value}}</td>
+                                <td>{{row.description}}</td>
+                                <td><pre>{{row.optionsString}}</pre></td>
+                                <td>{{row.correctkey}}</td>
+                                <td>{{row.topicmark}}</td>
+                                <td>{{row.typeName}}</td>
+                                <td>{{row.difficultName}}</td>
+                                <td>{{row.analysis}}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -399,7 +411,6 @@
             fileData:[],
             subjectList:[],
             chooseSubject:'',
-            fileId:'',
             findBySubject:'all',
             findByDifficult:'all',
             findByType:'all',
@@ -424,8 +435,7 @@
                         'Content-Type':'multipart/form-data',
                     }
                 }).then(function (response) {
-                    _this.fileData = response.data.file;
-                    _this.fileId=response.data.id;
+                    _this.fileData = response.data;
                     $('#myModal').modal('show');
                     console.log(_this.fileData);
                 }).catch(function (reason) {
@@ -473,13 +483,12 @@
             save:function () {
                 var _this = this;
                 axios.post('rest/topic/save',{
-                    id:_this.fileId,
-                    subject_id:_this.chooseSubject,
-                    type:_this.type,
-                    file:this.fileData
+                    topics:_this.fileData,
+                    subject_id:_this.chooseSubject
                 }).then(function (value) {
                     $('#myModal').modal('hide');
                     alert("导入成功!!!");
+                    _this.show(_this.pageNo);
                     console.log(value);
                 }).catch(function (reason) {
                     checkToken(reason.response.status);

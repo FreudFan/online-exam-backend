@@ -20,9 +20,13 @@ public class Topic implements Serializable {
     //题目类型
     @ApiModelProperty(value = "题目种类枚举{0:作业,1:考试}, 前端需赋值, 未赋值则默认为0")
     private Integer type;
+    //题目类型中文
+    private String typeName;
     //题目难度
     @ApiModelProperty(value = "题目难度枚举{0:易,1:中,2:难}, 前端需赋值, 未赋值则默认为0")
     private Integer difficult;
+    //题目难度中文
+    private String difficultName;
     //题目描述
     private String description;
     //正确答案
@@ -35,6 +39,8 @@ public class Topic implements Serializable {
     private Integer subject_id;
     //选项集合
     private List<Option> optionsList;
+    //题目字符串
+    private String optionsString;
     @JsonIgnore
     private Date createtime;
     @JsonIgnore

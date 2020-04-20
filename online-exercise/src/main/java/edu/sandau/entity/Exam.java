@@ -29,7 +29,7 @@ public class Exam implements Serializable {
     //难度中文
     private String difficultName;
     //试卷标识,标识试卷可不可用 1:可用 0:不可用
-    private Integer flag;
+    private Integer flag = 1;
     //创建人
     private Integer createBy;
     //更新人

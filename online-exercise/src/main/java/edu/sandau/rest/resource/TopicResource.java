@@ -53,7 +53,8 @@ public class TopicResource {
         if (data == null) {
             return Response.ok("请上传xlsx格式文件").status(Response.Status.BAD_REQUEST).build();
         }
-        return Response.ok(data).build();
+        List<Topic> topics = topicService.convertToModel(data);
+        return Response.ok(topics).build();
     }
 
     /***
@@ -106,8 +107,8 @@ public class TopicResource {
     }
 
     /***
-     *前端传数据时需带上subject_id以及题目的type
-     * @param data
+     *前端传数据时需带上subject_id
+     * @param topics
      * @return 插入成功
      * @throws Exception
      */
@@ -116,8 +117,11 @@ public class TopicResource {
     @Path("save")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response topicSave(TopicData data) throws Exception {
-        topicService.save(data);
+    public Response topicSave(TopicData topicData) throws Exception {
+        if(topicData.getSubject_id() == null){
+           return Response.accepted("请选择学科").status(Response.Status.BAD_REQUEST).build();
+        }
+        topicService.save(topicData.getTopics(),topicData.getSubject_id());
         return Response.accepted("ok").build();
     }
 

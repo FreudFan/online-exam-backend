@@ -158,10 +158,11 @@ public class TopicServiceImpl implements TopicService {
      * @return
      */
     @Override
-    public int save(TopicData data) {
+    public List<Topic> convertToModel(TopicData data) {
         int id = data.getId();
-        int subject_id = data.getSubject_id();
+//        int subject_id = data.getSubject_id();
         List<List<Object>> topicList = data.getFile();
+        List<Topic> topics = new ArrayList<>();
         //获得最大选项列的索引
         int options = getChooseCount(topicList.get(0));
         for (int i = 1; i < topicList.size(); i++) {
@@ -169,9 +170,10 @@ public class TopicServiceImpl implements TopicService {
             Topic topicObject = new Topic();
             List<Option> optionArgs = new ArrayList<>();
             topicObject.setFile_id(id);
-            topicObject.setSubject_id(subject_id);
+//            topicObject.setSubject_id(subject_id);
             topicObject.setDescription(topic.get(0).toString());
             //将每行的选项单独放入一个集合
+            StringBuffer optionStr = new StringBuffer();
             for (int j = 1; j <= options; j++) {
                 String value = topic.get(j).toString();
                 if (value != null && !"".equals(value)) {
@@ -179,21 +181,31 @@ public class TopicServiceImpl implements TopicService {
                     optionObject.setName(String.valueOf((char) ('A' + j - 1)));
                     optionObject.setContent(value);
                     optionArgs.add(optionObject);
+                    optionStr.append(optionObject.getName());
+                    optionStr.append(".");
+                    optionStr.append(optionObject.getContent());
+                    optionStr.append("\n");
                 }
             }
             topicObject.setOptionsList(optionArgs);
+            topicObject.setOptionsString(optionStr.toString());
             int size = topic.size();
-            Integer type = enumService.getEnumValue("TOPIC", "TYPE", topic.get(size - 1).toString());
+            String typeName = topic.get(size - 1).toString();
+            topicObject.setTypeName(typeName);
+            Integer type = enumService.getEnumValue("TOPIC", "TYPE", typeName);
             topicObject.setType(type);
-            Integer difficult = enumService.getEnumValue("TOPIC", "DIFFICULT", topic.get(size - 3).toString());
+            String difficultName = topic.get(size - 3).toString();
+            topicObject.setDifficultName(difficultName);
+            Integer difficult = enumService.getEnumValue("TOPIC", "DIFFICULT", difficultName);
             topicObject.setDifficult(difficult);
             topicObject.setAnalysis(topic.get(size - 2).toString());
             topicObject.setTopicmark(NumberUtils.toDouble(topic.get(size - 4).toString()));
             topicObject.setCorrectkey(topic.get(size - 5).toString());
-            int keyId = topicDao.save(topicObject);
-            optionService.insertOption(keyId, optionArgs);
+            topics.add(topicObject);
+//            int keyId = topicDao.save(topicObject);
+//            optionService.insertOption(keyId, optionArgs);
         }
-        return 0;
+        return topics;
     }
 
     /***
@@ -273,12 +285,21 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<Topic> getTopicsDetail(List<Topic> topics) {
-        topics.forEach((topic) -> {
+        topics.stream().forEach((topic) -> {
             Integer id = topic.getId();
             List<Option> optionList = optionService.findOptionById(id);
             topic.setOptionsList(optionList);
         });
         return topics;
+    }
+
+    @Override
+    public void save(List<Topic> topics,Integer subject_id) {
+        topics.stream().forEach(topic -> {
+            topic.setSubject_id(subject_id);
+            int keyId = topicDao.save(topic);
+            optionService.insertOption(keyId, topic.getOptionsList());
+        });
     }
 
 }

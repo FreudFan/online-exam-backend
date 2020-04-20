@@ -8,6 +8,7 @@ import edu.sandau.security.Auth;
 import edu.sandau.service.ExamService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +16,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Path("exam/paper")
@@ -90,7 +92,8 @@ public class ExamResource {
     @Path("showDetail")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response showExamDetail(Integer id){
+    public Response showExamDetail(@QueryParam("id") Integer id){
+
         List<Topic> topicsList = examService.getExamDetail(id,0);
         return Response.ok(topicsList).build();
     }
@@ -105,7 +108,7 @@ public class ExamResource {
     @Path("showDetailAdmin")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response showExamDetailForAdmin(Integer id){
+    public Response showExamDetailForAdmin(@QueryParam("id")Integer id){
         List<Topic> topicsList = examService.getExamDetail(id,1);
         return Response.ok(topicsList).build();
     }
@@ -121,7 +124,7 @@ public class ExamResource {
     @Path("delete")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response deleteExam(Integer id){
+    public Response deleteExam(@QueryParam("id") Integer id){
         examService.deleteExam(id);
         return Response.ok("ok").build();
     }
