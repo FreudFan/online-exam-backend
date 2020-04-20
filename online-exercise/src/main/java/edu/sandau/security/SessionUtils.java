@@ -32,7 +32,7 @@ public class SessionUtils {
     final public static String REFRESH_TIME = "refresh_time";
 
     public void addUserToSession(User user) {
-        Map<String,String> attribute = new HashMap<>(2);
+        Map<String,String> attribute = new HashMap<>(3);
         attribute.put(USER_ID_PREFIX, JacksonUtil.toJSON(user.getId()));
         attribute.put(USER_wxID_PREFIX, JacksonUtil.toJSON(user.getWxId()));
         attribute.put(USER_INFO_PREFIX, JacksonUtil.toJSON(user));
