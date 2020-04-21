@@ -54,7 +54,16 @@ public class ExamRecordServiceImpl implements ExamRecordService {
         Map<String, Object> param = new HashMap<>(2);
         //获取此次做题的题目
         List<Topic> topicsList = examService.getExamDetail(examId, 0);
-        ExamRecord examRecord = this.addRecord(examId);
+        List<ExamRecord> checkExamRecord = examRecordDao.checkEndTime(examId);
+        //判断之前的这次做题是否已经结束
+        ExamRecord examRecord;
+        if(checkExamRecord != null && checkExamRecord.size() > 0  ){
+            examRecord = checkExamRecord.get(0);
+            List<ExamRecordTopic> recordAnswers = examRecordTopicDao.getRecordAnswersByRecordId(examRecord.getId());
+            param.put("answers", recordAnswers);
+        }else {
+             examRecord = this.addRecord(examId);
+        }
         param.put("recordId", examRecord.getId());
         List<SysEnum> types = sysEnumService.getEnums("TOPIC", "TYPE");
         // 题目类型value : List<Topic>

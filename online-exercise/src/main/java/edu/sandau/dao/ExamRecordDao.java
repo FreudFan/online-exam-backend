@@ -3,6 +3,7 @@ package edu.sandau.dao;
 import edu.sandau.entity.ExamRecord;
 import edu.sandau.entity.Subject;
 import edu.sandau.rest.model.exam.ExamRecordAndExamDeatil;
+import edu.sandau.security.RequestContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -73,5 +74,10 @@ public class ExamRecordDao {
     public List<Subject> getSubjectIdByUserId(Integer userId) {
         String sql = "SELECT DISTINCT subject_id as id FROM exam_record INNER JOIN exam ON exam_id = exam.id WHERE user_id = ? ";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Subject>(Subject.class), userId);
+    }
+
+    public List<ExamRecord> checkEndTime(Integer examId) {
+        String sql = "SELECT  id,endTime FROM exam_record WHERE exam_id = ? AND user_Id = ? And endTime is null";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<ExamRecord>(ExamRecord.class), examId, RequestContent.getCurrentUser().getId());
     }
 }
