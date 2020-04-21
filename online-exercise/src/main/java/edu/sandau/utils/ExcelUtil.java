@@ -50,7 +50,8 @@ public class ExcelUtil {
         // 读取第一张表格内容
         XSSFSheet sheet = xwb.getSheetAt(0);
         if ( sheet.getPhysicalNumberOfRows() == 0 ) {
-            return null; //若该表为空，返回空
+            //若该表为空，返回空
+            return null;
         }
         return analysisExcel(sheet);
     }

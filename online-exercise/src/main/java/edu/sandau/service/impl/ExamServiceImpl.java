@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @Service
-@Transactional
-public class ExamServiceImpl implements ExamService  {
+@Transactional(rollbackFor=Exception.class)
+public class ExamServiceImpl implements ExamService {
 
     @Autowired
     private ExamDao examDao;
@@ -36,6 +36,7 @@ public class ExamServiceImpl implements ExamService  {
     private WorryTopicService worryTopicService;
     @Autowired
     private SubjectService subjectService;
+
     @Override
     public void saveExam(Exam exam) {
         exam = examDao.save(exam);
@@ -45,7 +46,7 @@ public class ExamServiceImpl implements ExamService  {
     @Override
     public Page getExamByPage(Page page) {
         List<Exam> exams = examDao.listExamByPage(page);
-        exams.stream().forEach((exam)->{
+        exams.stream().forEach((exam) -> {
             try {
                 exam.setSubjectName(subjectService.getSubjectById(exam.getSubject_id()).getName());
                 String difficultName = sysEnumService.getEnumName("TOPIC", "DIFFICULT", exam.getDifficult());
@@ -62,14 +63,14 @@ public class ExamServiceImpl implements ExamService  {
     public List<Topic> getExamDetail(Integer id, Integer role) {
         List<ExamDetail> examDetails = examDao.listExamDetail(id);
         List<Integer> ids = new ArrayList<Integer>();
-        examDetails.stream().forEach((examDetail)->{
+        examDetails.stream().forEach((examDetail) -> {
             ids.add(examDetail.getTopic_id());
         });
-        List<Topic> topics = topicService.getTopicById(ids,role);
+        List<Topic> topics = topicService.getTopicById(ids, role);
         int i = 0;
-        topics.stream().forEach((topic)->{
-            for (ExamDetail ed : examDetails)  {
-                if(ed.getTopic_id().intValue() == topic.getId().intValue()){
+        topics.stream().forEach((topic) -> {
+            for (ExamDetail ed : examDetails) {
+                if (ed.getTopic_id().intValue() == topic.getId().intValue()) {
                     topic.setTopicmark(ed.getTopicmark());
                     break;
                 }
@@ -88,7 +89,7 @@ public class ExamServiceImpl implements ExamService  {
         List<Topic> topicList = new ArrayList<>();
         int subjectId = examModel.getSubjectId();
         List<ExamClazz> clazzList = examModel.getClazz();
-        for ( ExamClazz clazz: clazzList ) {
+        for (ExamClazz clazz : clazzList) {
             int type = clazz.getType();
             int difficult = clazz.getDifficult();
             List<Topic> topics = topicDao.getTopicByTypeAndDifficult(subjectId, type, difficult);
@@ -104,8 +105,6 @@ public class ExamServiceImpl implements ExamService  {
         return topicList;
     }
 
-
-
     /***
      * 随意抽取题目，通过随机生成下标，从list里随机拿数据
      * @param topicList
@@ -114,15 +113,15 @@ public class ExamServiceImpl implements ExamService  {
      * @return
      */
     private List<Topic> randomTopic(List<Topic> topicList, Integer num, Double totalScore) {
-        BigDecimal bg = new BigDecimal(totalScore/num);
+        BigDecimal bg = new BigDecimal(totalScore / num);
         Double score = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
         Set<Integer> topicIds = new HashSet<>(num);
-        while(topicIds.size() != num) {
+        while (topicIds.size() != num) {
             int index = RandomUtils.nextInt(0, topicList.size());
             topicIds.add(index);
         }
         List<Topic> topics = new ArrayList<>(num);
-        for(Integer index: topicIds) {
+        for (Integer index : topicIds) {
             Topic topic = topicList.get(index);
             topic.setTopicmark(score);
             topics.add(topic);
@@ -130,43 +129,42 @@ public class ExamServiceImpl implements ExamService  {
         return topics;
     }
 
-
-        @Override
-        public Double makeStandardExam(ExamRecord examRecord) {
-            //拿到试卷Id号
-            Integer examId = examRecord.getExamId();
-            //获取该试卷的所有题目
-            List<Topic> examDetail = getExamDetail(examId, 1);
-            List<WorryTopic> worryTopics = new ArrayList<>();
-            double total = 0;
-            //获取用户的做题信息
-            List<ExamRecordTopic> examRecordTopic = examRecordTopicDao.getTopicsByRecordId(examRecord.getId());
-            Map<Integer,Topic> correctKey = new HashMap<Integer,Topic>(examDetail.size());
-            examDetail.stream().forEach((topic)->{
-                correctKey.put(topic.getId(),topic);
-            });
-            for (ExamRecordTopic userRecord : examRecordTopic) {
-                Integer topicId = userRecord.getTopicId();
-                String userAnswer = userRecord.getAnswer();
-                String correctAnswer = correctKey.get(topicId).getCorrectkey();
-                Double topicMark = correctKey.get(topicId).getTopicmark();
-                if (userAnswer.equalsIgnoreCase(correctAnswer)) {
-                    total += topicMark;
-                }else{
-                    WorryTopic wt = new WorryTopic();
-                    wt.setUser_id(examRecord.getUserId());
-                    wt.setExam_id(examId);
-                    wt.setRecord_id(examRecord.getId());
-                    wt.setTopic_id(topicId);
-                    wt.setCorrectanswer(correctAnswer);
-                    wt.setWorryanswer(userAnswer);
-                    worryTopics.add(wt);
-                }
+    @Override
+    public Double makeStandardExam(ExamRecord examRecord) {
+        //拿到试卷Id号
+        Integer examId = examRecord.getExamId();
+        //获取该试卷的所有题目
+        List<Topic> examDetail = getExamDetail(examId, 1);
+        List<WorryTopic> worryTopics = new ArrayList<>();
+        double total = 0;
+        //获取用户的做题信息
+        List<ExamRecordTopic> examRecordTopic = examRecordTopicDao.getTopicsByRecordId(examRecord.getId());
+        Map<Integer, Topic> correctKey = new HashMap<Integer, Topic>(examDetail.size());
+        examDetail.stream().forEach((topic) -> {
+            correctKey.put(topic.getId(), topic);
+        });
+        for (ExamRecordTopic userRecord : examRecordTopic) {
+            Integer topicId = userRecord.getTopicId();
+            String userAnswer = userRecord.getAnswer();
+            String correctAnswer = correctKey.get(topicId).getCorrectkey();
+            Double topicMark = correctKey.get(topicId).getTopicmark();
+            if (userAnswer.equalsIgnoreCase(correctAnswer)) {
+                total += topicMark;
+            } else {
+                WorryTopic wt = new WorryTopic();
+                wt.setUser_id(examRecord.getUserId());
+                wt.setExam_id(examId);
+                wt.setRecord_id(examRecord.getId());
+                wt.setTopic_id(topicId);
+                wt.setCorrectanswer(correctAnswer);
+                wt.setWorryanswer(userAnswer);
+                worryTopics.add(wt);
             }
-            examRecord.setScore(total);
-            examRecordService.updateScoreById(examRecord.getId(),total);
-            worryTopicService.saveWorryTopic(worryTopics);
-            return examRecord.getScore();
         }
+        examRecord.setScore(total);
+        examRecordService.updateScoreById(examRecord.getId(), total);
+        worryTopicService.saveWorryTopic(worryTopics);
+        return examRecord.getScore();
+    }
 
 }

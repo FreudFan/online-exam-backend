@@ -14,7 +14,8 @@ public class SmsCodeGenerator implements ValidateCodeGenerator {
 
     @Override
     public ValidateCode generate(HttpServletRequest request) {
-        String code = String.valueOf((Math.random()*9+1) * 100000).substring(0, 6); //默认六位验证码
+        //默认六位验证码
+        String code = String.valueOf((Math.random()*9+1) * 100000).substring(0, 6);
         return new ValidateCode(code, applicationProperties.getTimeout().getSms());
     }
 }

@@ -26,7 +26,6 @@ public interface ExamRecordService {
      */
     Map<String, Object> startExam(Integer examId) throws Exception;
 
-
     /***
      * 添加做题记录
      * @param examId
@@ -34,7 +33,6 @@ public interface ExamRecordService {
      * @throws Exception
      */
     ExamRecord addRecord(Integer examId) throws Exception;
-
 
     /***
      * 用户做题实时保存，做一道存一道
@@ -44,7 +42,6 @@ public interface ExamRecordService {
      */
     Boolean saveOrUpdateTopic(ExamTopic examTopic) throws Exception;
 
-
     /***
      * 结束做题, 更新所有题目答案
      * @param examTopic
@@ -53,7 +50,6 @@ public interface ExamRecordService {
      */
     Double endExam(ExamTopic examTopic) throws Exception;
 
-
     /***
      * 更新所有题目
      * @param examTopic
@@ -61,7 +57,6 @@ public interface ExamRecordService {
      * @throws Exception
      */
     void refreshRecord(ExamTopic examTopic) throws Exception;
-
 
     /***
      * 修改成绩

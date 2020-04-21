@@ -7,6 +7,7 @@ import java.util.Date;
 
 @Data
 public class SysEnum {
+
     private Integer id;
     /***
      * 模块名

@@ -127,16 +127,14 @@ public class TopicDao {
         //0为学生，1为管理员，管理员返回全部内容
         StringBuilder sb;
         if(role == 0) {
-           sb = new StringBuilder("SELECT id,description,topicmark FROM topic where 1 = 1 ");
-        }
-        else {
-            sb = new StringBuilder("SELECT * FROM topic where 1 = 1 ");
+           sb = new StringBuilder("SELECT id, type, description, topicmark FROM topic WHERE 1 = 1 ");
+        } else {
+            sb = new StringBuilder("SELECT * FROM topic WHERE 1 = 1 ");
         }
         List<String> idsString = ids.stream().map(x -> x + "").collect(Collectors.toList());
         String id = StringUtils.join(idsString, ',');
         sb.append(" and id in (" + id + ")");
-        List<Topic> topics = jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<>(Topic.class));
-        return topics;
+        return jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<>(Topic.class));
     }
 
     /***

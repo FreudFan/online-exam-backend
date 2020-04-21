@@ -16,14 +16,12 @@ public interface ExamService {
      */
     void saveExam(Exam exam);
 
-
     /***
      * 分页展示所有试卷
      * @param page
      * @return
      */
     Page getExamByPage(Page page);
-
 
     /***
      * 得到试卷的详细题目
@@ -33,15 +31,11 @@ public interface ExamService {
      */
     List<Topic> getExamDetail(Integer id, Integer role);
 
-
-
     /***
      * 禁用指定试卷
      * @param id
      */
     void deleteExam(Integer id);
-
-
 
     /***
      * 自动生成试卷
@@ -50,11 +44,10 @@ public interface ExamService {
      */
     Object autoGenerate(ExamModel examModel);
 
-
-
     /***
      * 判卷
      * @param examRecord
+     * @return
      */
     Double makeStandardExam(ExamRecord examRecord);
 

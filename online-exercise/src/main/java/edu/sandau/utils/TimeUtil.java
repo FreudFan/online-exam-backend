@@ -17,7 +17,8 @@ public class TimeUtil {
     public static String fileNow() {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00"));
         Date date = calendar.getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd HHmmss");//保存文件时文件名不能有冒号 :
+        //保存文件时文件名不能有冒号 :
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd HHmmss");
         return simpleDateFormat.format(date);
     }
 

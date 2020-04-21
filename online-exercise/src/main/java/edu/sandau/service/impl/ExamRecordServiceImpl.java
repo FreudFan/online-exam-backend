@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@Transactional
+@Transactional(rollbackFor=Exception.class)
 public class ExamRecordServiceImpl implements ExamRecordService {
 
     @Autowired
@@ -30,13 +30,15 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     private SubjectService subjectService;
     @Autowired
     private WorryTopicService worryTopicService;
+    @Autowired
+    private SysEnumService sysEnumService;
 
     @Override
     public List<ExamDetailAndWorryTopic> findDetailByRecordId(Integer recordId) {
         List<ExamDetailAndWorryTopic> examDetails = examRecordTopicDao.findDetailByRecordId(recordId);
         examDetails.stream().forEach((examDetailAndWorryTopic)->{
-            Integer topic_id = examDetailAndWorryTopic.getTopic_id();
-            List<Option> options = optionService.findOptionById(topic_id);
+            Integer topicId = examDetailAndWorryTopic.getTopic_id();
+            List<Option> options = optionService.findOptionById(topicId);
             examDetailAndWorryTopic.setOptionList(options);
             WorryTopic worryTopic = worryTopicService.findWorryTopicByRecordId(examDetailAndWorryTopic.getRecord_id(), examDetailAndWorryTopic.getTopic_id());
             if(worryTopic != null){
@@ -49,16 +51,27 @@ public class ExamRecordServiceImpl implements ExamRecordService {
 
     @Override
     public Map<String, Object> startExam(Integer examId) throws Exception {
-        Map<String, Object> param = new HashMap<>();
+        Map<String, Object> param = new HashMap<>(2);
         //获取此次做题的题目
         List<Topic> topicsList = examService.getExamDetail(examId,0);
         ExamRecord examRecord = this.addRecord(examId);
         param.put("recordId", examRecord.getId());
-        param.put("topics", topicsList);
-
+        List<SysEnum> types = sysEnumService.getEnums("TOPIC", "TYPE");
+        // 题目类型value : List<Topic>
+        Map<Integer, List<Topic>> topics = new HashMap<>(types.size());
+        for(SysEnum type: types) {
+            Integer typeId = type.getValue();
+            List<Topic> topicsWithType = new ArrayList<>(10);
+            for(Topic topic: topicsList) {
+                if(topic.getType().equals(typeId)) {
+                    topicsWithType.add(topic);
+                }
+            }
+            topics.put(typeId, topicsWithType);
+        }
+        param.put("topics", topics);
         return param;
     }
-
 
     @Override
     public ExamRecord addRecord(Integer examId) throws Exception {
@@ -133,6 +146,5 @@ public class ExamRecordServiceImpl implements ExamRecordService {
         });
         return subjectList;
     }
-
 
 }

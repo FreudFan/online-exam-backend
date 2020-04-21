@@ -54,7 +54,7 @@ public class WorryTopicDao {
     public List<WorryTopicData> selectAll(Page page) {
         Map<String, Object> params = page.getOption();
         if(params == null || params.size() == 0){
-            params = new HashMap<>();
+            params = new HashMap<>(10);
         }
         List<Object> obj = new ArrayList<Object>();
 
@@ -81,14 +81,18 @@ public class WorryTopicDao {
         return jdbcTemplate.queryForObject(sqlCount.toString(), Integer.class,obj.toArray());
     }
 
-
-    //拼接动态Sql
+    /***
+     * 拼接动态Sql
+     * @param params
+     * @param obj
+     * @return
+     */
     private String getSqlAndParams(Map<String, Object> params, List<Object> obj){
         StringBuffer sql = new StringBuffer();
         Set<String> keySet = params.keySet();
         for (String key : keySet) {
             Object value = params.get(key);
-            if(key.equalsIgnoreCase("user_id"))
+            if("user_id".equalsIgnoreCase(key))
             {
                 sql.append(" AND wt." + key + " = ?");
             }else{

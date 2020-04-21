@@ -29,6 +29,7 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String USERNAME;
 
+    @Override
     public void sendSimpleMail(EmailMessage emailMessage) {
         try {
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
@@ -47,6 +48,7 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+    @Override
     public void sendHTMLMail(EmailMessage emailMessage, Map<String,Object> model, String templateFileName) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -55,11 +57,14 @@ public class EmailServiceImpl implements EmailService {
 //            mimeMessage.addRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(emailMessage.getEmail()));
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
             messageHelper.setFrom(new InternetAddress(USERNAME));
-            messageHelper.setTo(InternetAddress.parse(emailMessage.getEmail()));   //设定收件人Email
+            //设定收件人Email
+            messageHelper.setTo(InternetAddress.parse(emailMessage.getEmail()));
             messageHelper.setCc(InternetAddress.parse(USERNAME));
-            messageHelper.setSubject(emailMessage.getSubject());    //设置邮件主题
+            //设置邮件主题
+            messageHelper.setSubject(emailMessage.getSubject());
             String text = FreemarkerUtil.getTemplate(templateFileName, model);
-            messageHelper.setText(text, true);  //设置邮件主题内容
+            //设置邮件主题内容
+            messageHelper.setText(text, true);
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             log.error("发送邮件失败", e);
