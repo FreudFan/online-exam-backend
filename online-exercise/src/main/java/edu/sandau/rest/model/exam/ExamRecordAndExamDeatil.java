@@ -13,17 +13,16 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-/***
- * 只包含试卷的一些信息和试卷分数信息
- */
+/*** 只包含试卷的一些信息和试卷分数信息 */
 public class ExamRecordAndExamDeatil {
-    //记录表id
+    /***
+     * 记录表id
+     */
     private Integer id;
     /***
      * 用户id
      */
     private Integer userId;
-
     /***
      * 此次做题成绩
      */
@@ -36,21 +35,21 @@ public class ExamRecordAndExamDeatil {
      * 做题结束时间
      */
     private Date endTime;
-
     /***
      * 试卷的信息
+     * //试卷的名字
      */
-    //试卷的名字
     private String name;
-
-    //试卷总分
+    /***
+     * 试卷总分
+     */
     private Double totalScore;
-    //试卷描述
+    /***
+     * 试卷描述
+     */
     private String description;
     @JsonIgnore
     private Date createtime;
     @JsonIgnore
     private Date updatetime;
-
-
 }

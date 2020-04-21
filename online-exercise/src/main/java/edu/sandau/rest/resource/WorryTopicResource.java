@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 public class WorryTopicResource {
     @Autowired
     private WorryTopicService worryTopicService;
+
     /***
      * 传参格式
      * {
@@ -36,8 +37,8 @@ public class WorryTopicResource {
     @Path("show")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response show(Page page){
-        if(page == null){
+    public Response show(Page page) {
+        if (page == null) {
             page = new Page();
         }
         page = worryTopicService.getWorryTopicByPage(page);

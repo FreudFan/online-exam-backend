@@ -1,6 +1,5 @@
 package edu.sandau.dao;
 
-
 import edu.sandau.entity.ExamRecord;
 import edu.sandau.entity.Subject;
 import edu.sandau.rest.model.exam.ExamRecordAndExamDeatil;
@@ -73,6 +72,6 @@ public class ExamRecordDao {
 
     public List<Subject> getSubjectIdByUserId(Integer userId) {
         String sql = "SELECT DISTINCT subject_id as id FROM exam_record INNER JOIN exam ON exam_id = exam.id WHERE user_id = ? ";
-        return jdbcTemplate.query(sql,new BeanPropertyRowMapper<Subject>(Subject.class),userId);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Subject>(Subject.class), userId);
     }
 }

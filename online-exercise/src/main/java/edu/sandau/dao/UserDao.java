@@ -49,7 +49,7 @@ public class UserDao {
         return user;
     }
 
-    public List<User> getUserByRealname(String realname ) {
+    public List<User> getUserByRealname(String realname) {
         String sql = " SELECT * FROM user WHERE realname = ? ";
         List<User> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), realname);
         if (users.size() == 0) {
@@ -59,7 +59,7 @@ public class UserDao {
         }
     }
 
-    public User getUserByWxId(String wxId ) {
+    public User getUserByWxId(String wxId) {
         String sql = " SELECT * FROM user WHERE wxId = ? ";
         List<User> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), wxId);
         if (users.size() == 0) {
@@ -77,10 +77,10 @@ public class UserDao {
      */
     public List<User> getUserByFields(List<String> keys, List<String> values) {
         StringBuilder sql = new StringBuilder(" SELECT * FROM user WHERE 1=1 ");
-        if ( keys.size() == values.size() && keys.size() > 0 ) {
+        if (keys.size() == values.size() && keys.size() > 0) {
             sql.append(" AND ");
-            for ( int i = 0; i < keys.size(); i++ ) {
-                if ( i != 0 ) {
+            for (int i = 0; i < keys.size(); i++) {
+                if (i != 0) {
                     sql.append(" OR ");
                 }
                 sql.append(keys.get(i)).append(" = ? ");
@@ -94,7 +94,7 @@ public class UserDao {
         }
     }
 
-    public User login(String loginValue, String loginNmae, String password) throws  Exception {
+    public User login(String loginValue, String loginNmae, String password) throws Exception {
         String sql = " SELECT * FROM user WHERE " + loginValue + " = ? AND password = ? ";
         List<User> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), new Object[]{loginNmae, password});
         if (users.size() == 0) {
@@ -140,7 +140,7 @@ public class UserDao {
      * @return
      * @throws Exception
      */
-    public Boolean updateUserById(Integer id, String column, String value ) throws Exception {
+    public Boolean updateUserById(Integer id, String column, String value) throws Exception {
         String sql = "UPDATE user SET " + column + " = ? WHERE id = ? ";
         int num = jdbcTemplate.update(sql, new Object[]{value, id});
         return num > 0;

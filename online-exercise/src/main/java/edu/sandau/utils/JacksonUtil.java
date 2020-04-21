@@ -50,7 +50,7 @@ public class JacksonUtil {
     public static <T> T fromJSON(String json, Class<T> clazz) {
         T obj;
         try {
-            if(clazz.isAssignableFrom(String.class)) {
+            if (clazz.isAssignableFrom(String.class)) {
                 return (T) json;
             }
             obj = objectMapper.readValue(json, clazz);

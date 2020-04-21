@@ -135,8 +135,8 @@ public class TopicServiceImpl implements TopicService {
                     throw new Exception("Excel表格式错误");
                 }
             } else {
-                String answer = topic.get(count+1).toString();
-                if(answer.toCharArray().length > 1) {
+                String answer = topic.get(count + 1).toString();
+                if (answer.toCharArray().length > 1) {
                     topic.add("多选题");
                 } else {
                     topic.add("单选题");
@@ -214,8 +214,8 @@ public class TopicServiceImpl implements TopicService {
      */
     @Override
     public void insertTopics(Topic topic) {
-            int keyId = topicDao.save(topic);
-            optionService.insertOption(keyId, topic.getOptionsList());
+        int keyId = topicDao.save(topic);
+        optionService.insertOption(keyId, topic.getOptionsList());
     }
 
     @Override
@@ -249,7 +249,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<TopicModel> refactorEntity(List<Topic> topics) {
-        List<TopicModel> topicModelList = new ArrayList<TopicModel>();
+        List<TopicModel> topicModelList = new ArrayList<>();
         topics.stream().forEach((t) -> {
             try {
                 TopicModel topicModel = new TopicModel();
@@ -264,17 +264,16 @@ public class TopicServiceImpl implements TopicService {
                 topicModel.setSubjectName(subjectName);
                 topicModel.setSubject_id(t.getSubject_id());
                 topicModelList.add(topicModel);
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-                }
-        );
+        });
         return topicModelList;
     }
 
     @Override
     public List<Topic> getTopicById(List<Integer> ids, Integer role) {
-        List<Topic> topics = topicDao.listTopicByIds(ids,role);
+        List<Topic> topics = topicDao.listTopicByIds(ids, role);
         topics.stream().forEach((topic) -> {
             Integer id = topic.getId();
             List<Option> optionList = optionService.findOptionById(id);
@@ -294,7 +293,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public void save(List<Topic> topics,Integer subject_id) {
+    public void save(List<Topic> topics, Integer subject_id) {
         topics.stream().forEach(topic -> {
             topic.setSubject_id(subject_id);
             int keyId = topicDao.save(topic);

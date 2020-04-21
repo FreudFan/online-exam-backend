@@ -20,7 +20,7 @@ public enum RoleTypeEnum {
     /***
      * 系统管理员
      */
-    SYSTEM_MANAGER(2,"系统管理员");
+    SYSTEM_MANAGER(2, "系统管理员");
 
     private final Integer value;
     private final String name;

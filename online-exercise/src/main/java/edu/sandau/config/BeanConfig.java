@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 public class BeanConfig {
 
     @Bean
-    RestTemplate wxRestTemplate(){
+    RestTemplate wxRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new WxMappingJackson2HttpMessageConverter());
         return restTemplate;

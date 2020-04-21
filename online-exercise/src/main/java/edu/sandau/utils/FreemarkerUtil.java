@@ -37,7 +37,7 @@ public class FreemarkerUtil {
      * @throws IOException
      * @throws TemplateException
      */
-    public static String getTemplate(String templateName, Map<String,Object> model) {
+    public static String getTemplate(String templateName, Map<String, Object> model) {
         try {
             Template template = configurer.getConfiguration().getTemplate(templateName);
             return getTemplate(template, model);

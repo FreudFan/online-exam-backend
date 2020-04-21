@@ -32,11 +32,11 @@ public class WorryTopicServiceImpl implements WorryTopicService {
     @Override
     public void saveWorryTopic(List<WorryTopic> worryTopicList) {
         //存入错题表之前先看之前有没有错过这题，错过就修改错误次数,没有存入错题表
-        worryTopicList.stream().forEach((worryTopic)->{
+        worryTopicList.stream().forEach((worryTopic) -> {
             WorryTopic wt = findWorryTopicByUserIdAndTopicId(worryTopic.getUser_id(), worryTopic.getTopic_id());
-            if(wt == null){
+            if (wt == null) {
                 worryTopicDao.saveWorryTopic(worryTopic);
-            }else{
+            } else {
                 worryTopicDao.updateWorryCount(wt);
             }
         });
@@ -46,9 +46,9 @@ public class WorryTopicServiceImpl implements WorryTopicService {
     @Override
     public WorryTopic findWorryTopicByUserIdAndTopicId(Integer userId, Integer topicId) {
         List<WorryTopic> worryTopic = worryTopicDao.findById(userId, topicId);
-        if(worryTopic != null && worryTopic.size() > 0){
+        if (worryTopic != null && worryTopic.size() > 0) {
             return worryTopic.get(0);
-        }else{
+        } else {
             return null;
         }
 
@@ -56,7 +56,7 @@ public class WorryTopicServiceImpl implements WorryTopicService {
 
     @Override
     public void deleteWorryTopicByRecordId(Integer RecordId, Integer userId) {
-        worryTopicDao.deleteById(RecordId,userId);
+        worryTopicDao.deleteById(RecordId, userId);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class WorryTopicServiceImpl implements WorryTopicService {
                 String subjectName = subjectService.getSubjectById(worryTopic.getSubject_id()).getName();
                 worryTopic.setDifficultName(difficultName);
                 worryTopic.setSubjectName(subjectName);
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
@@ -80,7 +80,7 @@ public class WorryTopicServiceImpl implements WorryTopicService {
     }
 
     @Override
-    public WorryTopic findWorryTopicByRecordId(Integer record_id,Integer topic_id) {
-        return worryTopicDao.findWorryTopicByRecordId(record_id,topic_id);
+    public WorryTopic findWorryTopicByRecordId(Integer record_id, Integer topic_id) {
+        return worryTopicDao.findWorryTopicByRecordId(record_id, topic_id);
     }
 }

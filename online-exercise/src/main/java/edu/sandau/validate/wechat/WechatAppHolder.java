@@ -30,7 +30,7 @@ public class WechatAppHolder {
     public JsCode2Session login(String code) {
         String URL = "https://api.weixin.qq.com/sns/jscode2session?appid={appId}&secret={appSecret}" +
                 "&js_code={code}&grant_type=authorization_code";
-        Map<String,String> param = new HashMap<>(3);
+        Map<String, String> param = new HashMap<>(3);
         param.put("appId", applicationProperties.getWechat().getAppId());
         param.put("appSecret", applicationProperties.getWechat().getAppSecret());
         param.put("code", code);

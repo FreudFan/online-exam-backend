@@ -43,17 +43,17 @@ public class AuthResource {
             return Response.accepted().status(Response.Status.BAD_REQUEST).build();
         }
         LoginValueEnum loginValue;
-        if ( name.contains("@") ) {
+        if (name.contains("@")) {
             //识别是否是邮箱
             loginValue = LoginValueEnum.EMAIL;
-        } else if ( name.length() == 11 && NumberUtils.isDigits(name) ) {
+        } else if (name.length() == 11 && NumberUtils.isDigits(name)) {
             //识别是手机号
             loginValue = LoginValueEnum.TELEPHONE;
         } else {
             loginValue = LoginValueEnum.USERNAME;
         }
         user = userService.login(loginValue, name, password);
-        if ( user == null ) {
+        if (user == null) {
             return Response.accepted().status(Response.Status.BAD_REQUEST).build();
         }
 
@@ -72,7 +72,7 @@ public class AuthResource {
      */
     @ApiOperation(value = "用户注册", response = String.class)
     @ApiResponses({
-            @ApiResponse(code=400, message="用户已注册")
+            @ApiResponse(code = 400, message = "用户已注册")
     })
     @POST
     @Path("register")
@@ -80,7 +80,7 @@ public class AuthResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response register(User user) throws Exception {
         user = userService.addUser(user);
-        if ( user == null ) {
+        if (user == null) {
             return Response.accepted("same value").status(Response.Status.BAD_REQUEST).build();
         }
         sessionUtils.addUserToSession(user);
@@ -94,7 +94,7 @@ public class AuthResource {
      * @throws Exception
      */
     @ApiOperation(value = "检查是否有存在指定用户", response = String.class,
-                    notes = "检查 username，email，telephone 是否唯一")
+            notes = "检查 username，email，telephone 是否唯一")
     @GET
     @Path("check")
     @Consumes({MediaType.APPLICATION_JSON})

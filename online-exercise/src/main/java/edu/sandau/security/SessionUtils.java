@@ -32,7 +32,7 @@ public class SessionUtils {
     final public static String REFRESH_TIME = "refresh_time";
 
     public void addUserToSession(User user) {
-        Map<String,String> attribute = new HashMap<>(3);
+        Map<String, String> attribute = new HashMap<>(3);
         attribute.put(USER_ID_PREFIX, JacksonUtil.toJSON(user.getId()));
         attribute.put(USER_wxID_PREFIX, JacksonUtil.toJSON(user.getWxId()));
         attribute.put(USER_INFO_PREFIX, JacksonUtil.toJSON(user));
@@ -53,7 +53,7 @@ public class SessionUtils {
         RequestContent.add(token);
     }
 
-    public void setAttribute(Map<String,String> attribute) {
+    public void setAttribute(Map<String, String> attribute) {
         String token = this.getToken();
         redisTemplate.opsForHash().putAll(token, attribute);
         redisTemplate.expire(token, properties.getTimeout().getRedis(), TimeUnit.MINUTES);
@@ -101,7 +101,7 @@ public class SessionUtils {
     public String getToken() {
         try {
             String token = RequestContent.getSessionToken();
-            if(token == null) {
+            if (token == null) {
                 throw new Exception("Authorization Token不存在");
             } else {
                 return RedisConstants.SESSION_ID + ":" + token;

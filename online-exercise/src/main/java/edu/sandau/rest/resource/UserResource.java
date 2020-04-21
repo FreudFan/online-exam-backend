@@ -31,13 +31,13 @@ public class UserResource {
 
     @ApiOperation(value = "修改用户信息")
     @ApiResponses({
-            @ApiResponse(code=400, message="修改失败"),
-            @ApiResponse(code=200, message = "修改成功, 返回最新记录", response = User.class)
+            @ApiResponse(code = 400, message = "修改失败"),
+            @ApiResponse(code = 200, message = "修改成功, 返回最新记录", response = User.class)
     })
     @POST
     @Path("update")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response changeUser(User user) throws Exception {
         if (user.getId() == null) {
             return Response.ok().status(Response.Status.BAD_REQUEST).build();
@@ -52,8 +52,8 @@ public class UserResource {
     @ApiOperation(value = "查询当前用户信息")
     @GET
     @Path("info")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response getCurrentUser() throws Exception {
         User user = RequestContent.getCurrentUser();
         return Response.ok(user).build();
@@ -62,8 +62,8 @@ public class UserResource {
     @ApiOperation(value = "分页查询用户", response = List.class)
     @POST
     @Path("list")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response list(Page page) throws Exception {
         if (page == null) {
             return Response.ok().status(Response.Status.BAD_REQUEST).build();
@@ -74,21 +74,21 @@ public class UserResource {
 
     @ApiOperation(value = "重置密码", response = Boolean.class)
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "用户id", dataType = "Integer", required = true ),
-            @ApiImplicitParam(name = "password", value = "新密码", dataType = "String", required = true )
+            @ApiImplicitParam(name = "id", value = "用户id", dataType = "Integer", required = true),
+            @ApiImplicitParam(name = "password", value = "新密码", dataType = "String", required = true)
     })
     @POST
     @Path("reset-password")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response resetPassword(User user) throws Exception {
         Integer id = user.getId();
         String password = user.getPassword();
-        if (StringUtils.isEmpty(password) || id==null) {
+        if (StringUtils.isEmpty(password) || id == null) {
             return Response.accepted(false).status(400).build();
         }
         boolean ok = userService.resetPassword(id, password);
-        if ( ok ) {
+        if (ok) {
             return Response.ok(true).build();
         }
         return Response.accepted(false).status(500).build();
@@ -97,15 +97,15 @@ public class UserResource {
     @ApiOperation(value = "设置默认密码", response = List.class)
     @POST
     @Path("default-password")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response defaultPassword(User user) throws Exception {
         Integer id = user.getId();
-        if (id==null) {
+        if (id == null) {
             return Response.accepted(false).status(400).build();
         }
         boolean ok = userService.resetPassword(id);
-        if ( ok ) {
+        if (ok) {
             return Response.ok(true).build();
         }
         return Response.accepted(false).status(500).build();
@@ -114,15 +114,15 @@ public class UserResource {
     @ApiOperation(value = "获取所有在线用户", response = List.class)
     @GET
     @Path("online-user")
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response getAllOnlineUser() throws Exception {
         String prefix = RedisConstants.SESSION_ID + "*";
         // 获取所有的key
         Set<String> keys = redisTemplate.keys(prefix);
         List<User> users = new ArrayList<>();
         // 批量获取数据
-        for (String key: keys) {
+        for (String key : keys) {
             String value = Objects.requireNonNull(redisTemplate.opsForHash().get(key, "user")).toString();
             User user = JacksonUtil.fromJSON(value, User.class);
             users.add(user);

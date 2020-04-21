@@ -49,13 +49,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendHTMLMail(EmailMessage emailMessage, Map<String,Object> model, String templateFileName) {
+    public void sendHTMLMail(EmailMessage emailMessage, Map<String, Object> model, String templateFileName) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
 //            mimeMessage.setFrom(new InternetAddress(USERNAME));
 //            mimeMessage.addRecipients(MimeMessage.RecipientType.CC, InternetAddress.parse(USERNAME));
 //            mimeMessage.addRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(emailMessage.getEmail()));
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
             messageHelper.setFrom(new InternetAddress(USERNAME));
             //设定收件人Email
             messageHelper.setTo(InternetAddress.parse(emailMessage.getEmail()));

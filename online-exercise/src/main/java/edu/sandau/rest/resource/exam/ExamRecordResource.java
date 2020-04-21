@@ -161,7 +161,7 @@ public class ExamRecordResource {
     @Path("showSubject")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getSubjectByUserId(Map<String,Integer> params) throws Exception {
+    public Response getSubjectByUserId(Map<String, Integer> params) throws Exception {
         Integer userId = MapUtils.getInteger(params, "userId", null);
         if (userId == null) {
             userId = RequestContent.getCurrentUser().getId();

@@ -1,6 +1,5 @@
 package edu.sandau.rest.model;
 
-
 import edu.sandau.entity.Option;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,7 +7,10 @@ import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.util.List;
-//返回给前端的题目Model
+
+/***
+ * 返回给前端的题目Model
+ */
 @ApiModel(description = "题目")
 @Data
 public class TopicModel {

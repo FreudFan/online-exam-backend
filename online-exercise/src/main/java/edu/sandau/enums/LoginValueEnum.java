@@ -20,7 +20,7 @@ public enum LoginValueEnum {
     /***
      * 用户名
      */
-    USERNAME(2,"username");
+    USERNAME(2, "username");
 
     private final Integer value;
     private final String name;

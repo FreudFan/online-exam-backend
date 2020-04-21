@@ -18,7 +18,7 @@ public class OptionServiceImpl implements OptionService {
 
     @Override
     public void insertOption(int keyId, List<Option> optionList) {
-        optionDao.insertOption(keyId,optionList);
+        optionDao.insertOption(keyId, optionList);
     }
 
     @Override

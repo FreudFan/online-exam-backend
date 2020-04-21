@@ -43,27 +43,27 @@ public class ExamDao {
         return exam;
     }
 
-    public void saveDetail(Exam exam){
+    public void saveDetail(Exam exam) {
         String sql = "INSERT INTO exam_detail(exam_id,topic_id,topicmark) VALUES(?,?,?)";
         List<Topic> topics = exam.getTopics();
         int keyId = exam.getId();
         List<Object[]> params = new ArrayList<Object[]>();
-        topics.stream().forEach((topic)->{
-            Object[] obj = new Object[]{keyId,topic.getId(),topic.getTopicmark()};
+        topics.stream().forEach((topic) -> {
+            Object[] obj = new Object[]{keyId, topic.getId(), topic.getTopicmark()};
             params.add(obj);
         });
-        jdbcTemplate.batchUpdate(sql,params);
+        jdbcTemplate.batchUpdate(sql, params);
     }
 
 
-    public List<Exam> listExamByPage(Page page){
+    public List<Exam> listExamByPage(Page page) {
         StringBuffer sb = new StringBuffer(" SELECT * FROM exam where 1 = 1 ");
         List<Object> obj = new ArrayList<>();
-        Map<String,Object> params = page.getOption();
+        Map<String, Object> params = page.getOption();
         String sql = getSqlAndParams(params, obj);
         sb.append(sql);
         page.setTotal(getCount(sql, obj));
-        if(page.getPageSize() != null && page.getPageNo() != null) {
+        if (page.getPageSize() != null && page.getPageNo() != null) {
             sb.append(" limit ? , ? ");
             int start = (page.getPageNo() - 1) * page.getPageSize();
             obj.add(start);
@@ -73,16 +73,21 @@ public class ExamDao {
 
     }
 
-    public int getCount(String sb, List<Object> obj ) {
+    public int getCount(String sb, List<Object> obj) {
         int count = 0;
         String sql = "select count(1) from exam where 1 = 1 " + sb;
         count = jdbcTemplate.queryForObject(sql, Integer.class, obj.toArray());
         return count;
     }
 
-    // 获取动态sql
-    private String getSqlAndParams(Map<String, Object> params, List<Object> obj){
-        if(params == null || params.size() <= 0){
+    /***
+     * 获取动态sql
+     * @param params
+     * @param obj
+     * @return
+     */
+    private String getSqlAndParams(Map<String, Object> params, List<Object> obj) {
+        if (params == null || params.size() <= 0) {
             return "";
         }
         StringBuffer sql = new StringBuffer();
@@ -94,6 +99,7 @@ public class ExamDao {
         }
         return sql.toString();
     }
+
     public List<ExamDetail> listExamDetail(Integer id) {
         String sql = "select topic_id,topicmark from exam_detail where exam_id = ?";
         List<ExamDetail> idList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamDetail.class), id);
@@ -102,6 +108,6 @@ public class ExamDao {
 
     public void deleteExam(Integer id) {
         String sql = "update exam set flag = 0 where id = ?";
-        jdbcTemplate.update(sql,id);
+        jdbcTemplate.update(sql, id);
     }
 }

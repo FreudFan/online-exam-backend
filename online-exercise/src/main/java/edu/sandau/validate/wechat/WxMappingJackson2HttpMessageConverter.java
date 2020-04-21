@@ -8,7 +8,7 @@ import java.util.List;
 
 public class WxMappingJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {
 
-    public WxMappingJackson2HttpMessageConverter(){
+    public WxMappingJackson2HttpMessageConverter() {
         List<MediaType> mediaTypes = new ArrayList<>(1);
         mediaTypes.add(MediaType.TEXT_PLAIN);
         super.setSupportedMediaTypes(mediaTypes);

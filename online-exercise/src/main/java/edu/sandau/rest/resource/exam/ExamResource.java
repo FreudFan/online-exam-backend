@@ -26,6 +26,7 @@ public class ExamResource {
 
     @Autowired
     private ExamService examService;
+
     /***
      * 传参格式:
      *{
@@ -50,7 +51,7 @@ public class ExamResource {
     @Path("save")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response saveExam(Exam exam){
+    public Response saveExam(Exam exam) {
         examService.saveExam(exam);
         return Response.accepted("ok").build();
     }
@@ -60,7 +61,7 @@ public class ExamResource {
     @Path("show")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response showExam(Page page){
+    public Response showExam(Page page) {
         if (page == null) {
             page = new Page();
         }
@@ -92,9 +93,9 @@ public class ExamResource {
     @Path("showDetail")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response showExamDetail(@QueryParam("id") Integer id){
+    public Response showExamDetail(@QueryParam("id") Integer id) {
 
-        List<Topic> topicsList = examService.getExamDetail(id,0);
+        List<Topic> topicsList = examService.getExamDetail(id, 0);
         return Response.ok(topicsList).build();
     }
 
@@ -108,8 +109,8 @@ public class ExamResource {
     @Path("showDetailAdmin")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response showExamDetailForAdmin(@QueryParam("id")Integer id){
-        List<Topic> topicsList = examService.getExamDetail(id,1);
+    public Response showExamDetailForAdmin(@QueryParam("id") Integer id) {
+        List<Topic> topicsList = examService.getExamDetail(id, 1);
         return Response.ok(topicsList).build();
     }
 
@@ -124,7 +125,7 @@ public class ExamResource {
     @Path("delete")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response deleteExam(@QueryParam("id") Integer id){
+    public Response deleteExam(@QueryParam("id") Integer id) {
         examService.deleteExam(id);
         return Response.ok("ok").build();
     }
@@ -157,10 +158,10 @@ public class ExamResource {
     @Path("autoGenerate")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response autoGenerate(ExamModel examModel){
+    public Response autoGenerate(ExamModel examModel) {
         Object topics = examService.autoGenerate(examModel);
-        if(topics instanceof String) {
-            return  Response.ok(topics).status(Response.Status.BAD_REQUEST).build();
+        if (topics instanceof String) {
+            return Response.ok(topics).status(Response.Status.BAD_REQUEST).build();
         }
         return Response.ok(topics).build();
     }

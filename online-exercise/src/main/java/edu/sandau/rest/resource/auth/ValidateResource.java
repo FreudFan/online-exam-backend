@@ -52,6 +52,7 @@ public class ValidateResource {
         "code": 552129
     }
      */
+
     /***
      * type 邮件：email， 短信：sms
      * @param type
@@ -64,9 +65,9 @@ public class ValidateResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Boolean checkVerificationCode(@PathParam("type") String type,
-                                          ValidateCodeParam validateCodeParam,
-                                          @Context HttpServletRequest request,
-                                          @Context HttpServletResponse response) throws Exception {
+                                         ValidateCodeParam validateCodeParam,
+                                         @Context HttpServletRequest request,
+                                         @Context HttpServletResponse response) throws Exception {
         return validateCodeProcessorHolder.findValidateCodeProcessor(type).validate(request, validateCodeParam);
     }
 }

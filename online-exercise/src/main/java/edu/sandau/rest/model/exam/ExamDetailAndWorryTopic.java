@@ -1,6 +1,5 @@
 package edu.sandau.rest.model.exam;
 
-
 import edu.sandau.entity.Option;
 import lombok.Data;
 
@@ -33,6 +32,5 @@ public class ExamDetailAndWorryTopic {
 
     //错误次数
     private Integer worrycount;
-
 
 }

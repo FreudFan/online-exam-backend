@@ -63,7 +63,7 @@ public class SysEnumDao {
     @Cacheable(cacheNames = "enums", key = "#catalog+'-'+#type", unless = "#result.empty")
     public List<SysEnum> getEnums(String catalog, String type) {
         String sql = " SELECT name, value FROM sys_enum WHERE catalog = ? AND type = ? ";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<SysEnum>(SysEnum.class),catalog, type);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<SysEnum>(SysEnum.class), catalog, type);
     }
 
     /***
@@ -77,7 +77,7 @@ public class SysEnumDao {
     public SysEnum getEnum(String catalog, String type, Integer value) {
         String sql = " SELECT * FROM sys_enum WHERE catalog = ? AND type = ? AND value = ? ";
 
-        return  jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<SysEnum>(SysEnum.class),new Object[]{catalog, type, value});
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<SysEnum>(SysEnum.class), new Object[]{catalog, type, value});
     }
 
     @Cacheable(cacheNames = "enums", key = "#catalog+'-'+#type+'-'+#name", unless = "#result <= 0")
@@ -97,7 +97,7 @@ public class SysEnumDao {
     @Cacheable(cacheNames = "enums", key = "#id", unless = "#result != null")
     public SysEnum getEnumById(Integer id) {
         String sql = " SELECT * FROM sys_enum WHERE id = ? ";
-        return  jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<SysEnum>(SysEnum.class),new Object[]{id});
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<SysEnum>(SysEnum.class), new Object[]{id});
     }
 
     @CacheEvict(cacheNames = "enums", allEntries = true, beforeInvocation = true)
@@ -133,13 +133,13 @@ public class SysEnumDao {
 
     public List<SysEnum> listAllEnum() {
         String sql = " SELECT * FROM sys_enum ORDER by id ASC ";
-        return  jdbcTemplate.query(sql,new BeanPropertyRowMapper<SysEnum>(SysEnum.class));
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<SysEnum>(SysEnum.class));
     }
 
     public List<SysEnum> listEnumByPage(Page page) {
         int start = (page.getPageNo() - 1) * page.getPageSize();
         String sql = " SELECT * FROM sys_enum ORDER by id ASC limit ? , ? ";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<SysEnum>(SysEnum.class),start, page.getPageSize());
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<SysEnum>(SysEnum.class), start, page.getPageSize());
     }
 
     @Cacheable(cacheNames = "enums", key = "count")

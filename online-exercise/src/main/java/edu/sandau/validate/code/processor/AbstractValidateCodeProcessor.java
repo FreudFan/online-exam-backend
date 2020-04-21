@@ -56,7 +56,7 @@ public abstract class AbstractValidateCodeProcessor<C extends ValidateCode> impl
     public Boolean validate(HttpServletRequest request, ValidateCodeParam validateCodeParam) {
         String sessionKey = getSessionKey(request);
         ValidateCode codeInSession = sessionUtils.getAttribute(sessionKey, ValidateCode.class);
-        if(codeInSession != null && codeInSession.isNotExpired()) {
+        if (codeInSession != null && codeInSession.isNotExpired()) {
             String code = validateCodeParam.getCode();
             if (StringUtils.equals(codeInSession.getCode(), code)) {
                 sessionUtils.removeAttribute(sessionKey);

@@ -48,11 +48,11 @@ public class UserServiceImpl implements UserService {
             //默认为注册用户
             user.setRole(RoleTypeEnum.NORMAL_USER.getValue());
         }
-        if(user.getWxId() == null) {
+        if (user.getWxId() == null) {
             String wxId = sessionUtils.getAttribute(SessionUtils.USER_wxID_PREFIX, String.class);
             user.setWxId(wxId);
         }
-        if ( this.check(user) == null ) {
+        if (this.check(user) == null) {
             //添加用户主表
             user = userDao.save(user);
         } else {
@@ -106,9 +106,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(LoginValueEnum loginValue, String loginName, String password) throws  Exception {
-        User user = userDao.login(loginValue.getName(),loginName,password);
-        if ( user == null ) {
+    public User login(LoginValueEnum loginValue, String loginName, String password) throws Exception {
+        User user = userDao.login(loginValue.getName(), loginName, password);
+        if (user == null) {
             return null;
         }
         return this.refactorEntity(user);

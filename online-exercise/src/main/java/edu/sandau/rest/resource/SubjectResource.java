@@ -23,25 +23,24 @@ public class SubjectResource {
     @ApiOperation(value = "查询所有课程")
     @Path("show")
     @POST
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response showSub(Page page) throws Exception {
-        if(page == null){
+        if (page == null) {
             List<Subject> subjects = subjectService.getAll();
             return Response.ok(subjects).build();
-        }else {
+        } else {
             page = subjectService.showSub(page);
         }
         return Response.ok(page).build();
     }
 
 
-
     @ApiOperation(value = "新增课程")
     @Path("insert")
     @POST
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response addSub(Subject subject) throws Exception {
         subjectService.save(subject);
         return Response.ok(subject).build();
@@ -57,12 +56,11 @@ public class SubjectResource {
 //    }
 
 
-
     @ApiOperation(value = "根据id删除课程")
     @Path("delete")
     @DELETE
-    @Consumes({ MediaType.APPLICATION_JSON })
-    @Produces({ MediaType.APPLICATION_JSON })
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response deleteSubById(@QueryParam("id") Integer id) throws Exception {
         subjectService.deleteById(id);
         return Response.ok().build();

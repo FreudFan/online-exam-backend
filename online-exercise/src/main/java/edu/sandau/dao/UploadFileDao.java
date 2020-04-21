@@ -39,7 +39,7 @@ public class UploadFileDao {
 
     public UploadFile getFileById(Integer id) throws Exception {
         String SQL = " SELECT * FROM upload_file WHERE id = ? ";
-        List<UploadFile> uploadFileList = jdbcTemplate.query(SQL, new BeanPropertyRowMapper<UploadFile>(UploadFile.class),id);
+        List<UploadFile> uploadFileList = jdbcTemplate.query(SQL, new BeanPropertyRowMapper<UploadFile>(UploadFile.class), id);
         if (uploadFileList.size() == 0) {
             return null;
         } else {

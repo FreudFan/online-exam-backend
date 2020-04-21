@@ -38,7 +38,7 @@ public class WechatResource {
     @Produces({MediaType.APPLICATION_JSON})
     public Response login(Map<String, String> param) throws Exception {
         String code = MapUtils.getString(param, "code", null);
-        if(code == null) {
+        if (code == null) {
             return Response.accepted().status(Response.Status.BAD_REQUEST).build();
         }
         JsCode2Session jscode2session = wechatAppHolder.login(code);
@@ -47,7 +47,7 @@ public class WechatResource {
         User user = userService.getUserByWxId(wxId);
         Map<String, Object> params = new HashMap<>(2);
         params.put("wxId", wxId);
-        if(user == null) {
+        if (user == null) {
             params.put("msg", "用户未注册~");
             return Response.accepted(params).status(Response.Status.UNAUTHORIZED).build();
         }

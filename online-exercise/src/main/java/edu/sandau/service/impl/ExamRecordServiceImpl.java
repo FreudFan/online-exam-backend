@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@Transactional(rollbackFor=Exception.class)
+@Transactional(rollbackFor = Exception.class)
 public class ExamRecordServiceImpl implements ExamRecordService {
 
     @Autowired
@@ -36,12 +36,12 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     @Override
     public List<ExamDetailAndWorryTopic> findDetailByRecordId(Integer recordId) {
         List<ExamDetailAndWorryTopic> examDetails = examRecordTopicDao.findDetailByRecordId(recordId);
-        examDetails.stream().forEach((examDetailAndWorryTopic)->{
+        examDetails.stream().forEach((examDetailAndWorryTopic) -> {
             Integer topicId = examDetailAndWorryTopic.getTopic_id();
             List<Option> options = optionService.findOptionById(topicId);
             examDetailAndWorryTopic.setOptionList(options);
             WorryTopic worryTopic = worryTopicService.findWorryTopicByRecordId(examDetailAndWorryTopic.getRecord_id(), examDetailAndWorryTopic.getTopic_id());
-            if(worryTopic != null){
+            if (worryTopic != null) {
                 examDetailAndWorryTopic.setWorryanswer(worryTopic.getWorryanswer());
                 examDetailAndWorryTopic.setWorrycount(worryTopic.getWorrycount());
             }
@@ -53,17 +53,17 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     public Map<String, Object> startExam(Integer examId) throws Exception {
         Map<String, Object> param = new HashMap<>(2);
         //获取此次做题的题目
-        List<Topic> topicsList = examService.getExamDetail(examId,0);
+        List<Topic> topicsList = examService.getExamDetail(examId, 0);
         ExamRecord examRecord = this.addRecord(examId);
         param.put("recordId", examRecord.getId());
         List<SysEnum> types = sysEnumService.getEnums("TOPIC", "TYPE");
         // 题目类型value : List<Topic>
         Map<Integer, List<Topic>> topics = new HashMap<>(types.size());
-        for(SysEnum type: types) {
+        for (SysEnum type : types) {
             Integer typeId = type.getValue();
             List<Topic> topicsWithType = new ArrayList<>(10);
-            for(Topic topic: topicsList) {
-                if(topic.getType().equals(typeId)) {
+            for (Topic topic : topicsList) {
+                if (topic.getType().equals(typeId)) {
                     topicsWithType.add(topic);
                 }
             }
@@ -86,7 +86,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     public Boolean saveOrUpdateTopic(ExamTopic examTopic) throws Exception {
         //查询记录表中是否已存在此题
         ExamRecordTopic recordTopic = examRecordTopicDao.getRecordTopicByElements(examTopic.getRecordId(), examTopic.getTopicId());
-        if(recordTopic == null) {
+        if (recordTopic == null) {
             //不存在，存入做题详情表
             recordTopic = new ExamRecordTopic(examTopic.getRecordId(), examTopic.getTopicId(), examTopic.getAnswer());
             examRecordTopicDao.save(recordTopic);
@@ -105,7 +105,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
         //记录提交时间
         Date endTime = Calendar.getInstance().getTime();
         ExamRecord record = examRecordDao.getRecordById(examTopic.getRecordId());
-        if(record.getEndTime() == null) {
+        if (record.getEndTime() == null) {
             record.setEndTime(endTime);
         }
         examRecordDao.updateEndTimeById(record);
@@ -124,12 +124,12 @@ public class ExamRecordServiceImpl implements ExamRecordService {
 
     @Override
     public void updateScoreById(Integer id, Double score) {
-        examRecordDao.updateScoreById(id,score);
+        examRecordDao.updateScoreById(id, score);
     }
 
     @Override
-    public List<ExamRecordAndExamDeatil> findAll(Integer subjectId,Integer userId) {
-        return examRecordDao.findAll(subjectId,userId);
+    public List<ExamRecordAndExamDeatil> findAll(Integer subjectId, Integer userId) {
+        return examRecordDao.findAll(subjectId, userId);
     }
 
     @Override

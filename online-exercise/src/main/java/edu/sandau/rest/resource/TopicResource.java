@@ -118,10 +118,10 @@ public class TopicResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response topicSave(TopicData topicData) throws Exception {
-        if(topicData.getSubject_id() == null){
-           return Response.accepted("请选择学科").status(Response.Status.BAD_REQUEST).build();
+        if (topicData.getSubject_id() == null) {
+            return Response.accepted("请选择学科").status(Response.Status.BAD_REQUEST).build();
         }
-        topicService.save(topicData.getTopics(),topicData.getSubject_id());
+        topicService.save(topicData.getTopics(), topicData.getSubject_id());
         return Response.accepted("ok").build();
     }
 
@@ -230,7 +230,7 @@ public class TopicResource {
     @Path("downloadFromWork")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response downloadFromWork( @Context HttpHeaders httpHeaders) throws Exception {
+    public Response downloadFromWork(@Context HttpHeaders httpHeaders) throws Exception {
         File f = new File("files" + File.separator + "考试题目上传模板.xlsx");
         String fileName = f.getName();
         if (!f.exists()) {
@@ -244,7 +244,7 @@ public class TopicResource {
                 fileName = URLEncoder.encode(fileName, "UTF-8");
             }
             String mt = new MimetypesFileTypeMap().getContentType(f);
-            return Response.ok(f,mt).header("Content-disposition", "attachment;filename=" + fileName)
+            return Response.ok(f, mt).header("Content-disposition", "attachment;filename=" + fileName)
                     .header("Cache-Control", "no-cache").build();
         }
     }

@@ -8,7 +8,7 @@ import javax.ws.rs.container.ContainerRequestContext;
  * 请求内容
  */
 public class RequestContent {
-    /** 用户 */
+    /*** 用户 */
     private static final ThreadLocal<User> userHolder = new ThreadLocal<>();
 
     private static final ThreadLocal<String> tokenHolder = new ThreadLocal<>();

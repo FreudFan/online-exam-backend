@@ -15,24 +15,24 @@ public class OptionDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void insertOption(int keyId, List<Option> optionList){
-      String sql = " INSERT INTO options " +
+    public void insertOption(int keyId, List<Option> optionList) {
+        String sql = " INSERT INTO options " +
                 "( topic_id,name,content) VALUES " +
-                   "( ?, ?, ? )";
-      List<Object[]> params = new ArrayList<>();
+                "( ?, ?, ? )";
+        List<Object[]> params = new ArrayList<>();
         for (int i = 0; i < optionList.size(); i++) {
             Option optionObject = optionList.get(i);
             String option = optionObject.getName();
             String value = optionObject.getContent();
-            Object[] obj = new Object[]{keyId,option,value};
+            Object[] obj = new Object[]{keyId, option, value};
             params.add(obj);
         }
-        jdbcTemplate.batchUpdate(sql,params);
+        jdbcTemplate.batchUpdate(sql, params);
     }
 
-    public List<Option> findOptionById(int id){
+    public List<Option> findOptionById(int id) {
         String sql = "select * from options where topic_id = ?";
-        List<Option> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Option.class),id);
+        List<Option> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Option.class), id);
         return list;
     }
 }

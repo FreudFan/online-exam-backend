@@ -22,7 +22,6 @@ public class TopicDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-
     /***
      * 批量禁用题目flag
      * @param ids
@@ -34,7 +33,7 @@ public class TopicDao {
             Object[] o = new Object[]{id};
             params.add(o);
         }
-        jdbcTemplate.batchUpdate(sql,params);
+        jdbcTemplate.batchUpdate(sql, params);
     }
 
     /***
@@ -73,7 +72,7 @@ public class TopicDao {
      * 得到topic表的总题目数量
      * @return 题目总数量
      */
-    public int getCount( String sb, List<Object> obj) {
+    public int getCount(String sb, List<Object> obj) {
         String sql = "select count(1) from topic where 1 = 1 " + sb;
         return jdbcTemplate.queryForObject(sql, Integer.class, obj.toArray());
     }
@@ -84,11 +83,11 @@ public class TopicDao {
      * @return List<Topic>
      */
     public List<Topic> listTopicByPage(Page page) {
-        Map<String,Object> params = page.getOption();
+        Map<String, Object> params = page.getOption();
         List<Object> obj = new ArrayList<>();
         StringBuffer sb = new StringBuffer("SELECT * FROM topic where 1 = 1 ");
         String sql = this.getSqlAndParams(params, obj);
-        page.setTotal(getCount(sql,obj));
+        page.setTotal(getCount(sql, obj));
         sb.append(sql);
         sb.append(" ORDER BY createtime DESC limit ?,? ");
         int start = (page.getPageNo() - 1) * page.getPageSize();
@@ -100,16 +99,16 @@ public class TopicDao {
 
 
     // 获取动态sql
-    private String getSqlAndParams(Map<String, Object> params, List<Object> obj){
+    private String getSqlAndParams(Map<String, Object> params, List<Object> obj) {
         StringBuffer sql = new StringBuffer();
         Set<String> keySet = params.keySet();
         for (String key : keySet) {
             Object value = params.get(key);
-            if(value != null && !"all".equalsIgnoreCase(value.toString()) && !"".equalsIgnoreCase(value.toString())) {
-                if("description".equals(key)){
+            if (value != null && !"all".equalsIgnoreCase(value.toString()) && !"".equalsIgnoreCase(value.toString())) {
+                if ("description".equals(key)) {
                     sql.append(" And " + key + " like ? ");
                     obj.add("%" + value + "%");
-                }else {
+                } else {
                     sql.append(" And " + key + "= ? ");
                     obj.add(value);
                 }
@@ -117,17 +116,18 @@ public class TopicDao {
         }
         return sql.toString();
     }
+
     /***
      * 查询试卷的试题内容
      * @param ids
      * @param role
      * @return
      */
-    public List<Topic> listTopicByIds(List<Integer> ids, Integer role){
+    public List<Topic> listTopicByIds(List<Integer> ids, Integer role) {
         //0为学生，1为管理员，管理员返回全部内容
         StringBuilder sb;
-        if(role == 0) {
-           sb = new StringBuilder("SELECT id, type, description, topicmark FROM topic WHERE 1 = 1 ");
+        if (role == 0) {
+            sb = new StringBuilder("SELECT id, type, description, topicmark FROM topic WHERE 1 = 1 ");
         } else {
             sb = new StringBuilder("SELECT * FROM topic WHERE 1 = 1 ");
         }

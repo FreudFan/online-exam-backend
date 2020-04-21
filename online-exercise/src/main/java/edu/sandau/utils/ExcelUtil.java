@@ -29,7 +29,7 @@ public class ExcelUtil {
      * @throws Exception
      */
     public static List<List<Object>> readExcel(File file) throws Exception {
-        if(!file.exists()){
+        if (!file.exists()) {
             throw new Exception("找不到文件");
         }
         XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(file));
@@ -49,7 +49,7 @@ public class ExcelUtil {
         XSSFWorkbook xwb = new XSSFWorkbook(inputStream);
         // 读取第一张表格内容
         XSSFSheet sheet = xwb.getSheetAt(0);
-        if ( sheet.getPhysicalNumberOfRows() == 0 ) {
+        if (sheet.getPhysicalNumberOfRows() == 0) {
             //若该表为空，返回空
             return null;
         }
@@ -65,7 +65,7 @@ public class ExcelUtil {
         List<Object> titleLinked = new LinkedList<>();
         for (int j = row.getFirstCellNum(); j <= row.getLastCellNum(); j++) {
             Object value = getValue(row, j);
-            if ( value == null ) {
+            if (value == null) {
                 continue;
             }
             titleLinked.add(value);
@@ -81,25 +81,25 @@ public class ExcelUtil {
             List<Object> valueLinked = new LinkedList<>();
             for (int j = row.getFirstCellNum(); j < titleLinked.size(); j++) {
                 Object value = getValue(row, j);
-                if ( value == null ) {
+                if (value == null) {
                     value = "";
                 }
                 valueLinked.add(value);
             }
 
             //不添加空着的行
-            if ( valueLinked.size() != 0) {
+            if (valueLinked.size() != 0) {
                 boolean flag = true;
                 int cont = 0;
-                for ( Object v: valueLinked ) {
-                    if ( v == null || "".equals(v) ) {
+                for (Object v : valueLinked) {
+                    if (v == null || "".equals(v)) {
                         cont++;
                     }
                 }
-                if ( cont == valueLinked.size() ) {
+                if (cont == valueLinked.size()) {
                     flag = false;
                 }
-                if ( flag ) {
+                if (flag) {
                     list.add(valueLinked);
                 }
             }
@@ -146,10 +146,11 @@ public class ExcelUtil {
 
     /**
      * 导出excel
+     *
      * @param excel_name 导出的excel路径（需要带.xlsx)
-     * @param headList  excel的标题备注名称
-     * @param fieldList excel的标题字段（与数据中map中键值对应）
-     * @param dataList  excel数据
+     * @param headList   excel的标题备注名称
+     * @param fieldList  excel的标题字段（与数据中map中键值对应）
+     * @param dataList   excel数据
      * @throws Exception
      */
     public static void createExcel(String excel_name, String[] headList,
