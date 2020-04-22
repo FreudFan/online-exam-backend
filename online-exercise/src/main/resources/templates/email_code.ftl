@@ -10,7 +10,7 @@
     <div style="padding: 10px 10px 0;">
         <p style="margin-bottom: 10px;padding-bottom: 0;">尊敬的用户，您好：</p>
         <p style="text-indent: 2em; margin-bottom: 10px;">您正在申请邮箱验证，您的验证码为：</p>
-            <p style="text-align: center;
+        <p style="text-align: center;
 			font-family: Times New Roman;
 			font-size: 22px;
 			color: #C60024;
@@ -27,7 +27,7 @@
 			font-size: 12px;
 			padding: 20px 0px;
 			font-family: Microsoft YaHei;">
-                Copyright &copy;${.now?string("yyyy")} 在线考试 All Rights Reserved.
+            Copyright &copy;${.now?string("yyyy")} 在线考试 All Rights Reserved.
         </div>
     </div>
 </div>

@@ -60,6 +60,7 @@ public class SysEnumDao {
 ////        List<Map<String, Object>> params = this.getEnumMap(catalog, type);
 ////        return (List) MapUtil.mapToObject(params, SysEnum.class);
 ////    }
+
     @Cacheable(cacheNames = "enums", key = "#catalog+'-'+#type", unless = "#result.empty")
     public List<SysEnum> getEnums(String catalog, String type) {
         String sql = " SELECT name, value FROM sys_enum WHERE catalog = ? AND type = ? ";

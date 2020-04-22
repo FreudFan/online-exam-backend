@@ -61,7 +61,6 @@ public class SubjectDao {
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<Subject>(Subject.class), new Object[]{id});
     }
 
-
     public List<Subject> showSub(Page page) {
         StringBuffer sb = new StringBuffer(" SELECT * FROM subject WHERE 1 = 1 ");
         List<Object> obj = new ArrayList<>();

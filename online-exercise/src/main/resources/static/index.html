@@ -3,13 +3,14 @@
     <title>welcome</title>
     <meta charset="UTF-8">
     <script type="text/javascript">
-        function getDate(){
+        function getDate() {
             let date = new Date();
             let date1 = date.toLocaleString();
             let div1 = document.getElementById("times");
             div1.innerHTML = date1;
         }
-        setInterval("getDate()",1000);
+
+        setInterval("getDate()", 1000);
     </script>
 </head>
 <body>
