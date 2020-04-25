@@ -1,5 +1,7 @@
 package edu.sandau.rest.resource;
 
+import edu.sandau.entity.Topic;
+import edu.sandau.entity.WorryTopicAnalysis;
 import edu.sandau.rest.model.Page;
 import edu.sandau.security.Auth;
 import edu.sandau.service.WorryTopicService;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Path("worryTopic")
@@ -43,5 +47,18 @@ public class WorryTopicResource {
         }
         page = worryTopicService.getWorryTopicByPage(page);
         return Response.ok(page).build();
+    }
+
+
+
+    @ApiOperation(value = "错题数据分析统计")
+    @POST
+    @Path("analysis")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response analysisTopic(Map<String,String> params) {
+
+        List<WorryTopicAnalysis> worryTopicAnalysis= worryTopicService.getWorryTopicAnalysis(params.get("id"),params.get("correctkey"));
+        return Response.ok(worryTopicAnalysis).build();
     }
 }

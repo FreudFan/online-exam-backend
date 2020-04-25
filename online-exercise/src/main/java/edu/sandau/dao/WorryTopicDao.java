@@ -1,6 +1,7 @@
 package edu.sandau.dao;
 
 import edu.sandau.entity.WorryTopic;
+import edu.sandau.entity.WorryTopicAnalysis;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.WorryTopicData;
 import edu.sandau.security.RequestContent;
@@ -115,5 +116,13 @@ public class WorryTopicDao {
             return null;
         }
         return worryTopics.get(0);
+    }
+
+    public int analysisCorrectKey(Integer id, String correctkey) {
+        return jdbcTemplate.queryForObject("select count(*) from exam_record_topic where topic_id =? AND answer = ?",Integer.class,id,correctkey);
+    }
+
+    public List<WorryTopicAnalysis> analysisWorryAnswer(Integer id) {
+        return jdbcTemplate.query("SELECT COUNT(worryanswer) AS value,worryanswer as label FROM worry_topic WHERE topic_id = ? GROUP BY worryanswer",new BeanPropertyRowMapper<>(WorryTopicAnalysis.class),id);
     }
 }

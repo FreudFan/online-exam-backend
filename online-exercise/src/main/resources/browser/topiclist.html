@@ -213,6 +213,7 @@
                                     <td>{{topic.typeName}}</td>
                                     <td class="text-center">
                                         <button type="button" class="btn bg-olive btn-xs" @click="getDetail(topic)">详情</button>
+                                        <button type="button" class="btn bg-olive btn-xs" @click="analysis(topic)">数据分析</button>
                                         <button type="button" class="btn bg-olive btn-xs" @click="disableTopic(topic.id)">禁用</button>
                                     </td>
                                 </tr>
@@ -514,6 +515,10 @@
             getDetail:function (topic) {
                 sessionStorage.setItem("topic",JSON.stringify(topic));
                 location.href="topicdetail.html";
+            },
+            analysis:function(topic){
+                sessionStorage.setItem("analysisTopic",JSON.stringify(topic));
+                location.href="topic-chart.html";
             },
             downloadFromWork:function () {
                 axios.get('rest/topic/downloadFromWork',{

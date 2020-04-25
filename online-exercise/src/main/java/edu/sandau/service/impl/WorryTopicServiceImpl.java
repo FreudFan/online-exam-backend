@@ -4,7 +4,9 @@ package edu.sandau.service.impl;
 import edu.sandau.dao.OptionDao;
 import edu.sandau.dao.WorryTopicDao;
 import edu.sandau.entity.Option;
+import edu.sandau.entity.Topic;
 import edu.sandau.entity.WorryTopic;
+import edu.sandau.entity.WorryTopicAnalysis;
 import edu.sandau.rest.model.Page;
 import edu.sandau.rest.model.WorryTopicData;
 import edu.sandau.service.SubjectService;
@@ -14,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -82,5 +86,16 @@ public class WorryTopicServiceImpl implements WorryTopicService {
     @Override
     public WorryTopic findWorryTopicByRecordId(Integer record_id, Integer topic_id) {
         return worryTopicDao.findWorryTopicByRecordId(record_id, topic_id);
+    }
+
+    @Override
+    public  List<WorryTopicAnalysis> getWorryTopicAnalysis(String id,String correctkey) {
+        List<WorryTopicAnalysis> worryTopicAnalysisList = worryTopicDao.analysisWorryAnswer(Integer.parseInt(id));
+        int value = worryTopicDao.analysisCorrectKey(Integer.parseInt(id),correctkey);
+        WorryTopicAnalysis wta = new WorryTopicAnalysis();
+        wta.setLabel(correctkey);
+        wta.setValue(value);
+        worryTopicAnalysisList.add(wta);
+        return worryTopicAnalysisList;
     }
 }
