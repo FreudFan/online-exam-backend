@@ -2,7 +2,7 @@ package edu.sandau.rest.resource.exam;
 
 import edu.sandau.entity.Subject;
 import edu.sandau.rest.model.exam.ExamDetailAndWorryTopic;
-import edu.sandau.rest.model.exam.ExamRecordAndExamDeatil;
+import edu.sandau.rest.model.exam.ExamRecordAndExamDetail;
 import edu.sandau.rest.model.exam.ExamTopic;
 import edu.sandau.security.Auth;
 import edu.sandau.security.RequestContent;
@@ -141,7 +141,7 @@ public class ExamRecordResource {
         if (userId == null) {
             userId = RequestContent.getCurrentUser().getId();
         }
-        List<ExamRecordAndExamDeatil> examRecordAndExamDetails = examRecordService.findAll(subjectId, userId);
+        List<ExamRecordAndExamDetail> examRecordAndExamDetails = examRecordService.findAll(subjectId, userId);
         return Response.ok(examRecordAndExamDetails).build();
     }
 

@@ -4,7 +4,7 @@ import edu.sandau.dao.ExamRecordDao;
 import edu.sandau.dao.ExamRecordTopicDao;
 import edu.sandau.entity.*;
 import edu.sandau.rest.model.exam.ExamDetailAndWorryTopic;
-import edu.sandau.rest.model.exam.ExamRecordAndExamDeatil;
+import edu.sandau.rest.model.exam.ExamRecordAndExamDetail;
 import edu.sandau.rest.model.exam.ExamTopic;
 import edu.sandau.security.RequestContent;
 import edu.sandau.service.*;
@@ -137,7 +137,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     }
 
     @Override
-    public List<ExamRecordAndExamDeatil> findAll(Integer subjectId, Integer userId) {
+    public List<ExamRecordAndExamDetail> findAll(Integer subjectId, Integer userId) {
         return examRecordDao.findAll(subjectId, userId);
     }
 

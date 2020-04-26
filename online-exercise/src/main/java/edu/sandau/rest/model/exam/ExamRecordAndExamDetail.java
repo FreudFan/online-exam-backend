@@ -1,12 +1,10 @@
 package edu.sandau.rest.model.exam;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.sandau.entity.Exam;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
 /***
  * 考试记录
@@ -14,15 +12,23 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 /*** 只包含试卷的一些信息和试卷分数信息 */
-public class ExamRecordAndExamDeatil {
+public class ExamRecordAndExamDetail {
     /***
      * 记录表id
      */
     private Integer id;
     /***
+     * 试卷id
+     */
+    private Integer examId;
+    /***
      * 用户id
      */
     private Integer userId;
+    /***
+     * 试卷难度
+     */
+    private Integer difficult;
     /***
      * 此次做题成绩
      */
@@ -30,11 +36,11 @@ public class ExamRecordAndExamDeatil {
     /***
      * 做题开始时间
      */
-    private Date beginTime;
+    private LocalDateTime beginTime;
     /***
      * 做题结束时间
      */
-    private Date endTime;
+    private LocalDateTime endTime;
     /***
      * 试卷的信息
      * //试卷的名字
@@ -48,8 +54,4 @@ public class ExamRecordAndExamDeatil {
      * 试卷描述
      */
     private String description;
-    @JsonIgnore
-    private Date createtime;
-    @JsonIgnore
-    private Date updatetime;
 }

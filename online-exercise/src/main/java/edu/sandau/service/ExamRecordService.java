@@ -3,7 +3,7 @@ package edu.sandau.service;
 import edu.sandau.entity.ExamRecord;
 import edu.sandau.entity.Subject;
 import edu.sandau.rest.model.exam.ExamDetailAndWorryTopic;
-import edu.sandau.rest.model.exam.ExamRecordAndExamDeatil;
+import edu.sandau.rest.model.exam.ExamRecordAndExamDetail;
 import edu.sandau.rest.model.exam.ExamTopic;
 
 import java.util.List;
@@ -72,7 +72,7 @@ public interface ExamRecordService {
      * @return
      */
 
-    List<ExamRecordAndExamDeatil> findAll(Integer subjectId, Integer userId);
+    List<ExamRecordAndExamDetail> findAll(Integer subjectId, Integer userId);
 
     /***
      * 返回用户做过的课程号以及课程名列表
