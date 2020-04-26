@@ -90,92 +90,104 @@
         <!-- 内容区域 -->
 
         <div class="content-wrapper">
-            <h2 align="center">题目详情</h2>
-            <div class="row data-type">
-                <div class="col-md-2 title rowHeight2x">题目详情</div>
-                <div class="col-md-10 data rowHeight2x">
-                    <textarea class="form-control" rows="3" placeholder="请输入..." v-model="topic.description"></textarea>
-                </div>
-                <div class="col-md-2 title rowHeight2x" style="height: 210px">选项</div>
-                <div class="col-md-10 data rowHeight2x" style="height: 210px">
-                    <select multiple="multiple" style="height: 170px;width: 100%;" v-model="chooseOption" @change="getOption($event)">
-                        <option v-for="(item,index) in topic.optionsList" style="margin-top:10px" :value="index">
-                            {{item.name}}.{{item.content}}
-                        </option>
-                    </select>
-                    <div style="text-align: center">
-                        <button type="button" class="btn bg-maroon" @click="insertOption()">添加选项</button>
-                        <button type="button" class="btn bg-maroon" @click="updateOption()" v-bind:style="{display:chooseOption == ''?'none':'inline-block'}">修改选项</button>
-                        <button type="button" class="btn bg-maroon" @click="deleteOption()" v-bind:style="{display:chooseOption == ''?'none':'inline-block'}">删除选项</button>
+            <h2 align="center">生成试卷</h2>
+            <div class="form-horizontal" style="margin-left: 300px">
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">试卷名</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" style="width:50%" v-model="exam.name">
                     </div>
                 </div>
-                <div class="col-md-2 title">正确答案</div>
-                <div class="col-md-4 data">
-                    <input type="text" class="form-control"  v-model="topic.correctkey">
+                <div class="form-group">
+                    <label for="difficult" class="col-sm-2 control-label">试卷难度</label>
+                    <div class="col-sm-10">
+                        <select class="form-control"  id = "difficult" style="width: 50%"  v-model="exam.difficult">
+                            <option value="0" >易</option>
+                            <option value="1" >中</option>
+                            <option value="2" >难</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-2 title">分值</div>
-                <div class="col-md-4 data">
-                    <input type="text" class="form-control"  v-model="topic.topicmark">
+
+                <div class="form-group">
+                    <label for="chooseTopic" class="col-sm-2 control-label" >题目选取</label>
+                    <div class="col-sm-10">
+                        <button  class="btn btn-default" id="chooseTopic" @click="showModal()">配置试题</button>
+                    </div>
                 </div>
-                <div class="col-md-2 title">难度</div>
-                <div class="col-md-4 data">
-                    <select class="form-control"  v-model="topic.difficult" @change="getDifficult($event)">
-                        <option value="0" >易</option>
-                        <option value="1" >中</option>
-                        <option value="2" >难</option>
-                    </select>
+                    <div class="form-group">
+                        <label for="description" class="col-sm-2 control-label">试卷描述</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="3" id="description" style="width:50%" v-model="exam.description"></textarea>
                 </div>
-                <div class="col-md-2 title">题目类型</div>
-                <div class="col-md-4 data">
-                    <select class="form-control"  v-model="topic.type" @change="getType($event)">
-                        <option value="0" >判断题</option>
-                        <option value="1" >单选题</option>
-                        <option value="2" >多选题</option>
-                    </select>
-                </div>
-                <div class="col-md-2 title">所属学科</div>
-                <div class="col-md-4 data">
-                    <select class="form-control"  v-model="topic.subject_id" @change="getSubject($event)">
-                        <option v-for="subject in subjectList" :value="subject.id" >{{subject.name}}</option>
-                    </select>
-                </div>
-                <div class="col-md-2 title"></div>
-                <div class="col-md-4 data">
-                </div>
-                <div class="col-md-2 title rowHeight2x">解析</div>
-                <div class="col-md-10 data rowHeight2x">
-                    <textarea class="form-control" rows="3" v-model="topic.analysis"></textarea>
-                </div>
-                <div class="col-md-2 title"></div>
-                <div class="col-md-10 data text-center">
-                    <button type="button" class="btn bg-maroon" @click="update()">保存</button>
-                    <button type="button" class="btn bg-default" onclick="history.back(-1);">返回</button>
+                    </div>
+                <div class="form-group" style="padding-left: 300px">
+                        <button type="button" class="btn btn-primary " @click="generate()">生成</button>
+                        <button type="button" class="btn btn-primary " onclick="history.back(-1)">返回</button>
                 </div>
 
             </div>
         </div>
-
-
+        <!-- modal -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" >
             <div class="modal-dialog" role="document">
                 <div class="modal-content" >
                     <div class="modal-header">
                         <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-                        <h4 class="modal-title" id="myModalLabel"></h4>
+                        <h4 class="modal-title" id="myModalLabel">配置题目</h4>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="content" id="contentLabel"></label>
-                            <input type="text" class="form-control" id="content"/>
+                    <div class="modal-body form-horizontal">
+                        <div class="form-group" >
+                            <label for="type" class="col-sm-2 control-label">题目类型:</label>
+                            <div class="col-sm-10">
+                            <select class="form-control"  id = "type" style="width: 50%" v-model="ExamClazz.type">
+                                <option value="0" >判断题</option>
+                                <option value="1" >单选题</option>
+                                <option value="2" >多选题</option>
+                            </select>
+                            </div>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label for="subject_id" class="col-sm-2 control-label">学科</label>
+                            <div class="col-sm-10">
+                                <select class="form-control"  id = "subject_id" style="width: 50%" v-model="exam.subject_id">
+                                    <option v-for="subject in subjectList" :value="subject.id" >{{subject.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                            <label for="difficult" class="col-sm-2 control-label">题目难度:</label>
+                            <div class="col-sm-10">
+                            <select class="form-control"  id = "topicDifficult" style="width: 50%" v-model="ExamClazz.difficult">
+                                <option value="0" >易</option>
+                                <option value="1" >中</option>
+                                <option value="2" >难</option>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                            <label for="num" class="col-sm-2 control-label">题目数量:</label>
+                            <div class="col-sm-10">
+                            <input type="num" class="form-control" id="num" style="width:50%" v-model="ExamClazz.num">
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                            <label for="topicMark" class="col-sm-2 control-label">总分:</label>
+                            <div class="col-sm-10">
+                            <input type="num" class="form-control" id="topicMark" style="width:50%" v-model="ExamClazz.score">
+                            </div>
+                        </div>
+                        </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary" @click="saveUpdate()">确定</button>
+                        <button type="button" class="btn btn-primary" @click="save()">确定</button>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
         <!-- @@close -->
         <!-- 内容区域 /-->
 
@@ -187,7 +199,11 @@
             <strong>Copyright &copy; 2019-2020 <a href="https://www.sandau.edu.cn/">上海杉达学院</a>.</strong> All rights reserved.
         </footer>
         <!-- 底部导航 /-->
+
+
+
     </div>
+
 
     <script src="./plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script src="./plugins/jQueryUI/jquery-ui.min.js"></script>
@@ -208,16 +224,6 @@
     <script src="./plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="./plugins/datatables/dataTables.bootstrap.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // 选择框
-            $(".select2").select2();
-
-            // WYSIHTML5编辑器
-            $(".textarea").wysihtml5({
-                locale: 'zh-CN'
-            });
-        });
-
 
         // 设置激活菜单
         function setSidebarActive(tagUri) {
@@ -250,83 +256,58 @@
     new Vue({
         el:"#main",
         data:{
-         topic:JSON.parse(sessionStorage.getItem("topic")),
-        subjectList:[],
-        chooseOption:'',
+            subjectList:[],
+            exam:{
+                subject_id:'',
+                name:'',
+                description:'',
+                difficult:0,
+                topics:[]
+            },
+            ExamClazz:{
+                type:0,
+                num:0,
+                score:0,
+                difficult:0
+            },
         },
         methods:{
-        getSubject:function (event) {
-            this.topic.subject_id = event.target.value;
-            console.log(this.topic.subject_id );
-        },
-        getType:function (event) {
-                this.topic.type = event.target.value;
-                console.log(this.topic.type);
-        },
-        getDifficult:function (event) {
-            this.topic.difficult = event.target.value;
-            console.log(this.topic.difficult);
-        },
-        getOption:function (event) {
-                this.chooseOption = event.target.value;
-            },
-        update:function () {
-            var vue = this;
-            axios.post('rest/topic/update',vue.topic).then(function (value) {
-                alert("修改成功!!!");
-                sessionStorage.removeItem("topic");
-                history.back(-1);
-                console.log(value);
-            }).catch(function (reason) {
-                checkToken(reason.response.status);
-                console.log(reason);
-            })
-        },
-        insertOption:function () {
-                var choice = this.topic.optionsList[this.topic.optionsList.length - 1].name;
-                $('#contentLabel').html("选项" + String.fromCharCode((choice.charCodeAt(0) + 1))+":");
-                $('#content').val('');
-                $('#myModalLabel').val('新增选项');
-            $('#myModal').modal('show');
-        },
-        updateOption:function(){
-                $('#contentLabel').html('选项'+this.topic.optionsList[this.chooseOption].name+':');
-               $('#content').val(this.topic.optionsList[this.chooseOption].content);
-                $('#myModalLabel').val('修改选项');
-                $('#myModal').modal('show');
-
-            },
-        deleteOption:function () {
-                var options = this.topic.optionsList;
-                var choice =  options[this.chooseOption].name;
-                var temp;
-                options.splice(this.chooseOption,1);
-                for (var i = this.chooseOption; i < options.length; i++) {
-                        temp = options[i].name;
-                        options[i].name = choice;
-                        choice = temp;
-                }
-                console.log(options);
-            },
-            saveUpdate:function () {
-                var title = $('#myModalLabel').val();
-                if(title === '修改选项') {
-                    this.topic.optionsList[this.chooseOption].content = $('#content').val();
-                }else if(title === '新增选项'){
-                    this.topic.optionsList.push({
-                        name:$('#contentLabel').html().substr(2,1),
-                        content:$('#content').val(),
-                    })
-                    console.log(this.topic.optionsList)
-                }
-                $('#myModal').modal('hide');
-            }
+          showModal:function () {
+              $('#myModal').modal('show');
+          },
+         generate:function(){
+             var _this = this;
+             axios.post('rest/exam/paper/save',_this.exam).then(function (response) {
+                 alert("保存成功!!!")
+                location.href = "examlist.html";
+             }).catch(function (reason) {
+                 checkToken(reason.response.status);
+                 console.log(reason);
+             })
+         },
+          save:function () {
+              var _this = this;
+              var clazz = [];
+              clazz.push(this.ExamClazz)
+              console.log(this.clazz)
+              axios.post('rest/exam/paper/autoGenerate',{
+                  subjectId:_this.exam.subject_id,
+                  clazz:clazz
+              }).then(function (response) {
+                  _this.exam.topics = response.data;
+                  $('#myModal').modal('hide');
+                  console.log(response);
+              }).catch(function (reason) {
+                  checkToken(reason.response.status);
+                  console.log(reason);
+              })
+          }
         },
         created:function () {
             var vue = this;
             axios.post('rest/common/sub/show').then(function (response) {
                 vue.subjectList = response.data;
-                console.log(vue.topic);
+                vue.exam.subject_id =  vue.subjectList[0].id
             }).catch(function (reason) {
                 checkToken(reason.response.status);
                 console.log(reason);

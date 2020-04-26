@@ -21,6 +21,9 @@
     <link rel="stylesheet" href="./plugins/adminLTE/css/AdminLTE.css">
     <link rel="stylesheet" href="./plugins/adminLTE/css/skins/_all-skins.min.css">
     <link rel="stylesheet" href="./css/style.css">
+    <script src="/webjars/vue/2.6.11/vue.min.js"></script>
+    <script src="/webjars/axios/0.19.2/dist/axios.js"></script>
+    <script src="js/my.js"></script>
 </head>
 
 <body class="hold-transition skin-purple sidebar-mini">
@@ -42,6 +45,7 @@
             <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
+            <h4 align="center" style="color:white" id="report"></h4>
         </nav>
     </header>
         <!-- 页面头部 /-->
@@ -75,7 +79,7 @@
                     </li>
                     <li>
                         <a href="subjectlist.html">
-                            <i class="fa  fa-book"></i> <span>课程管理</span>
+                            <i class="fa   fa-clone"></i> <span>课程管理</span>
                         </a>
                     </li>
                 </ul>
@@ -87,13 +91,7 @@
         <!-- 内容区域 -->
 
         <div class="content-wrapper">
-
-            <!-- 内容头部 -->
-            <section class="content-header">
-
-            </section>
-            <!-- 正文区域 /-->
-
+        <img src="image/sanda.jpg"  width="1500px" height="650px">
         </div>
         <!-- @@close -->
         <!-- 内容区域 /-->
@@ -181,6 +179,37 @@
                 alert('请先登录!!!!');
                 location.href='login.html';
             }
+        })
+
+
+        new Vue({
+            el:"#main",
+            data:{
+                report:{}
+            },
+            created:function () {
+                var _this = this;
+                var str;
+               axios.get('http://wthrcdn.etouch.cn/weather_mini?city=%E4%B8%8A%E6%B5%B7').then(function (reasponse) {
+                   var today = reasponse.data.data.forecast[0];
+                   var date = new Date();
+                   var year = date.getFullYear();
+                   var month = date.getMonth() + 1;
+                   var day = date.getDate();
+                   if (month < 10) {
+                       month = "0" + month;
+                   }
+                   if (day < 10) {
+                       day = "0" + day;
+                   }
+                   str = year + "年" +month + "月" +day+ "日 上海,最高温度:" + today.high.split(' ')[1]+" 最低温度:"
+                       + today.low.split(' ')[1] + "," + today.fengxiang + "," + today.type
+                 sessionStorage.setItem("report",str)
+                   $('#report').html(sessionStorage.getItem("report"))
+               })
+
+            }
+
         })
     </script>
 

@@ -4,6 +4,8 @@ function checkToken(status){
         alert("登录失效,请重新登录!!!!");
         sessionStorage.removeItem("token");
         location.href="login.html";
+    }else if(status == 400){
+      alert("题库中,题目数量不足!!!")
     }
 }
 

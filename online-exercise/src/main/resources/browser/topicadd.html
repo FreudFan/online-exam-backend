@@ -78,7 +78,7 @@
                     </li>
                     <li>
                         <a href="subjectlist.html">
-                            <i class="fa  fa-book"></i> <span>课程管理</span>
+                            <i class="fa   fa-clone"></i> <span>课程管理</span>
                         </a>
                     </li>
                 </ul>
@@ -232,7 +232,14 @@
 
         });
 
-
+        $('#myModal').on('shown.bs.modal', function (e) {
+            // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+            $(this).css('display', 'block');
+            var modalHeight = $(window).height() / 2 - $('#myModel .modal-dialog').height() / 2;
+            $(this).find('.modal-dialog').css({
+                'margin-top': modalHeight
+            });
+        });
     </script>
 
 
