@@ -53,12 +53,12 @@ public class SubjectDao {
 
     public List<Subject> getAll() {
         String sql = " SELECT * FROM subject ORDER by id ASC ";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<Subject>(Subject.class));
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Subject.class));
     }
 
     public Subject getSubjectById(Integer id) {
         String sql = " SELECT * FROM subject WHERE id = ? ORDER by id ASC ";
-        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<Subject>(Subject.class), new Object[]{id});
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Subject.class), new Object[]{id});
     }
 
     public List<Subject> showSub(Page page) {
@@ -73,7 +73,7 @@ public class SubjectDao {
         Integer pageNo = page.getPageNo();
         obj.add((pageNo - 1) * pageSize);
         obj.add(pageSize);
-        return jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<Subject>(Subject.class), obj.toArray());
+        return jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<>(Subject.class), obj.toArray());
     }
 
     private String getSqlAndParams(Map<String, Object> params, List<Object> obj) {

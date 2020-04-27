@@ -1,12 +1,10 @@
 package edu.sandau.service;
 
-import edu.sandau.entity.Topic;
 import edu.sandau.entity.WorryTopic;
 import edu.sandau.entity.WorryTopicAnalysis;
 import edu.sandau.rest.model.Page;
 
 import java.util.List;
-import java.util.Map;
 
 public interface WorryTopicService {
 
