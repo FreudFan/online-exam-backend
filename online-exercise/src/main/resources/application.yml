@@ -22,9 +22,9 @@ spring:
       max-wait: 60000
 
   redis:
-    host: 127.0.0.16
+    host: 127.0.0.1
     port: 6400
-    password: p
+    password: ???
     timeout: 3000
     database: 0
     jedis:
