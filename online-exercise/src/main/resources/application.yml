@@ -7,9 +7,9 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: fan
-    password: Fmy1054.
-    url: jdbc:mysql://106.14.120.166:3400/online_exercise?useUnicode=true&characterEncoding=utf8&useSSL=true
+    username: ???
+    password: ???
+    url: jdbc:mysql://127.0.0.1/online_exercise_test?useUnicode=true&characterEncoding=utf8&useSSL=true
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       #连接池初始化大小
@@ -22,9 +22,9 @@ spring:
       max-wait: 60000
 
   redis:
-    host: 106.14.120.166
+    host: 127.0.0.16
     port: 6400
-    password: myredis
+    password: p
     timeout: 3000
     database: 0
     jedis:
@@ -57,9 +57,10 @@ swagger:
   enabled: true
 
 exercise:
-  #存入redis的session生存时间 ttl 分钟
-  session_timeout: 20
-  #邮箱验证码有效期 分钟
-  mail_timeout: 10
-  #短信验证码有效期 分钟
-  sms_timeout: 3
+  timeout:
+    redis: 120
+    mail: 10
+    sms: 5
+  wechat:
+    appId: ???
+    appSecret: ???
