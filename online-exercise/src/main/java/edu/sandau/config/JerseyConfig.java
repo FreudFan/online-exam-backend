@@ -39,7 +39,7 @@ public class JerseyConfig extends ResourceConfig {
         this.register(AcceptHeaderApiListingResource.class);
         this.register(SwaggerSerializers.class);
         BeanConfig config = new BeanConfig();
-        config.setTitle("在线考试系统API文档");
+        config.setTitle("智云宝盒API文档");
         config.setVersion("v1.0");
         config.setContact("fmy");
         config.setBasePath(this.apiPath);
