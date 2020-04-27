@@ -5,7 +5,7 @@
     <!-- 页面meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>题库后台管理系统</title>
+    <title>智云宝盒后台管理系统</title>
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -35,9 +35,8 @@
         <!-- Logo -->
         <a href="all-admin-index.html" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>题库</b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>题库</b>后台管理</span>
+            <span class="logo-lg"><b>智云宝盒</b>后台管理</span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top">
@@ -162,8 +161,8 @@
                                     <td>{{exam.subjectName}}</td>
                                     <td>{{exam.description}}</td>
                                     <td class="text-center">
-                                        <button type="button" class="btn bg-olive btn-xs">详情</button>
-                                        <button type="button" class="btn bg-olive btn-xs">编辑</button>
+                                        <!--<button type="button" class="btn bg-olive btn-xs">详情</button>-->
+                                        <button type="button" class="btn bg-olive btn-xs" @click="fenxi(exam.id)">试卷分析</button>
                                         <button type="button" class="btn bg-olive btn-xs">禁用</button>
                                     </td>
                                 </tr>
@@ -178,14 +177,15 @@
                     <div class="box-footer">
                         <div class="pull-left">
                             <div class="form-group form-inline">
-                                总共2 页，共14 条数据。 每页
-                                <select class="form-control">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select> 条
+                                总共2 页，共14 条数据。
+                                <!--每页-->
+                                <!--<select class="form-control">-->
+                                    <!--<option>1</option>-->
+                                    <!--<option>2</option>-->
+                                    <!--<option>3</option>-->
+                                    <!--<option>4</option>-->
+                                    <!--<option>5</option>-->
+                                <!--</select> 条-->
                             </div>
                         </div>
 
@@ -304,6 +304,12 @@
             examList:[],
             pageNo:1,
             pageSize:10
+        },
+        methods:{
+            fenxi:function (id) {
+                sessionStorage.setItem("examid",id)
+                location.href = 'exam-chart.html'
+            }
         },
         created:function () {
             var _this = this;

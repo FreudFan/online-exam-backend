@@ -89,7 +89,7 @@ public class TopicDao {
         String sql = this.getSqlAndParams(params, obj);
         page.setTotal(getCount(sql, obj));
         sb.append(sql);
-        sb.append(" ORDER BY createtime DESC limit ?,? ");
+        sb.append(" ORDER BY id DESC limit ?,? ");
         int start = (page.getPageNo() - 1) * page.getPageSize();
         obj.add(start);
         obj.add(page.getPageSize());
