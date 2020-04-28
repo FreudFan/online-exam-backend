@@ -55,6 +55,7 @@ public class ExamDao {
         jdbcTemplate.batchUpdate(sql, params);
     }
 
+
     public List<Exam> listExamByPage(Page page) {
         StringBuffer sb = new StringBuffer(" SELECT * FROM exam where 1 = 1 ");
         List<Object> obj = new ArrayList<>();
@@ -69,6 +70,7 @@ public class ExamDao {
             obj.add(page.getPageSize());
         }
         return jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<>(Exam.class), obj.toArray());
+
     }
 
     public int getCount(String sb, List<Object> obj) {

@@ -1,8 +1,10 @@
 package edu.sandau.service.impl;
 
+
 import edu.sandau.dao.OptionDao;
 import edu.sandau.dao.WorryTopicDao;
 import edu.sandau.entity.Option;
+import edu.sandau.entity.Topic;
 import edu.sandau.entity.WorryTopic;
 import edu.sandau.entity.WorryTopicAnalysis;
 import edu.sandau.rest.model.Page;
@@ -14,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -40,6 +44,7 @@ public class WorryTopicServiceImpl implements WorryTopicService {
                 worryTopicDao.updateWorryCount(wt);
             }
         });
+
     }
 
     @Override
@@ -50,6 +55,7 @@ public class WorryTopicServiceImpl implements WorryTopicService {
         } else {
             return null;
         }
+
     }
 
     @Override

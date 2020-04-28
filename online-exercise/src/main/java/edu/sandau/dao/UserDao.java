@@ -49,7 +49,7 @@ public class UserDao {
         return user;
     }
 
-    public List<User> getUserByRealName(String realname) {
+    public List<User> getUserByRealname(String realname) {
         String sql = " SELECT * FROM user WHERE realname = ? ";
         List<User> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), realname);
         if (users.size() == 0) {

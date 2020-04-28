@@ -119,6 +119,6 @@ public class ExamRecordTopicDao {
     public List<ExamDetailAndWorryTopic> findDetailByRecordId(Integer recordId) {
         String sql = "SELECT a.record_id,a.topic_id,description,correctkey,answer,analysis FROM exam_record_topic AS a " +
                 "INNER JOIN topic AS b ON a.topic_id = b.id AND a.record_id = ? ";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(ExamDetailAndWorryTopic.class), recordId);
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<ExamDetailAndWorryTopic>(ExamDetailAndWorryTopic.class), recordId);
     }
 }
