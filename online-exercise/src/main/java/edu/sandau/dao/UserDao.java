@@ -11,8 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Repository
 public class UserDao {
@@ -153,9 +152,41 @@ public class UserDao {
      * @throws Exception
      */
     public List<User> listUserByPage(Page page) throws Exception {
+        //获取查询参数
+        Map<String, Object> params = page.getOption();
+        List<Object> obj = new ArrayList<>();
+        StringBuffer sb = new StringBuffer("SELECT * FROM user where 1 = 1 ");
+        String sql = this.getSqlAndParams(params, obj);
+        page.setTotal(getCount(sql, obj));
+        sb.append(sql);
+        sb.append(" ORDER BY id DESC limit ?,? ");
         int start = (page.getPageNo() - 1) * page.getPageSize();
-        String sql = " SELECT * FROM user ORDER BY id ASC limit ? , ? ";
-        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), new Object[]{start, page.getPageSize()});
+        obj.add(start);
+        obj.add(page.getPageSize());
+        return jdbcTemplate.query(sb.toString(), new BeanPropertyRowMapper<>(User.class), obj.toArray());
+    }
+
+    /***
+     * 得到user表的总用户数量
+     * @return 用户总数量
+     */
+    public int getCount(String sb, List<Object> obj) {
+        String sql = "select count(1) from user where 1 = 1 " + sb;
+        return jdbcTemplate.queryForObject(sql, Integer.class, obj.toArray());
+    }
+
+    // 获取动态sql
+    private String getSqlAndParams(Map<String, Object> params, List<Object> obj) {
+        StringBuffer sql = new StringBuffer();
+        Set<String> keySet = params.keySet();
+        for (String key : keySet) {
+            Object value = params.get(key);
+            if (value != null && !"".equalsIgnoreCase(value.toString())) {
+                    sql.append(" And " + key + " like ? ");
+                    obj.add("%" + value + "%");
+            }
+        }
+        return sql.toString();
     }
 
     /***
