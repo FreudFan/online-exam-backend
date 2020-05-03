@@ -9,5 +9,14 @@ function checkToken(status){
     }
 }
 
+function exitSystem(){
+
+    if(window.confirm("确定要退出吗?")){
+        sessionStorage.clear();
+        location.href='login.html';
+    }
+
+}
+
 axios.defaults.headers.get['Authorization'] = sessionStorage.getItem("token");
 axios.defaults.headers.post['Authorization'] = sessionStorage.getItem("token");
