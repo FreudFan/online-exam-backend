@@ -1,5 +1,6 @@
 package edu.sandau.rest.resource;
 
+import edu.sandau.entity.Topic;
 import edu.sandau.entity.WorryTopicAnalysis;
 import edu.sandau.rest.model.Page;
 import edu.sandau.security.Auth;
@@ -48,12 +49,15 @@ public class WorryTopicResource {
         return Response.ok(page).build();
     }
 
+
+
     @ApiOperation(value = "错题数据分析统计")
     @POST
     @Path("analysis")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response analysisTopic(Map<String,String> params) {
+
         List<WorryTopicAnalysis> worryTopicAnalysis= worryTopicService.getWorryTopicAnalysis(params.get("id"),params.get("correctkey"));
         return Response.ok(worryTopicAnalysis).build();
     }

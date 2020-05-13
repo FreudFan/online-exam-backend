@@ -56,10 +56,9 @@ public class WorryTopicDao {
             params = new HashMap<>(10);
         }
         List<Object> obj = new ArrayList<>();
-        StringBuilder sql = new StringBuilder(
-                " SELECT t.id, t.`description`, t.`correctkey`, wt.`worryanswer`, wt.`worrycount` , " +
-                        " t.`difficult`, t.`analysis`, t.`subject_id`, wt.`createtime` " +
-                " FROM worry_topic AS wt INNER JOIN topic t ON wt.topic_id = t.`id` where  1 = 1 ");
+
+        StringBuilder sql = new StringBuilder("SELECT t.id,t.`description`,t.`correctkey`,wt.`worryanswer`,wt.`worrycount`,t.`difficult`,t.`analysis`,t.`subject_id`,wt.`createtime` " +
+                "FROM worry_topic AS wt INNER JOIN topic t ON wt.topic_id = t.`id` where  1 = 1 ");
 
         String sqlAppend = getSqlAndParams(params, obj);
         sql.append(sqlAppend);
@@ -112,7 +111,7 @@ public class WorryTopicDao {
 
     public WorryTopic findWorryTopicByRecordId(Integer record_id, Integer topic_id) {
         String sql = "select worryanswer,worrycount from worry_topic where record_id = ? and topic_id = ? ";
-        List<WorryTopic> worryTopics = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(WorryTopic.class), record_id, topic_id);
+        List<WorryTopic> worryTopics = jdbcTemplate.query(sql, new BeanPropertyRowMapper<WorryTopic>(WorryTopic.class), record_id, topic_id);
         if (worryTopics.size() == 0) {
             return null;
         }
@@ -120,12 +119,10 @@ public class WorryTopicDao {
     }
 
     public int analysisCorrectKey(Integer id, String correctkey) {
-        String sql = " SELECT count(*) FROM exam_record_topic WHERE topic_id =? AND answer = ?";
-        return jdbcTemplate.queryForObject( sql , Integer.class, id, correctkey );
+        return jdbcTemplate.queryForObject("select count(*) from exam_record_topic where topic_id =? AND answer = ?",Integer.class,id,correctkey);
     }
 
     public List<WorryTopicAnalysis> analysisWorryAnswer(Integer id) {
-        String sql = " SELECT COUNT(worryanswer) AS value,worryanswer as label FROM worry_topic WHERE topic_id = ? GROUP BY worryanswer";
-        return jdbcTemplate.query( sql , new BeanPropertyRowMapper<>(WorryTopicAnalysis.class), id);
+        return jdbcTemplate.query("SELECT COUNT(worryanswer) AS value,worryanswer as label FROM worry_topic WHERE topic_id = ? GROUP BY worryanswer",new BeanPropertyRowMapper<>(WorryTopicAnalysis.class),id);
     }
 }

@@ -161,9 +161,9 @@
                                     <td>{{exam.subjectName}}</td>
                                     <td>{{exam.description}}</td>
                                     <td class="text-center">
-                                        <!--<button type="button" class="btn bg-olive btn-xs">详情</button>-->
+                                        <button type="button" class="btn bg-olive btn-xs" @click="examDetail(exam)">详情</button>
                                         <button type="button" class="btn bg-olive btn-xs" @click="fenxi(exam.id)">试卷分析</button>
-                                        <button type="button" class="btn bg-olive btn-xs">禁用</button>
+                                        <button type="button" class="btn bg-olive btn-xs" @click="disableExam(exam.id)">禁用</button>
                                     </td>
                                 </tr>
                             </table>
@@ -306,9 +306,16 @@
             pageSize:10
         },
         methods:{
+            examDetail:function(exam){
+                sessionStorage.setItem("exam",JSON.stringify(exam));
+                location.href="examdetail.html";
+            },
             fenxi:function (id) {
                 sessionStorage.setItem("examid",id)
                 location.href = 'exam-chart.html'
+            },
+            disableExam:function(){
+
             }
         },
         created:function () {
