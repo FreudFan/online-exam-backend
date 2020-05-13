@@ -1,3 +1,5 @@
+axios.defaults.headers.get['Authorization'] = sessionStorage.getItem("token");
+axios.defaults.headers.post['Authorization'] = sessionStorage.getItem("token");
 
 function checkToken(status){
     if(status == 401){
@@ -13,10 +15,14 @@ function exitSystem(){
 
     if(window.confirm("确定要退出吗?")){
         sessionStorage.clear();
-        location.href='login.html';
+        axios.get('rest/auth/logout').then(function (response) {
+            location.href='login.html';
+        }).catch(function (reason) {
+            checkToken(reason.response.status);
+            console.log(reason);
+        })
+
     }
 
 }
 
-axios.defaults.headers.get['Authorization'] = sessionStorage.getItem("token");
-axios.defaults.headers.post['Authorization'] = sessionStorage.getItem("token");
