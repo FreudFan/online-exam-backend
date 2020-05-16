@@ -53,7 +53,7 @@ public interface TopicService {
      * 批量禁用题目
      * @param ids
      */
-    void deleteTopics(Integer... ids);
+    void deleteTopics(String ids);
 
     /***
      * 将解析excel的数据类型转换为Topic对象

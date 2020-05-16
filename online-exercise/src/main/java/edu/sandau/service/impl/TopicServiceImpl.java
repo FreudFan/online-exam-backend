@@ -26,10 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -243,8 +240,13 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public void deleteTopics(Integer... ids) {
-        topicDao.deleteTopics(ids);
+    public void deleteTopics(String ids) {
+        StringTokenizer st = new StringTokenizer(ids, ",");
+        List<Integer> idList = new ArrayList<>();
+        while (st.hasMoreTokens()) {
+            idList.add(Integer.parseInt(st.nextToken()));
+        }
+        topicDao.deleteTopics(idList.toArray(new Integer[idList.size()]));
     }
 
     @Override

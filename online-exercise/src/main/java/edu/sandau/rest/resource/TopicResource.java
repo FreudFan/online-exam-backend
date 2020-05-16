@@ -139,7 +139,7 @@ public class TopicResource {
     @Path("delete")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response topicDelete(@QueryParam("ids") Integer ids) {
+    public Response topicDelete(@QueryParam("ids") String ids) {
         topicService.deleteTopics(ids);
         return Response.ok("ok").build();
     }
