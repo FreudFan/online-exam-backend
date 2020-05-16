@@ -153,41 +153,6 @@
     <script src="./plugins/flot/jquery.flot.resize.min.js"></script>
     <script src="./plugins/flot/jquery.flot.pie.min.js"></script>
     <script src="./plugins/flot/jquery.flot.categories.min.js"></script>
-    <script>
-
-        // 设置激活菜单
-        function setSidebarActive(tagUri) {
-            var liObj = $("#" + tagUri);
-            if (liObj.length > 0) {
-                liObj.parent().parent().addClass("active");
-                liObj.addClass("active");
-            }
-        }
-
-
-        $(document).ready(function() {
-
-            // 激活导航位置
-            setSidebarActive("admin-datalist");
-
-            // 列表按钮 
-            $("#dataList td input[type='checkbox']").iCheck({
-                checkboxClass: 'icheckbox_square-blue',
-                increaseArea: '20%'
-            });
-
-
-
-
-
-
-        });
-
-
-
-    </script>
-
-
 <script>
 
 

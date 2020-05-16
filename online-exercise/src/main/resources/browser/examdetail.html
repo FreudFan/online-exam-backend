@@ -169,44 +169,6 @@
 <script src="./plugins/input-mask/jquery.inputmask.extensions.js"></script>
 <script src="./plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="./plugins/datatables/dataTables.bootstrap.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // 选择框
-        $(".select2").select2();
-
-        // WYSIHTML5编辑器
-        $(".textarea").wysihtml5({
-            locale: 'zh-CN'
-        });
-    });
-
-
-    // 设置激活菜单
-    function setSidebarActive(tagUri) {
-        var liObj = $("#" + tagUri);
-        if (liObj.length > 0) {
-            liObj.parent().parent().addClass("active");
-            liObj.addClass("active");
-        }
-    }
-
-
-    $(document).ready(function() {
-
-        // 激活导航位置
-        setSidebarActive("admin-datalist");
-
-        // 列表按钮
-        $("#dataList td input[type='checkbox']").iCheck({
-            checkboxClass: 'icheckbox_square-blue',
-            increaseArea: '20%'
-        });
-
-    });
-
-
-</script>
-
 
 <script>
     new Vue({

@@ -212,30 +212,6 @@
     <script src="./plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="./plugins/datatables/dataTables.bootstrap.min.js"></script>
     <script>
-
-        // 设置激活菜单
-        function setSidebarActive(tagUri) {
-            var liObj = $("#" + tagUri);
-            if (liObj.length > 0) {
-                liObj.parent().parent().addClass("active");
-                liObj.addClass("active");
-            }
-        }
-
-
-        $(document).ready(function() {
-
-            // 激活导航位置
-            setSidebarActive("admin-datalist");
-
-            // 列表按钮 
-            $("#dataList td input[type='checkbox']").iCheck({
-                checkboxClass: 'icheckbox_square-blue',
-                increaseArea: '20%'
-            });
-
-        });
-
         $('#myModal').on('shown.bs.modal', function (e) {
             // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
             $(this).css('display', 'block');

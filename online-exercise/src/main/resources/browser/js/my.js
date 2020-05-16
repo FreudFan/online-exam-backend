@@ -26,3 +26,12 @@ function exitSystem(){
 
 }
 
+// 设置激活菜单
+function setSidebarActive(tagUri) {
+    var liObj = $("#" + tagUri);
+    if (liObj.length > 0) {
+        liObj.parent().parent().addClass("active");
+        liObj.addClass("active");
+    }
+}
+
