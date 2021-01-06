@@ -11,4 +11,4 @@ online-exam-backend 是一个在线考试系统的后端模块。
 |  后端源码   |  https://github.com/FreudFan/online-exam-backend   |
 |  微信小程序   |  https://github.com/FreudFan/online-exam-wechat-app   |
 
-项目于2020.3.11日根据需求调整功能代码，正在进行中~
+项目于2020.3.11日根据需求调整功能代码。
